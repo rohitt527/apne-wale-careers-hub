@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,6 @@ import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-// Form validation schema
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -44,13 +43,11 @@ const formSchema = z.object({
   message: z.string().optional(),
 });
 
-// Available time slots
 const timeSlots = [
   "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", 
   "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
 ];
 
-// Service types
 const serviceTypes = [
   { value: "assessment", label: "Assessment Support" },
   { value: "mock-interview", label: "Mock Interview" },
@@ -62,6 +59,26 @@ const serviceTypes = [
 const Book = () => {
   const [step, setStep] = useState(1);
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success")) {
+      toast({
+        title: "Payment Successful!",
+        description: "Your booking has been confirmed. Check your email for details.",
+      });
+      window.history.replaceState({}, "", "/book");
+    }
+    if (params.get("canceled")) {
+      toast({
+        title: "Payment Canceled",
+        description: "Your booking was not completed. Please try again.",
+        variant: "destructive",
+      });
+      window.history.replaceState({}, "", "/book");
+    }
+  }, []);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,13 +90,33 @@ const Book = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    toast({
-      title: "Booking Confirmed!",
-      description: `Your ${getServiceLabel(data.serviceType)} session is scheduled for ${format(data.date, "MMMM do, yyyy")} at ${data.time}.`,
-    });
-    // In a real app, this would send data to a backend API
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/create-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ formData: data }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.url) {
+        window.location.href = result.url;
+      } else {
+        throw new Error("Failed to create checkout session");
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was a problem processing your booking. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getServiceLabel = (value: string) => {
@@ -104,7 +141,6 @@ const Book = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
       <section className="bg-brand-dark text-white py-20">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
@@ -116,11 +152,9 @@ const Book = () => {
         </div>
       </section>
 
-      {/* Booking Form Section */}
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
-            {/* Steps Indicator */}
             <div className="mb-12">
               <div className="flex items-center justify-center">
                 <div className="flex items-center">
@@ -280,7 +314,6 @@ const Book = () => {
                                   selected={field.value}
                                   onSelect={field.onChange}
                                   disabled={(date) => {
-                                    // Disable past dates and weekends
                                     const today = new Date();
                                     today.setHours(0, 0, 0, 0);
                                     const day = date.getDay();
@@ -372,7 +405,7 @@ const Book = () => {
                   <>
                     <SectionHeading
                       title="Confirm Your Booking"
-                      subtitle="Review your session details before confirming"
+                      subtitle="Review your session details before payment"
                       align="center"
                     />
 
@@ -411,6 +444,12 @@ const Book = () => {
                       )}
                     </div>
 
+                    <div className="mt-4 p-4 bg-brand-red/10 rounded-lg">
+                      <p className="text-center text-lg font-semibold text-brand-red">
+                        Session Fee: $9.00
+                      </p>
+                    </div>
+
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-800 flex items-start">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -418,7 +457,7 @@ const Book = () => {
                       <div>
                         <p className="font-medium">Important Information</p>
                         <p className="text-sm mt-1">
-                          Please note that all bookings are subject to confirmation. You'll receive a confirmation email shortly after submitting your request.
+                          By proceeding with the payment, you agree to our terms and conditions. You'll receive a confirmation email after successful payment.
                         </p>
                       </div>
                     </div>
@@ -434,8 +473,15 @@ const Book = () => {
                       <Button 
                         type="submit"
                         className="bg-brand-red hover:bg-red-700 text-white"
+                        disabled={isSubmitting}
                       >
-                        Confirm Booking
+                        {isSubmitting ? (
+                          <span className="flex items-center gap-2">
+                            Processing... <span className="animate-spin">⌛</span>
+                          </span>
+                        ) : (
+                          "Pay $9 & Confirm Booking"
+                        )}
                       </Button>
                     </div>
                   </>
@@ -446,7 +492,6 @@ const Book = () => {
         </div>
       </section>
 
-      {/* Why Book With Us */}
       <section className="py-16 bg-gray-50">
         <div className="container-custom">
           <SectionHeading
