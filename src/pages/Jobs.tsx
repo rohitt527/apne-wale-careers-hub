@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/common/SectionHeading";
@@ -215,7 +214,7 @@ const Jobs = () => {
                         <SelectValue placeholder="All Locations" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Locations</SelectItem>
+                        <SelectItem value="all-locations">All Locations</SelectItem>
                         {locations.map(location => (
                           <SelectItem key={location} value={location}>{location}</SelectItem>
                         ))}
@@ -237,7 +236,7 @@ const Jobs = () => {
                         <SelectValue placeholder="All Types" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Types</SelectItem>
+                        <SelectItem value="all-types">All Types</SelectItem>
                         {types.map(type => (
                           <SelectItem key={type} value={type}>{type}</SelectItem>
                         ))}
@@ -259,7 +258,7 @@ const Jobs = () => {
                         <SelectValue placeholder="Any Experience" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Any Experience</SelectItem>
+                        <SelectItem value="any-experience">Any Experience</SelectItem>
                         {experiences.map(exp => (
                           <SelectItem key={exp} value={exp}>{exp}</SelectItem>
                         ))}
@@ -278,7 +277,7 @@ const Jobs = () => {
                         <SelectValue placeholder="All Domains" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Domains</SelectItem>
+                        <SelectItem value="all-domains">All Domains</SelectItem>
                         {domains.map(domain => (
                           <SelectItem key={domain} value={domain}>{domain}</SelectItem>
                         ))}
