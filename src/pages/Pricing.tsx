@@ -44,7 +44,7 @@ const Pricing = () => {
     <Layout>
       <div className="container-custom section-padding">
         <SectionHeading 
-          title="Simple, Transparent Pricing" 
+          title="Our Services" 
           subtitle="All our services are priced at $9 per session to make professional guidance accessible to everyone."
         />
         

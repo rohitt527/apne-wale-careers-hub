@@ -8,10 +8,10 @@ interface ServiceCardProps {
   title: string;
   description: string;
   icon: ReactNode;
-  link: string;
+  link?: string; // Make link optional, defaulting to pricing
 }
 
-const ServiceCard = ({ title, description, icon, link }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon, link = "/pricing" }: ServiceCardProps) => {
   return (
     <Card className="card-hover border-t-4 border-t-brand-red">
       <CardHeader>
