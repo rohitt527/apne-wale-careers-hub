@@ -16,10 +16,20 @@ const Home = () => {
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Subscribed!",
-      description: "Thank you for joining our community!",
-    });
+    const form = e.target as HTMLFormElement;
+    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    
+    if (email) {
+      // In a real app, you would send this to your backend
+      // For now, we'll just show a toast
+      console.log("Sending subscription to:", email);
+      window.open(`mailto:apnewalecoders@gmail.com?subject=New Subscription&body=New subscription from: ${email}`);
+      toast({
+        title: "Subscribed!",
+        description: "Thank you for joining our community!",
+      });
+      form.reset();
+    }
   };
 
   return (
@@ -37,9 +47,6 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
             <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
               <Link to="/book">Book Your Slot</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-              <Link to="/services">Explore Services</Link>
             </Button>
           </div>
         </div>
@@ -82,9 +89,9 @@ const Home = () => {
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                  <line x1="16" x2="16" y1="2" y2="6"></line>
-                  <line x1="8" x2="8" y1="2" y2="6"></line>
-                  <line x1="3" x2="21" y1="10" y2="10"></line>
+                  <line x1="16" x2="16" y1="2" y1="6"></line>
+                  <line x1="8" x2="8" y1="2" y1="6"></line>
+                  <line x1="3" x2="21" y1="10" y1="10"></line>
                   <path d="m9 16 2 2 4-4"></path>
                 </svg>
               }
@@ -256,6 +263,7 @@ const Home = () => {
             </p>
             <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
               <Input
+                name="email"
                 type="email"
                 placeholder="Enter your email"
                 className="bg-white/10 border-gray-700 text-white placeholder:text-gray-400"

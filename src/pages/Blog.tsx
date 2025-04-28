@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // Mock data for blogs
 const blogData = [
@@ -205,16 +206,17 @@ const Blog = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {filteredBlogs.map(blog => (
-                      <BlogCard
-                        key={blog.id}
-                        id={blog.id}
-                        title={blog.title}
-                        excerpt={blog.excerpt}
-                        author={blog.author}
-                        date={blog.date}
-                        category={blog.category}
-                        image={blog.image}
-                      />
+                      <Link to={`/blog/${blog.id}`} key={blog.id} className="block">
+                        <BlogCard
+                          id={blog.id}
+                          title={blog.title}
+                          excerpt={blog.excerpt}
+                          author={blog.author}
+                          date={blog.date}
+                          category={blog.category}
+                          image={blog.image}
+                        />
+                      </Link>
                     ))}
                   </div>
                 </>
