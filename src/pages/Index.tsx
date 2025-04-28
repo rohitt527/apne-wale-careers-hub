@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -20,10 +19,8 @@ const Home = () => {
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
     
     if (email) {
-      // In a real app, you would send this to your backend
-      // For now, we'll just show a toast
-      console.log("Sending subscription to:", email);
-      window.open(`mailto:apnewalecoders@gmail.com?subject=New Subscription&body=New subscription from: ${email}`);
+      window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent('New Subscription')}&body=${encodeURIComponent(`New subscription from: ${email}`)}`);
+      
       toast({
         title: "Subscribed!",
         description: "Thank you for joining our community!",
@@ -77,8 +74,7 @@ const Home = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                   <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  <path d="M23 21v-2a4 4 0 0 1 0 7.75"></path>
                 </svg>
               }
               link="/services#interviews"
@@ -206,7 +202,6 @@ const Home = () => {
               />
             </TabsContent>
             <TabsContent value="contract" className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* No jobs for this filter - show empty state */}
               <div className="col-span-2 py-12 text-center text-gray-500">
                 <p>No contract jobs available at the moment. Check back soon!</p>
               </div>

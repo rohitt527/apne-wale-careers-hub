@@ -56,31 +56,45 @@ const Book = () => {
     setLoading(true);
 
     try {
-      // In a real app with Stripe integration, you would create a checkout session here
-      // For now, we'll just simulate the process
-      setTimeout(() => {
-        toast({
-          title: "Booking confirmed!",
-          description: `Your ${services.find(s => s.id === selectedService)?.name} session is scheduled for ${format(selectedDate, 'PP')} at ${selectedTime}.`,
-        });
-        
-        // Reset form
-        setSelectedService(null);
-        setSelectedDate(undefined);
-        setSelectedTime(null);
-        setName("");
-        setEmail("");
-        setPhone("");
-        setNotes("");
-        setCompanyName("");
-        setExamPattern("");
-        setDuration("");
-        setLoading(false);
-      }, 1500);
+      const selectedServiceDetails = services.find(s => s.id === selectedService);
+      const emailSubject = `New Booking: ${selectedServiceDetails?.name}`;
+      const emailBody = `
+New booking details:
 
-      // If you had a real Stripe integration, you would do something like:
-      // const { url } = await createCheckoutSession('price_id', 'success_url', 'cancel_url');
-      // window.location.href = url;
+Service: ${selectedServiceDetails?.name}
+Date: ${format(selectedDate, 'PP')}
+Time: ${selectedTime}
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Company Name: ${companyName}
+Exam Pattern: ${examPattern}
+Test Duration: ${duration}
+Additional Notes: ${notes}
+
+Total Amount: $${selectedServiceDetails?.price}
+      `;
+
+      // Open email client with booking details
+      window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
+
+      toast({
+        title: "Booking details sent!",
+        description: "Please check your email client to send the booking details.",
+      });
+      
+      // Reset form
+      setSelectedService(null);
+      setSelectedDate(undefined);
+      setSelectedTime(null);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setNotes("");
+      setCompanyName("");
+      setExamPattern("");
+      setDuration("");
+      setLoading(false);
       
     } catch (error) {
       console.error("Booking error:", error);
