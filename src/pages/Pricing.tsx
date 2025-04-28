@@ -21,6 +21,21 @@ const services = [
     title: "Mock Interview",
     description: "Practice interview with feedback",
     benefits: ["Real interview simulation", "Detailed feedback", "Common questions practice", "Body language tips"]
+  },
+  {
+    title: "Assessment Support",
+    description: "Expert help with technical assessments",
+    benefits: ["Code review", "Problem-solving guidance", "Optimization tips", "Best practices advice"]
+  },
+  {
+    title: "Technical Interview Prep",
+    description: "Focused preparation for technical rounds",
+    benefits: ["Algorithm practice", "System design guidance", "Technical questions review", "Problem-solving strategies"]
+  },
+  {
+    title: "Project Help",
+    description: "Assistance with coding projects",
+    benefits: ["Code review", "Architecture consulting", "Debugging assistance", "Project planning"]
   }
 ];
 

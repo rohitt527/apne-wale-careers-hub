@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Briefcase, MapPin, Clock, Building, DollarSign } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
 // Mock job data - this would come from an API in a real app
@@ -88,7 +86,6 @@ const jobsData = [
                  </ul>`,
     applicationProcess: "Apply with your resume and GitHub profile. Selected candidates will go through a technical screening call followed by an onsite interview."
   },
-  // Add more job data with similar structure for other IDs
   {
     id: 3,
     title: "DevOps Specialist",
@@ -185,12 +182,6 @@ const JobDetail = () => {
   const { id } = useParams();
   const [job, setJob] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [resume, setResume] = useState<File | null>(null);
-  const [coverLetter, setCoverLetter] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const { toast } = useToast();
 
   useEffect(() => {
@@ -205,22 +196,14 @@ const JobDetail = () => {
     }, 300);
   }, [id]);
 
-  const handleApply = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleApply = () => {
+    // Open email client with job application
+    window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(`Application for ${job.title} at ${job.company}`)}&body=${encodeURIComponent(`I am interested in applying for the ${job.title} position at ${job.company}.`)}`);
     
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "Application submitted!",
-        description: "We've received your application and will get back to you soon.",
-      });
-      setIsSubmitting(false);
-      setName("");
-      setEmail("");
-      setResume(null);
-      setCoverLetter("");
-    }, 1500);
+    toast({
+      title: "Application initiated!",
+      description: "You'll be redirected to your email client to complete your application.",
+    });
   };
 
   if (loading) {
@@ -267,158 +250,97 @@ const JobDetail = () => {
       </div>
 
       <div className="container-custom py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Job Details Column */}
-          <div className="md:col-span-2">
-            {/* Job Header */}
-            <div className="flex items-start gap-4 mb-6">
-              <div className="h-16 w-16 rounded-md overflow-hidden border">
-                <img src={job.logo} alt={job.company} className="h-full w-full object-contain" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold mb-1">{job.title}</h1>
-                <div className="flex items-center gap-2 text-gray-700">
-                  <Building className="h-4 w-4" />
-                  <span>{job.company}</span>
-                </div>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          {/* Job Header */}
+          <div className="flex items-start gap-4 mb-6">
+            <div className="h-16 w-16 rounded-md overflow-hidden border">
+              <img src={job.logo} alt={job.company} className="h-full w-full object-contain" />
             </div>
-            
-            {/* Job Meta */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="flex items-center gap-2 text-gray-700 mb-1">
-                  <MapPin className="h-4 w-4 text-brand-red" />
-                  <span className="text-sm font-medium">Location</span>
-                </div>
-                <div className="text-gray-900">{job.location}</div>
+            <div>
+              <h1 className="text-3xl font-bold mb-1">{job.title}</h1>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Building className="h-4 w-4" />
+                <span>{job.company}</span>
               </div>
-              
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="flex items-center gap-2 text-gray-700 mb-1">
-                  <Briefcase className="h-4 w-4 text-brand-red" />
-                  <span className="text-sm font-medium">Job Type</span>
-                </div>
-                <div className="text-gray-900">{job.type}</div>
-              </div>
-              
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="flex items-center gap-2 text-gray-700 mb-1">
-                  <Clock className="h-4 w-4 text-brand-red" />
-                  <span className="text-sm font-medium">Experience</span>
-                </div>
-                <div className="text-gray-900">{job.experience}</div>
-              </div>
-              
-              <div className="bg-gray-50 p-3 rounded-md">
-                <div className="flex items-center gap-2 text-gray-700 mb-1">
-                  <DollarSign className="h-4 w-4 text-brand-red" />
-                  <span className="text-sm font-medium">Salary</span>
-                </div>
-                <div className="text-gray-900">{job.salary}</div>
-              </div>
-            </div>
-            
-            {/* Tags */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium mb-2">Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {job.tags.map((tag: string) => (
-                  <Badge key={tag} variant="outline" className="bg-gray-100">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            
-            {/* Job Description */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Job Description</h2>
-              <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: job.description }}></div>
-            </div>
-            
-            {/* Application Process */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Application Process</h2>
-              <p className="text-gray-700">{job.applicationProcess}</p>
             </div>
           </div>
           
-          {/* Apply Column */}
-          <div className="md:col-span-1">
-            <Card>
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-bold mb-4">Apply for this position</h2>
-                <form onSubmit={handleApply} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      className="w-full px-3 py-2 border rounded-md"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full px-3 py-2 border rounded-md"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="resume" className="block text-sm font-medium text-gray-700 mb-1">Resume/CV</label>
-                    <input
-                      id="resume"
-                      type="file"
-                      onChange={(e) => setResume(e.target.files ? e.target.files[0] : null)}
-                      required
-                      className="w-full px-3 py-2 border rounded-md"
-                      accept=".pdf,.doc,.docx"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX (Max 5MB)</p>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 mb-1">Cover Letter</label>
-                    <textarea
-                      id="coverLetter"
-                      value={coverLetter}
-                      onChange={(e) => setCoverLetter(e.target.value)}
-                      rows={5}
-                      className="w-full px-3 py-2 border rounded-md"
-                      placeholder="Why do you want to work with us?"
-                    ></textarea>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-brand-red hover:bg-red-700 text-white"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Submitting..." : "Submit Application"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-            
-            <div className="mt-6 bg-gray-50 p-4 rounded-md">
-              <h3 className="font-medium mb-2">Need help with your application?</h3>
-              <p className="text-sm text-gray-600 mb-4">Book a coaching session to improve your chances of getting hired.</p>
-              <Button asChild variant="outline" className="w-full">
-                <Link to="/book">Book a Coaching Session</Link>
-              </Button>
+          {/* Job Meta */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
+                <MapPin className="h-4 w-4 text-brand-red" />
+                <span className="text-sm font-medium">Location</span>
+              </div>
+              <div className="text-gray-900">{job.location}</div>
             </div>
+            
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
+                <Briefcase className="h-4 w-4 text-brand-red" />
+                <span className="text-sm font-medium">Job Type</span>
+              </div>
+              <div className="text-gray-900">{job.type}</div>
+            </div>
+            
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
+                <Clock className="h-4 w-4 text-brand-red" />
+                <span className="text-sm font-medium">Experience</span>
+              </div>
+              <div className="text-gray-900">{job.experience}</div>
+            </div>
+            
+            <div className="bg-gray-50 p-3 rounded-md">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
+                <DollarSign className="h-4 w-4 text-brand-red" />
+                <span className="text-sm font-medium">Salary</span>
+              </div>
+              <div className="text-gray-900">{job.salary}</div>
+            </div>
+          </div>
+          
+          {/* Tags */}
+          <div className="mb-8">
+            <h3 className="text-lg font-medium mb-2">Skills</h3>
+            <div className="flex flex-wrap gap-2">
+              {job.tags.map((tag: string) => (
+                <Badge key={tag} variant="outline" className="bg-gray-100">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          
+          {/* Job Description */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">Job Description</h2>
+            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: job.description }}></div>
+          </div>
+          
+          {/* Application Process */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">Application Process</h2>
+            <p className="text-gray-700">{job.applicationProcess}</p>
+          </div>
+          
+          {/* Apply Button */}
+          <div className="mt-8 mb-12">
+            <Button 
+              onClick={handleApply}
+              className="w-full md:w-auto bg-brand-red hover:bg-red-700 text-white py-3 px-8 text-lg"
+            >
+              Apply Now
+            </Button>
+          </div>
+          
+          {/* Coaching Banner */}
+          <div className="mt-12 bg-gray-50 p-6 rounded-md">
+            <h3 className="font-medium text-xl mb-2">Need help with your application?</h3>
+            <p className="text-gray-600 mb-4">Book a coaching session to improve your chances of getting hired.</p>
+            <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
+              <Link to="/pricing">View Coaching Services</Link>
+            </Button>
           </div>
         </div>
       </div>
