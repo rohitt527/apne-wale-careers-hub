@@ -8,7 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard } from "lucide-react";
+import ServiceCard from "@/components/common/ServiceCard";
 
 // Services available for booking with detailed descriptions and features
 const services = [
@@ -100,7 +101,36 @@ const timeSlots = [
   "06:00 PM", "07:00 PM", "08:00 PM"
 ];
 
+// Step indicators component for the booking process
+const BookingSteps = ({ currentStep }: { currentStep: number }) => {
+  return (
+    <div className="flex items-center justify-center mb-8 w-full">
+      <div className="flex w-full max-w-3xl">
+        <div className={`flex-1 text-center ${currentStep >= 1 ? 'text-brand-red' : 'text-gray-400'}`}>
+          <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center border-2 ${currentStep >= 1 ? 'border-brand-red bg-brand-red/10' : 'border-gray-300'}`}>
+            <span className="text-lg font-semibold">1</span>
+          </div>
+          <span className="mt-2 block text-sm font-medium">Service Details</span>
+        </div>
+        <div className={`flex-1 text-center ${currentStep >= 2 ? 'text-brand-red' : 'text-gray-400'}`}>
+          <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center border-2 ${currentStep >= 2 ? 'border-brand-red bg-brand-red/10' : 'border-gray-300'}`}>
+            <span className="text-lg font-semibold">2</span>
+          </div>
+          <span className="mt-2 block text-sm font-medium">Payment</span>
+        </div>
+        <div className={`flex-1 text-center ${currentStep >= 3 ? 'text-brand-red' : 'text-gray-400'}`}>
+          <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center border-2 ${currentStep >= 3 ? 'border-brand-red bg-brand-red/10' : 'border-gray-300'}`}>
+            <span className="text-lg font-semibold">3</span>
+          </div>
+          <span className="mt-2 block text-sm font-medium">Confirmation</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Book = () => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedService, setSelectedService] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -112,10 +142,45 @@ const Book = () => {
   const [examPattern, setExamPattern] = useState("");
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const { toast } = useToast();
 
-  const handleBooking = async (e: React.FormEvent) => {
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      // Validate step 1
+      if (!selectedService || !selectedDate || !selectedTime || !name || !email || !phone) {
+        toast({
+          title: "Missing information",
+          description: "Please fill in all required fields before proceeding.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    if (currentStep === 2) {
+      // Simulate payment processing
+      setPaymentProcessing(true);
+      setTimeout(() => {
+        setPaymentProcessing(false);
+        setCurrentStep(currentStep + 1);
+      }, 1500);
+      return;
+    }
+
+    // Move to the next step
+    setCurrentStep(currentStep + 1);
+  };
+
+  const handlePreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleFinalConfirmation = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!selectedService || !selectedDate || !selectedTime) {
@@ -153,21 +218,11 @@ Total Amount: $${selectedServiceDetails?.price}
       window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
 
       toast({
-        title: "Booking details sent!",
+        title: "Booking confirmed!",
         description: "Please check your email client to send the booking details.",
       });
       
-      // Reset form
-      setSelectedService(null);
-      setSelectedDate(undefined);
-      setSelectedTime(null);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setNotes("");
-      setCompanyName("");
-      setExamPattern("");
-      setDuration("");
+      setIsConfirmed(true);
       setLoading(false);
       
     } catch (error) {
@@ -186,68 +241,34 @@ Total Amount: $${selectedServiceDetails?.price}
     return date < new Date(new Date().setHours(0, 0, 0, 0));
   };
 
-  return (
-    <Layout>
-      <section className="bg-brand-dark text-white py-20">
-        <div className="container-custom">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="heading-xl mb-6">Book Your Session</h1>
-            <p className="text-lg text-gray-300">
-              Schedule a one-on-one session with our expert coaches to advance your tech career
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-padding">
-        <div className="container-custom max-w-5xl">
-          <SectionHeading
-            title="Select Your Service"
-            subtitle="Choose the service that best fits your needs"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {services.map((service) => (
-              <Card 
-                key={service.id}
-                className={`cursor-pointer transition-all ${
-                  selectedService === service.id ? 'border-brand-red ring-2 ring-brand-red/20' : 'hover:border-brand-red/50'
-                }`}
-                onClick={() => setSelectedService(service.id)}
-              >
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                  <div className="text-2xl font-bold mb-2">${service.price}</div>
-                  
-                  <div className="mb-4 text-gray-600">{service.description}</div>
-                  
-                  {service.image && (
-                    <div className="mb-4 overflow-hidden rounded-md">
-                      <img src={service.image} alt={service.name} className="w-full h-32 object-cover transition-all hover:scale-105" />
+  const renderStepContent = () => {
+    switch(currentStep) {
+      case 1:
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {services.map((service) => (
+                <ServiceCard
+                  key={service.id}
+                  title={service.name}
+                  description={service.description}
+                  icon={
+                    <div className="flex justify-center">
+                      <div className={`border-2 rounded-full p-1 ${selectedService === service.id ? 'border-brand-red' : 'border-transparent'}`}>
+                        <div className={`w-6 h-6 rounded-full ${selectedService === service.id ? 'bg-brand-red' : 'bg-gray-200'}`}></div>
+                      </div>
                     </div>
-                  )}
-                  
-                  <ul className="mt-4 space-y-2">
-                    {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="flex-shrink-0 mt-1">
-                          <div className="bg-brand-red text-white p-1 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="ml-2 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  }
+                  features={service.features}
+                  image={service.image}
+                  onClick={() => setSelectedService(service.id)}
+                  isSelected={selectedService === service.id}
+                  price={service.price}
+                />
+              ))}
+            </div>
 
-          {selectedService && (
-            <form onSubmit={handleBooking}>
+            {selectedService && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-8">
                 <div>
                   <h3 className="text-lg font-semibold mb-4">Select Date & Time</h3>
@@ -298,7 +319,7 @@ Total Amount: $${selectedServiceDetails?.price}
                   <h3 className="text-lg font-semibold mb-4">Your Details</h3>
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium mb-1">Full Name</label>
+                      <label htmlFor="name" className="block text-sm font-medium mb-1">Full Name *</label>
                       <input
                         id="name"
                         type="text"
@@ -310,7 +331,7 @@ Total Amount: $${selectedServiceDetails?.price}
                     </div>
                     
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+                      <label htmlFor="email" className="block text-sm font-medium mb-1">Email *</label>
                       <input
                         id="email"
                         type="email"
@@ -322,7 +343,7 @@ Total Amount: $${selectedServiceDetails?.price}
                     </div>
                     
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone Number</label>
+                      <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone Number *</label>
                       <input
                         id="phone"
                         type="tel"
@@ -382,47 +403,227 @@ Total Amount: $${selectedServiceDetails?.price}
                   </div>
                 </div>
               </div>
-
-              <div className="bg-gray-50 p-6 rounded-lg mb-8">
-                <h3 className="text-lg font-semibold mb-4">Session Summary</h3>
-                <div className="space-y-2">
+            )}
+          </>
+        );
+      
+      case 2:
+        return (
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-gray-50 p-6 rounded-lg mb-8">
+              <h3 className="text-lg font-semibold mb-4">Session Summary</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Service:</span>
+                  <span>{services.find(s => s.id === selectedService)?.name}</span>
+                </div>
+                {selectedDate && (
                   <div className="flex justify-between">
-                    <span>Service:</span>
-                    <span>{services.find(s => s.id === selectedService)?.name}</span>
+                    <span>Date:</span>
+                    <span>{format(selectedDate, 'PP')}</span>
                   </div>
-                  {selectedDate && (
-                    <div className="flex justify-between">
-                      <span>Date:</span>
-                      <span>{format(selectedDate, 'PP')}</span>
-                    </div>
-                  )}
-                  {selectedTime && (
-                    <div className="flex justify-between">
-                      <span>Time:</span>
-                      <span>{selectedTime}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between font-bold pt-2 border-t">
-                    <span>Total:</span>
-                    <span>${services.find(s => s.id === selectedService)?.price}</span>
+                )}
+                {selectedTime && (
+                  <div className="flex justify-between">
+                    <span>Time:</span>
+                    <span>{selectedTime}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span>Name:</span>
+                  <span>{name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Email:</span>
+                  <span>{email}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Phone:</span>
+                  <span>{phone}</span>
+                </div>
+                {companyName && (
+                  <div className="flex justify-between">
+                    <span>Company:</span>
+                    <span>{companyName}</span>
+                  </div>
+                )}
+                {examPattern && (
+                  <div className="flex justify-between">
+                    <span>Exam Pattern:</span>
+                    <span>{examPattern}</span>
+                  </div>
+                )}
+                {duration && (
+                  <div className="flex justify-between">
+                    <span>Test Duration:</span>
+                    <span>{duration}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-bold pt-2 border-t">
+                  <span>Total:</span>
+                  <span>${services.find(s => s.id === selectedService)?.price}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+              <h3 className="text-lg font-semibold mb-4">Payment Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="cardName" className="block text-sm font-medium mb-1">Name on Card</label>
+                  <input
+                    id="cardName"
+                    type="text"
+                    className="w-full px-3 py-2 border rounded-md"
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="cardNumber" className="block text-sm font-medium mb-1">Card Number</label>
+                  <div className="flex items-center w-full px-3 py-2 border rounded-md bg-white">
+                    <CreditCard className="h-4 w-4 text-gray-400 mr-2" />
+                    <input
+                      id="cardNumber"
+                      type="text"
+                      className="flex-grow border-none focus:outline-none p-0"
+                      placeholder="1234 5678 9012 3456"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="expiry" className="block text-sm font-medium mb-1">Expiry Date</label>
+                    <input
+                      id="expiry"
+                      type="text"
+                      className="w-full px-3 py-2 border rounded-md"
+                      placeholder="MM/YY"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="cvc" className="block text-sm font-medium mb-1">CVC</label>
+                    <input
+                      id="cvc"
+                      type="text"
+                      className="w-full px-3 py-2 border rounded-md"
+                      placeholder="123"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        );
+      
+      case 3:
+        return (
+          <div className="max-w-3xl mx-auto text-center">
+            {isConfirmed ? (
+              <div className="bg-green-50 p-8 rounded-lg">
+                <div className="flex justify-center mb-4">
+                  <CheckCircle className="h-16 w-16 text-green-500" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-green-700">Booking Confirmed!</h3>
+                <p className="text-lg mb-6">
+                  Thank you for booking with us! We've sent the details to your email client.
+                </p>
+                <p className="mb-6">
+                  Your {services.find(s => s.id === selectedService)?.name} session is scheduled for:
+                  <br />
+                  <span className="font-semibold">{selectedDate ? format(selectedDate, 'PPP') : ''} at {selectedTime}</span>
+                </p>
+                <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
+                  <a href="/">Return to Home</a>
+                </Button>
+              </div>
+            ) : (
+              <div className="bg-gray-50 p-8 rounded-lg">
+                <h3 className="text-xl font-semibold mb-6">Confirm Your Booking</h3>
+                
+                <div className="mb-6 text-left">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Service</p>
+                      <p className="font-medium">{services.find(s => s.id === selectedService)?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Date & Time</p>
+                      <p className="font-medium">{selectedDate ? format(selectedDate, 'PP') : ''} at {selectedTime}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Name</p>
+                      <p className="font-medium">{name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Email</p>
+                      <p className="font-medium">{email}</p>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="text-center">
+                <p className="mb-8 text-gray-600">
+                  By confirming, you agree to our terms of service and cancellation policy.
+                </p>
+
                 <Button 
-                  type="submit" 
+                  onClick={handleFinalConfirmation}
                   size="lg" 
-                  className="bg-brand-red hover:bg-red-700 text-white" 
-                  disabled={!selectedService || !selectedDate || !selectedTime || loading}
+                  className="bg-brand-red hover:bg-red-700 text-white w-full md:w-auto" 
+                  disabled={loading}
                 >
                   {loading ? "Processing..." : "Confirm Booking"}
                 </Button>
-                <p className="text-sm text-gray-500 mt-2">
-                  You'll be prompted to complete payment after booking.
-                </p>
               </div>
-            </form>
+            )}
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Layout>
+      <section className="bg-brand-dark text-white py-20">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="heading-xl mb-6">Book Your Session</h1>
+            <p className="text-lg text-gray-300">
+              Schedule a one-on-one session with our expert coaches to advance your tech career
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding">
+        <div className="container-custom max-w-6xl">
+          <BookingSteps currentStep={currentStep} />
+          
+          {renderStepContent()}
+          
+          {!isConfirmed && (
+            <div className="mt-8 flex justify-between">
+              {currentStep > 1 && (
+                <Button 
+                  onClick={handlePreviousStep} 
+                  variant="outline"
+                  disabled={loading || paymentProcessing}
+                >
+                  Back
+                </Button>
+              )}
+              
+              {currentStep < 3 && (
+                <Button 
+                  onClick={handleNextStep} 
+                  className="bg-brand-red hover:bg-red-700 text-white ml-auto"
+                  disabled={loading || paymentProcessing}
+                >
+                  {currentStep === 2 && paymentProcessing ? "Processing..." : "Continue"}
+                </Button>
+              )}
+            </div>
           )}
         </div>
       </section>

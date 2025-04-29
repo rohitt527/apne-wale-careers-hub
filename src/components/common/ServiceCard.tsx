@@ -12,6 +12,9 @@ interface ServiceCardProps {
   link?: string; // Make link optional, defaulting to pricing
   features?: string[];
   image?: string;
+  onClick?: () => void;
+  isSelected?: boolean;
+  price?: number;
 }
 
 const ServiceCard = ({ 
@@ -20,10 +23,17 @@ const ServiceCard = ({
   icon, 
   link = "/pricing",
   features = [],
-  image
+  image,
+  onClick,
+  isSelected = false,
+  price
 }: ServiceCardProps) => {
-  return (
-    <Card className="card-hover border-t-4 border-t-brand-red">
+  const cardClass = onClick 
+    ? `cursor-pointer border transition-all ${isSelected ? 'border-2 border-brand-red ring-2 ring-brand-red/20' : 'border-gray-200 hover:border-brand-red/50'}`
+    : "card-hover border-t-4 border-t-brand-red";
+
+  const cardContent = (
+    <>
       <CardHeader>
         <div className="mb-4 text-brand-red text-3xl">{icon}</div>
         <CardTitle>{title}</CardTitle>
@@ -37,6 +47,10 @@ const ServiceCard = ({
           </div>
         )}
         
+        {price !== undefined && (
+          <div className="text-2xl font-bold mb-4">${price}</div>
+        )}
+        
         {features.length > 0 && (
           <ul className="mt-4 space-y-2">
             {features.map((feature, index) => (
@@ -48,11 +62,23 @@ const ServiceCard = ({
           </ul>
         )}
       </CardContent>
-      <CardFooter>
-        <Button asChild variant="outline" className="w-full btn-outline">
-          <Link to={link}>View Pricing</Link>
-        </Button>
-      </CardFooter>
+      {!onClick && (
+        <CardFooter>
+          <Button asChild variant="outline" className="w-full btn-outline">
+            <Link to={link}>View Pricing</Link>
+          </Button>
+        </CardFooter>
+      )}
+    </>
+  );
+
+  return onClick ? (
+    <Card className={cardClass} onClick={onClick}>
+      {cardContent}
+    </Card>
+  ) : (
+    <Card className={cardClass}>
+      {cardContent}
     </Card>
   );
 };
