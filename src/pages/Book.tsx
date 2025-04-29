@@ -9,13 +9,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
-import { createCheckoutSession } from "@/functions/create-payment";
 
 // Services available for booking
 const services = [
-  { id: 1, name: "Career Guidance", price: 9, duration: "30 minutes" },
-  { id: 2, name: "Resume Building", price: 9, duration: "30 minutes" },
-  { id: 3, name: "Mock Interview", price: 9, duration: "45 minutes" },
+  { id: 1, name: "Career Guidance", price: 9 },
+  { id: 2, name: "Resume Building", price: 9 },
+  { id: 3, name: "Mock Interview", price: 9 },
+  { id: 4, name: "Assessment Support", price: 9 },
+  { id: 5, name: "Technical Interview Prep", price: 9 },
+  { id: 6, name: "Project Help", price: 9 },
 ];
 
 // Available time slots
@@ -144,7 +146,6 @@ Total Amount: $${selectedServiceDetails?.price}
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
                   <div className="text-2xl font-bold mb-2">${service.price}</div>
-                  <div className="text-gray-600">{service.duration}</div>
                 </CardContent>
               </Card>
             ))}
