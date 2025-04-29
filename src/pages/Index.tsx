@@ -67,6 +67,13 @@ const Home = () => {
                 </svg>
               }
               link="/services#assessment"
+              features={[
+                "Technical Assessment Reviews",
+                "Problem-Solving Sessions",
+                "Code Quality Analysis",
+                "System Design Feedback"
+              ]}
+              image="https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             />
             <ServiceCard
               title="Mock Interviews"
@@ -80,6 +87,13 @@ const Home = () => {
                 </svg>
               }
               link="/services#interviews"
+              features={[
+                "Role-Specific Interviews",
+                "Company-Specific Preparation",
+                "Behavioral Interview Practice",
+                "Detailed Performance Analysis"
+              ]}
+              image="https://images.unsplash.com/photo-1521798552670-919e6bfcc09e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             />
             <ServiceCard
               title="Career Guidance"
@@ -94,6 +108,13 @@ const Home = () => {
                 </svg>
               }
               link="/services#career"
+              features={[
+                "Resume & LinkedIn Reviews",
+                "Career Path Mapping",
+                "Salary Negotiation Advice",
+                "Job Search Strategy"
+              ]}
+              image="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             />
           </div>
           <div className="text-center mt-10">

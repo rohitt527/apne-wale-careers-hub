@@ -10,14 +10,86 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
 
-// Services available for booking
+// Services available for booking with detailed descriptions and features
 const services = [
-  { id: 1, name: "Career Guidance", price: 9 },
-  { id: 2, name: "Resume Building", price: 9 },
-  { id: 3, name: "Mock Interview", price: 9 },
-  { id: 4, name: "Assessment Support", price: 9 },
-  { id: 5, name: "Technical Interview Prep", price: 9 },
-  { id: 6, name: "Project Help", price: 9 },
+  { 
+    id: 1, 
+    name: "Career Guidance", 
+    price: 9,
+    description: "Personalized advice on career paths, skill development, and job hunting strategies.",
+    features: [
+      "Resume & LinkedIn Reviews",
+      "Career Path Mapping",
+      "Salary Negotiation Advice",
+      "Job Search Strategy"
+    ],
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 2, 
+    name: "Resume Building", 
+    price: 9,
+    description: "Expert help with crafting an ATS-friendly resume that highlights your strengths.",
+    features: [
+      "ATS Optimization",
+      "Professional Formatting",
+      "Achievement Highlighting",
+      "Technical Skills Showcase"
+    ],
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 3, 
+    name: "Mock Interview", 
+    price: 9,
+    description: "Practice with industry experts who provide real-time feedback to improve your interview skills.",
+    features: [
+      "Role-Specific Interviews",
+      "Company-Specific Preparation",
+      "Behavioral Interview Practice",
+      "Detailed Performance Analysis"
+    ],
+    image: "https://images.unsplash.com/photo-1521798552670-919e6bfcc09e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 4, 
+    name: "Assessment Support", 
+    price: 9,
+    description: "Get expert help with your technical assessments and coding challenges.",
+    features: [
+      "Technical Assessment Reviews",
+      "Problem-Solving Sessions",
+      "Code Quality Analysis",
+      "System Design Feedback"
+    ],
+    image: "https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 5, 
+    name: "Technical Interview Prep", 
+    price: 9,
+    description: "Comprehensive preparation for technical interviews with focus on algorithms and system design.",
+    features: [
+      "Data Structures & Algorithms",
+      "System Design Principles",
+      "Frontend Concepts",
+      "Database Optimization"
+    ],
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 6, 
+    name: "Project Help", 
+    price: 9,
+    description: "Expert assistance with your coding projects, from architecture to implementation.",
+    features: [
+      "Code Reviews",
+      "Architecture Consulting",
+      "Debugging Sessions",
+      "Project Planning"
+    ],
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
 ];
 
 // Available time slots
@@ -134,7 +206,7 @@ Total Amount: $${selectedServiceDetails?.price}
             subtitle="Choose the service that best fits your needs"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {services.map((service) => (
               <Card 
                 key={service.id}
@@ -146,6 +218,29 @@ Total Amount: $${selectedServiceDetails?.price}
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
                   <div className="text-2xl font-bold mb-2">${service.price}</div>
+                  
+                  <div className="mb-4 text-gray-600">{service.description}</div>
+                  
+                  {service.image && (
+                    <div className="mb-4 overflow-hidden rounded-md">
+                      <img src={service.image} alt={service.name} className="w-full h-32 object-cover transition-all hover:scale-105" />
+                    </div>
+                  )}
+                  
+                  <ul className="mt-4 space-y-2">
+                    {service.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="flex-shrink-0 mt-1">
+                          <div className="bg-brand-red text-white p-1 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="ml-2 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
