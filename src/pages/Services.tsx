@@ -116,7 +116,7 @@ const Services = () => {
             <div className="order-2 lg:order-1 relative">
               <div className="absolute -left-6 -top-6 bg-brand-red/20 w-64 h-64 rounded-full"></div>
               <img
-                src="https://images.unsplash.com/photo-1521798552670-919e6bfcc09e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
                 alt="Mock Interviews"
                 className="rounded-lg shadow-lg relative z-10"
               />
