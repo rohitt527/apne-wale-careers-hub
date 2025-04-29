@@ -1,9 +1,11 @@
+
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { ArrowLeft, Calendar, User, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import BlogCard from "@/components/common/BlogCard";
 
 // Mock blog data - this would come from an API in a real app
 const blogData = [
@@ -117,6 +119,12 @@ const blogData = [
   }
 ];
 
+// All categories from blogs
+const allCategories = Array.from(new Set(blogData.map(blog => blog.category)));
+
+// Get trending blogs (just using the first 3 for demo purposes)
+const trendingBlogs = blogData.slice(1, 4);
+
 const BlogDetail = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState<any>(null);
@@ -200,24 +208,89 @@ const BlogDetail = () => {
         </div>
       </div>
 
-      {/* Blog Content */}
+      {/* Three Column Layout */}
       <div className="container-custom py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
-          
-          <div className="mt-12 border-t pt-6">
-            <div className="flex flex-wrap gap-2 mb-8">
-              <span className="font-medium">Tags:</span>
-              {blog.tags.map((tag: string) => (
-                <Badge key={tag} variant="outline" className="bg-gray-100">
-                  {tag}
-                </Badge>
-              ))}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar - Categories */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border">
+                <h3 className="font-bold text-xl mb-4">Categories</h3>
+                <div className="flex flex-col space-y-2">
+                  <Button 
+                    variant="ghost" 
+                    className="justify-start hover:text-brand-red"
+                    asChild
+                  >
+                    <Link to="/blog">All Categories</Link>
+                  </Button>
+                  {allCategories.map(category => (
+                    <Button 
+                      key={category} 
+                      variant="ghost" 
+                      className={`justify-start ${blog.category === category ? 'text-brand-red' : ''} hover:text-brand-red`}
+                      asChild
+                    >
+                      <Link to={`/blog?category=${category}`}>{category}</Link>
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
+          </div>
+          
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
             
-            <Button asChild className="bg-brand-red hover:bg-red-700">
-              <Link to="/book">Book a Career Session</Link>
-            </Button>
+            <div className="mt-12 border-t pt-6">
+              <div className="flex flex-wrap gap-2 mb-8">
+                <span className="font-medium">Tags:</span>
+                {blog.tags.map((tag: string) => (
+                  <Badge key={tag} variant="outline" className="bg-gray-100">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              
+              <Button asChild className="bg-brand-red hover:bg-red-700">
+                <Link to="/book">Book a Career Session</Link>
+              </Button>
+            </div>
+          </div>
+          
+          {/* Right Sidebar - Trending Posts */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24">
+              <div className="bg-white p-6 rounded-lg shadow-sm border">
+                <div className="flex items-center gap-2 mb-5">
+                  <TrendingUp className="h-5 w-5 text-brand-red" />
+                  <h3 className="font-bold text-xl">Trending Posts</h3>
+                </div>
+                <div className="space-y-6">
+                  {trendingBlogs.map(trendingBlog => (
+                    <div key={trendingBlog.id} className="group">
+                      <Link to={`/blog/${trendingBlog.id}`} className="block mb-2">
+                        <div className="overflow-hidden rounded-md mb-2 h-32">
+                          <img 
+                            src={trendingBlog.image} 
+                            alt={trendingBlog.title} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                          />
+                        </div>
+                        <h4 className="font-medium text-base line-clamp-2 group-hover:text-brand-red transition-colors">
+                          {trendingBlog.title}
+                        </h4>
+                      </Link>
+                      <div className="flex items-center text-xs text-gray-500">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        <span>{trendingBlog.date}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
