@@ -2,7 +2,8 @@
 import Stripe from 'stripe';
 
 // Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+// Using import.meta.env instead of process.env for Vite compatibility
+const stripe = new Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY || '');
 
 export async function createPaymentIntent(amount: number, currency: string = 'usd') {
   try {
