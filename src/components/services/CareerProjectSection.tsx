@@ -16,25 +16,25 @@ const CareerProjectSection = () => {
             <div className="grid grid-cols-2 gap-6 relative z-10">
               <div className="space-y-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
                   alt="Career Guidance" 
                   className="rounded-lg shadow-lg w-full h-48 object-cover transition-transform hover:scale-105 duration-300"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Team Discussion" 
+                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Coding Project Support" 
                   className="rounded-lg shadow-lg w-full h-56 object-cover transition-transform hover:scale-105 duration-300"
                 />
               </div>
               <div className="pt-10 space-y-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Project Planning" 
+                  src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Technical Project Guidance" 
                   className="rounded-lg shadow-lg w-full h-56 object-cover transition-transform hover:scale-105 duration-300"
                 />
                 <img 
-                  src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Coding" 
+                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Portfolio Development" 
                   className="rounded-lg shadow-lg w-full h-48 object-cover transition-transform hover:scale-105 duration-300"
                 />
               </div>

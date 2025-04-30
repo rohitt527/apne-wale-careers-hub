@@ -79,9 +79,9 @@ const InterviewsSection = () => {
           <div className="relative">
             <div className="absolute -top-6 -right-6 w-64 h-64 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
             <img 
-              src="https://images.unsplash.com/photo-1521798552670-919e6bfcc09e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
-              alt="Mock Interview" 
-              className="rounded-lg shadow-xl w-full h-auto relative z-10"
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+              alt="Mock Interview Session" 
+              className="rounded-lg shadow-xl w-full h-auto relative z-10 object-cover aspect-[4/3]"
             />
             <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-red-300 rounded-full opacity-40 blur-xl"></div>
           </div>
