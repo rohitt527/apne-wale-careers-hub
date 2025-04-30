@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -7,9 +6,41 @@ import ServiceCard from "@/components/common/ServiceCard";
 import TestimonialCard from "@/components/common/TestimonialCard";
 import Counter from "@/components/common/Counter";
 import JobCard from "@/components/common/JobCard";
+import BlogCard from "@/components/common/BlogCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+
+// Mock data for blogs - Adding a small subset for home page display
+const featuredBlogs = [
+  {
+    id: 1,
+    title: "10 Essential Tips for Technical Interviews",
+    excerpt: "Prepare for your next technical interview with these proven strategies and approaches that will help you stand out from the competition.",
+    author: "Vikram Singh",
+    date: "Apr 15, 2023",
+    category: "Interview Tips",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+  },
+  {
+    id: 2,
+    title: "Understanding System Design: A Beginner's Guide",
+    excerpt: "System design is a critical skill for senior engineering roles. Learn the fundamental concepts and frameworks to approach any system design problem.",
+    author: "Ananya Mehta",
+    date: "Mar 22, 2023",
+    category: "Tech Concepts",
+    image: "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+  },
+  {
+    id: 3,
+    title: "How I Landed My Dream Job at Google",
+    excerpt: "A personal journey through the preparation, application, and interview process that led to a successful role at one of tech's biggest companies.",
+    author: "Priya Sharma",
+    date: "Mar 5, 2023",
+    category: "Success Story",
+    image: "https://images.unsplash.com/photo-1579389083395-4507e98b5e67?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+  },
+];
 
 const Home = () => {
   const { toast } = useToast();
@@ -82,8 +113,8 @@ const Home = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  <path d="M23 21v-2a4 4 0 0 1 0 7.75" />
+                  <path d="m9 16 2 2 4-4"></path>
                 </svg>
               }
               link="/services#interviews"
@@ -233,6 +264,37 @@ const Home = () => {
           <div className="text-center">
             <Button asChild variant="outline" className="btn-outline">
               <Link to="/jobs">View All Jobs</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Blog Posts Section */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <SectionHeading
+            title="Latest Articles"
+            subtitle="Career Insights & Technical Knowledge"
+            description="Expert insights, career advice, and technical tutorials to help you advance in your tech career"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredBlogs.map(blog => (
+              <Link to={`/blog/${blog.id}`} key={blog.id} className="block h-full">
+                <BlogCard
+                  id={blog.id}
+                  title={blog.title}
+                  excerpt={blog.excerpt}
+                  author={blog.author}
+                  date={blog.date}
+                  category={blog.category}
+                  image={blog.image}
+                />
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Button asChild variant="outline" className="btn-outline">
+              <Link to="/blog">View All Articles</Link>
             </Button>
           </div>
         </div>

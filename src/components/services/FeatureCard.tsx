@@ -9,12 +9,12 @@ interface FeatureCardProps {
   icon: ReactNode;
   title: string;
   description: string;
-  features: string[];
-  linkUrl: string;
-  linkText: string;
+  features?: string[];
+  linkUrl?: string;
+  linkText?: string;
 }
 
-const FeatureCard = ({ icon, title, description, features, linkUrl, linkText }: FeatureCardProps) => {
+const FeatureCard = ({ icon, title, description, features = [], linkUrl = "/services", linkText = "Learn More" }: FeatureCardProps) => {
   return (
     <Card className="card-hover h-full">
       <CardHeader>
@@ -25,20 +25,24 @@ const FeatureCard = ({ icon, title, description, features, linkUrl, linkText }: 
       </CardHeader>
       <CardContent className="text-gray-600">
         <p>{description}</p>
-        <ul className="mt-4 space-y-2">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-center">
-              <ArrowRight className="h-4 w-4 text-brand-red mr-2" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
+        {features.length > 0 && (
+          <ul className="mt-4 space-y-2">
+            {features.map((feature, index) => (
+              <li key={index} className="flex items-center">
+                <ArrowRight className="h-4 w-4 text-brand-red mr-2" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
-      <CardFooter>
-        <Button asChild variant="outline" className="w-full border-brand-red text-brand-red hover:bg-red-50">
-          <Link to={linkUrl}>{linkText}</Link>
-        </Button>
-      </CardFooter>
+      {linkUrl && linkText && (
+        <CardFooter>
+          <Button asChild variant="outline" className="w-full border-brand-red text-brand-red hover:bg-red-50">
+            <Link to={linkUrl}>{linkText}</Link>
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 };

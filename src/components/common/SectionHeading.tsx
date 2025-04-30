@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 interface SectionHeadingProps {
   title: string;
   subtitle?: string;
-  description?: string; // Added description prop
+  description?: string;
   align?: "left" | "center" | "right";
   className?: string;
 }
