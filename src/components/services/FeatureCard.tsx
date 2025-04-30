@@ -3,10 +3,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface FeatureCardProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   features: string[];
@@ -16,7 +16,7 @@ interface FeatureCardProps {
 
 const FeatureCard = ({ icon, title, description, features, linkUrl, linkText }: FeatureCardProps) => {
   return (
-    <Card className="card-hover">
+    <Card className="card-hover h-full">
       <CardHeader>
         <div className="text-brand-red text-3xl mb-4">
           {icon}
@@ -35,7 +35,7 @@ const FeatureCard = ({ icon, title, description, features, linkUrl, linkText }: 
         </ul>
       </CardContent>
       <CardFooter>
-        <Button asChild className="w-full btn-outline">
+        <Button asChild variant="outline" className="w-full border-brand-red text-brand-red hover:bg-red-50">
           <Link to={linkUrl}>{linkText}</Link>
         </Button>
       </CardFooter>

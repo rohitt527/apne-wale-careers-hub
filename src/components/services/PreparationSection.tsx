@@ -3,6 +3,7 @@ import SectionHeading from "@/components/common/SectionHeading";
 import FeatureCard from "./FeatureCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Code, FileText, Users } from "lucide-react";
 
 const PreparationSection = () => {
   return (
@@ -18,17 +19,26 @@ const PreparationSection = () => {
           <FeatureCard
             title="Technical Concepts"
             description="From fundamental algorithms to advanced system design patterns, we'll help you master core technical concepts"
-            icon="Code"
+            icon={<Code />}
+            features={["Algorithm mastery", "Data structures", "System design", "Technical communication"]}
+            linkUrl="/book?service=5"
+            linkText="Learn More"
           />
           <FeatureCard
             title="Resume & Portfolio Review"
             description="Get expert feedback on your resume, portfolio, and GitHub projects to stand out from other candidates"
-            icon="FileText"
+            icon={<FileText />}
+            features={["ATS optimization", "Project highlighting", "Skills assessment", "Portfolio enhancement"]}
+            linkUrl="/book?service=5"
+            linkText="Learn More"
           />
           <FeatureCard
             title="Behavioral Interview Prep"
             description="Learn how to effectively communicate your experience and skills using the STAR method and other techniques"
-            icon="Users"
+            icon={<Users />}
+            features={["STAR technique", "Scenario preparation", "Strengths showcase", "Cultural fit assessment"]}
+            linkUrl="/book?service=5"
+            linkText="Learn More"
           />
         </div>
         

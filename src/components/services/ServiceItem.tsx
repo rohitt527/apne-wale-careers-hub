@@ -12,8 +12,11 @@ interface ServiceItemProps {
 
 const ServiceItem = ({ title, description, features, linkUrl, linkText }: ServiceItemProps) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="space-y-4">
+    <div className="bg-white rounded-lg shadow-md p-6 h-full flex flex-col">
+      <h3 className="text-xl font-bold mb-3">{title}</h3>
+      <p className="text-gray-600 mb-5">{description}</p>
+      
+      <div className="space-y-4 flex-grow">
         {features.map((feature, index) => (
           <div key={index} className="flex items-start">
             <div className="flex-shrink-0 mt-1">
@@ -24,14 +27,14 @@ const ServiceItem = ({ title, description, features, linkUrl, linkText }: Servic
               </div>
             </div>
             <div className="ml-3">
-              <h3 className="font-medium">{feature}</h3>
-              <p className="text-gray-600">{description}</p>
+              <p className="font-medium">{feature}</p>
             </div>
           </div>
         ))}
       </div>
+      
       <div className="mt-6">
-        <Button asChild className="btn-primary">
+        <Button asChild className="bg-brand-red hover:bg-red-700 text-white w-full">
           <Link to={linkUrl}>{linkText}</Link>
         </Button>
       </div>

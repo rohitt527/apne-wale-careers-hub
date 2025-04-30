@@ -24,6 +24,8 @@ const AssessmentSection = () => {
               "Time complexity analysis",
               "Code optimization techniques"
             ]}
+            linkUrl="/book?service=1"
+            linkText="Book Now"
           />
           <ServiceItem
             title="System Design"
@@ -34,6 +36,8 @@ const AssessmentSection = () => {
               "Data storage solutions",
               "API design best practices"
             ]}
+            linkUrl="/book?service=1"
+            linkText="Book Now"
           />
           <ServiceItem
             title="Take-home Projects"
@@ -44,6 +48,8 @@ const AssessmentSection = () => {
               "Documentation guidance",
               "Testing strategies"
             ]}
+            linkUrl="/book?service=1"
+            linkText="Book Now"
           />
         </div>
         
