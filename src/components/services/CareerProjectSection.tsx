@@ -1,5 +1,7 @@
 
 import SectionHeading from "@/components/common/SectionHeading";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CareerProjectSection = () => {
   return (
