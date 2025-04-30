@@ -4,21 +4,18 @@ import { Link } from "react-router-dom";
 
 const CtaSection = () => {
   return (
-    <section className="py-16 bg-brand-red text-white">
+    <section className="py-20 bg-brand-dark text-white">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="heading-lg mb-6">Ready to Level Up Your Career?</h2>
-          <p className="text-lg mb-8">
-            Book your first session today and experience the difference expert guidance can make in your tech career journey.
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Advance Your Tech Career?
+          </h2>
+          <p className="text-lg text-gray-300 mb-8">
+            Book a session with our expert coaches and take the first step toward your next career milestone
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button asChild size="lg" className="bg-white text-brand-red hover:bg-gray-100">
-              <Link to="/book">Book a Service</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-              <Link to="/contact">Contact Us</Link>
-            </Button>
-          </div>
+          <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
+            <Link to="/book">Book a Session Now</Link>
+          </Button>
         </div>
       </div>
     </section>

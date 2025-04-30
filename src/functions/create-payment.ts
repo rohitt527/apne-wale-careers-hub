@@ -26,14 +26,7 @@ export async function createCheckoutSession(priceId: string, successUrl: string,
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'Coaching Session',
-              description: 'One-on-one career coaching session',
-            },
-            unit_amount: 900, // $9.00
-          },
+          price: priceId, // Use a predefined price ID from Stripe
           quantity: 1,
         },
       ],

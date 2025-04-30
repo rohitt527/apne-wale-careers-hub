@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -10,11 +9,26 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard } from "lucide-react";
 import ServiceCard from "@/components/common/ServiceCard";
+import { useSearchParams } from "react-router-dom";
+import { createCheckoutSession } from "@/functions/create-payment";
 
 // Services available for booking with detailed descriptions and features
 const services = [
   { 
     id: 1, 
+    name: "Technical Assessment Support", 
+    price: 9,
+    description: "Get expert guidance for your technical assessments and screening rounds with personalized coaching sessions.",
+    features: [
+      "Code Review & Feedback",
+      "Algorithm Optimization",
+      "System Design Guidance",
+      "Take-home Project Help"
+    ],
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+  },
+  { 
+    id: 2, 
     name: "Career Guidance", 
     price: 9,
     description: "Personalized advice on career paths, skill development, and job hunting strategies.",
@@ -25,19 +39,6 @@ const services = [
       "Job Search Strategy"
     ],
     image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-  },
-  { 
-    id: 2, 
-    name: "Resume Building", 
-    price: 9,
-    description: "Expert help with crafting an ATS-friendly resume that highlights your strengths.",
-    features: [
-      "ATS Optimization",
-      "Professional Formatting",
-      "Achievement Highlighting",
-      "Technical Skills Showcase"
-    ],
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
   },
   { 
     id: 3, 
@@ -54,16 +55,16 @@ const services = [
   },
   { 
     id: 4, 
-    name: "Assessment Support", 
+    name: "Resume Building", 
     price: 9,
-    description: "Get expert help with your technical assessments and coding challenges.",
+    description: "Expert help with crafting an ATS-friendly resume that highlights your strengths.",
     features: [
-      "Technical Assessment Reviews",
-      "Problem-Solving Sessions",
-      "Code Quality Analysis",
-      "System Design Feedback"
+      "ATS Optimization",
+      "Professional Formatting",
+      "Achievement Highlighting",
+      "Technical Skills Showcase"
     ],
-    image: "https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
   },
   { 
     id: 5, 
@@ -144,10 +145,22 @@ const Book = () => {
   const [loading, setLoading] = useState(false);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const { toast } = useToast();
 
-  const handleNextStep = () => {
+  // Handle service preselection from URL parameters
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    if (serviceParam) {
+      const serviceId = parseInt(serviceParam);
+      if (!isNaN(serviceId) && services.some(s => s.id === serviceId)) {
+        setSelectedService(serviceId);
+      }
+    }
+  }, [searchParams]);
+
+  const handleNextStep = async () => {
     if (currentStep === 1) {
       // Validate step 1
       if (!selectedService || !selectedDate || !selectedTime || !name || !email || !phone) {
@@ -161,18 +174,52 @@ const Book = () => {
     }
 
     if (currentStep === 2) {
-      // Simulate payment processing
+      // Process payment with Stripe
       setPaymentProcessing(true);
-      setTimeout(() => {
+      try {
+        const selectedServiceDetails = services.find(s => s.id === selectedService);
+        if (!selectedServiceDetails) {
+          throw new Error("Service not found");
+        }
+        
+        const amount = selectedServiceDetails.price * 100; // Convert to cents
+        const { sessionId, url } = await createCheckoutSession(
+          "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
+          `${window.location.origin}/book?step=3&success=true`, // Success URL
+          `${window.location.origin}/book` // Cancel URL
+        );
+        
+        if (url) {
+          window.location.href = url;
+        } else {
+          throw new Error("Failed to create checkout session");
+        }
+      } catch (error) {
+        console.error("Payment error:", error);
+        toast({
+          title: "Payment error",
+          description: "There was an error processing your payment. Please try again.",
+          variant: "destructive",
+        });
         setPaymentProcessing(false);
-        setCurrentStep(currentStep + 1);
-      }, 1500);
+      }
       return;
     }
 
     // Move to the next step
     setCurrentStep(currentStep + 1);
   };
+
+  // Check for success parameter in URL when returning from Stripe
+  useEffect(() => {
+    const step = searchParams.get('step');
+    const success = searchParams.get('success');
+    
+    if (step === '3' && success === 'true') {
+      setCurrentStep(3);
+      setIsConfirmed(true);
+    }
+  }, [searchParams]);
 
   const handlePreviousStep = () => {
     if (currentStep > 1) {

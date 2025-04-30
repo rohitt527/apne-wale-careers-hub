@@ -1,90 +1,56 @@
 
 import SectionHeading from "@/components/common/SectionHeading";
+import ServiceItem from "./ServiceItem";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const AssessmentSection = () => {
   return (
-    <section id="assessment" className="section-padding">
+    <section className="section-padding bg-gray-50">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <SectionHeading
-              title="Assessment Support"
-              subtitle="Get expert help with your technical assessments and coding challenges"
-              align="left"
-            />
-            <div className="space-y-4 mb-8">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="bg-brand-red text-white p-1 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-medium">Technical Assessment Reviews</h3>
-                  <p className="text-gray-600">Get detailed feedback on your take-home coding challenges and technical assessments.</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="bg-brand-red text-white p-1 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-medium">Problem-Solving Sessions</h3>
-                  <p className="text-gray-600">Interactive sessions to improve your approach to complex coding problems.</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="bg-brand-red text-white p-1 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-medium">Code Quality Analysis</h3>
-                  <p className="text-gray-600">Expert review of your code for best practices, patterns, and optimization.</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="bg-brand-red text-white p-1 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-medium">System Design Feedback</h3>
-                  <p className="text-gray-600">Comprehensive review of your system design solutions and architecture decisions.</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-x-4">
-              <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
-                <Link to="/book">Book Assessment Support</Link>
-              </Button>
-              <Button asChild variant="outline" className="btn-outline">
-                <Link to="/pricing">View Pricing</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -right-6 -bottom-6 bg-brand-red/20 w-64 h-64 rounded-full"></div>
-            <img
-              src="https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-              alt="Assessment Support"
-              className="rounded-lg shadow-lg relative z-10"
-            />
-          </div>
+        <SectionHeading
+          subtitle="OUR SERVICES"
+          title="Technical Assessment Support"
+          description="Get expert guidance for your technical assessments and screening rounds with personalized coaching sessions"
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+          <ServiceItem
+            title="Coding Challenges"
+            description="Practice coding challenges with real-time feedback from experienced engineers"
+            features={[
+              "Data structures & algorithms",
+              "Pattern recognition",
+              "Time complexity analysis",
+              "Code optimization techniques"
+            ]}
+          />
+          <ServiceItem
+            title="System Design"
+            description="Learn how to design scalable and efficient systems for technical interviews"
+            features={[
+              "Architecture principles",
+              "Scalability considerations",
+              "Data storage solutions",
+              "API design best practices"
+            ]}
+          />
+          <ServiceItem
+            title="Take-home Projects"
+            description="Get feedback and guidance on take-home assignments for job applications"
+            features={[
+              "Code organization",
+              "Best practices implementation",
+              "Documentation guidance",
+              "Testing strategies"
+            ]}
+          />
+        </div>
+        
+        <div className="mt-12 text-center">
+          <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
+            <Link to="/book?service=1">Book Assessment Support</Link>
+          </Button>
         </div>
       </div>
     </section>

@@ -5,143 +5,81 @@ import { Link } from "react-router-dom";
 
 const CareerProjectSection = () => {
   return (
-    <section id="career" className="section-padding bg-gray-50">
+    <section className="section-padding">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <SectionHeading
-              title="Career Guidance"
-              subtitle="Navigate your tech career with expert advice"
-              align="left"
-            />
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Resume & LinkedIn Reviews</h3>
-                    <p className="text-gray-600">Get your resume and LinkedIn profile optimized for maximum impact.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Career Path Mapping</h3>
-                    <p className="text-gray-600">Personalized roadmaps for your career growth and skill development.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Salary Negotiation Advice</h3>
-                    <p className="text-gray-600">Learn effective strategies to maximize your compensation packages.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Job Search Strategy</h3>
-                    <p className="text-gray-600">Develop effective approaches to finding and securing your ideal role.</p>
-                  </div>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="order-2 lg:order-1">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <img 
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Career Guidance" 
+                  className="rounded-lg mb-4 w-full h-40 object-cover"
+                />
+                <img 
+                  src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Team Discussion" 
+                  className="rounded-lg w-full h-48 object-cover"
+                />
               </div>
-              <div className="mt-6">
-                <Button asChild className="btn-primary">
-                  <Link to="/book">Get Career Guidance</Link>
-                </Button>
+              <div className="pt-6">
+                <img 
+                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Project Planning" 
+                  className="rounded-lg mb-4 w-full h-48 object-cover"
+                />
+                <img 
+                  src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                  alt="Coding" 
+                  className="rounded-lg w-full h-40 object-cover"
+                />
               </div>
             </div>
           </div>
           
-          <div id="projects">
+          <div className="order-1 lg:order-2">
             <SectionHeading
-              title="Project Help"
-              subtitle="Get expert assistance with your coding projects"
-              align="left"
+              subtitle="OUR SERVICES"
+              title="Career Strategy & Projects"
+              description="Get guidance on career decisions and work on practical projects to enhance your portfolio"
+              className="text-left"
             />
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Code Reviews</h3>
-                    <p className="text-gray-600">Detailed review of your project code with best practices recommendations.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Architecture Consulting</h3>
-                    <p className="text-gray-600">Expert guidance on system architecture and design decisions.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Debugging Sessions</h3>
-                    <p className="text-gray-600">Live troubleshooting assistance for complex bugs and issues.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="bg-brand-red text-white p-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="font-medium">Project Planning</h3>
-                    <p className="text-gray-600">Help with scoping, timeline estimation, and technology selection.</p>
-                  </div>
+            
+            <div className="mt-8">
+              <div className="mb-6">
+                <h3 className="text-xl font-bold mb-2">Career Guidance</h3>
+                <p className="text-gray-600">
+                  Strategic advice on career paths, skill development, and job hunting tailored to your goals
+                </p>
+                <div className="mt-4">
+                  <Button asChild variant="outline" className="border-brand-red text-brand-red">
+                    <Link to="/book?service=2">Book Career Guidance</Link>
+                  </Button>
                 </div>
               </div>
-              <div className="mt-6">
-                <Button asChild className="btn-primary">
-                  <Link to="/book">Request Project Help</Link>
-                </Button>
+              
+              <div className="mb-6">
+                <h3 className="text-xl font-bold mb-2">Project Help</h3>
+                <p className="text-gray-600">
+                  Assistance with personal coding projects, from architecture planning to implementation details
+                </p>
+                <div className="mt-4">
+                  <Button asChild variant="outline" className="border-brand-red text-brand-red">
+                    <Link to="/book?service=6">Book Project Help</Link>
+                  </Button>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-2">Resume Building</h3>
+                <p className="text-gray-600">
+                  Expert help with crafting an ATS-friendly resume that highlights your strengths
+                </p>
+                <div className="mt-4">
+                  <Button asChild variant="outline" className="border-brand-red text-brand-red">
+                    <Link to="/book?service=4">Book Resume Help</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
