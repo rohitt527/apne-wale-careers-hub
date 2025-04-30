@@ -14,6 +14,7 @@ import BlogDetail from "./pages/BlogDetail";
 import Jobs from "./pages/Jobs";
 import JobDetail from "./pages/JobDetail";
 import Book from "./pages/Book";
+import BookingFlow from "./pages/BookingFlow";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/book" element={<Book />} />
+          <Route path="/booking" element={<BookingFlow />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

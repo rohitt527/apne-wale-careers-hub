@@ -24,7 +24,7 @@ const AssessmentSection = () => {
               "Time complexity analysis",
               "Code optimization techniques"
             ]}
-            linkUrl="/book?service=1"
+            linkUrl="/booking?service=1"
             linkText="Book Now"
           />
           <ServiceItem
@@ -36,7 +36,7 @@ const AssessmentSection = () => {
               "Data storage solutions",
               "API design best practices"
             ]}
-            linkUrl="/book?service=1"
+            linkUrl="/booking?service=1"
             linkText="Book Now"
           />
           <ServiceItem
@@ -48,14 +48,14 @@ const AssessmentSection = () => {
               "Documentation guidance",
               "Testing strategies"
             ]}
-            linkUrl="/book?service=1"
+            linkUrl="/booking?service=1"
             linkText="Book Now"
           />
         </div>
         
         <div className="mt-12 text-center">
           <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
-            <Link to="/book?service=1">Book Assessment Support</Link>
+            <Link to="/booking?service=1">Book Assessment Support</Link>
           </Button>
         </div>
       </div>

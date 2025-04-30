@@ -21,7 +21,7 @@ const PreparationSection = () => {
             description="From fundamental algorithms to advanced system design patterns, we'll help you master core technical concepts"
             icon={<Code />}
             features={["Algorithm mastery", "Data structures", "System design", "Technical communication"]}
-            linkUrl="/book?service=5"
+            linkUrl="/booking?service=5"
             linkText="Learn More"
           />
           <FeatureCard
@@ -29,7 +29,7 @@ const PreparationSection = () => {
             description="Get expert feedback on your resume, portfolio, and GitHub projects to stand out from other candidates"
             icon={<FileText />}
             features={["ATS optimization", "Project highlighting", "Skills assessment", "Portfolio enhancement"]}
-            linkUrl="/book?service=5"
+            linkUrl="/booking?service=4"
             linkText="Learn More"
           />
           <FeatureCard
@@ -37,14 +37,14 @@ const PreparationSection = () => {
             description="Learn how to effectively communicate your experience and skills using the STAR method and other techniques"
             icon={<Users />}
             features={["STAR technique", "Scenario preparation", "Strengths showcase", "Cultural fit assessment"]}
-            linkUrl="/book?service=5"
+            linkUrl="/booking?service=3"
             linkText="Learn More"
           />
         </div>
         
         <div className="mt-12 text-center">
           <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
-            <Link to="/book?service=5">Book Interview Preparation</Link>
+            <Link to="/booking?service=5">Book Interview Preparation</Link>
           </Button>
         </div>
       </div>
