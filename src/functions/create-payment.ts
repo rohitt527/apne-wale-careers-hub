@@ -25,7 +25,7 @@ export async function createPaymentIntent(amount: number, currency: string = 'us
 export async function createCheckoutSession(priceId: string, successUrl: string, cancelUrl: string) {
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'paytm', 'phonepe'], // Added Paytm and PhonePe
+      payment_method_types: ['card'],
       line_items: [
         {
           price: priceId, // Use a predefined price ID from Stripe
