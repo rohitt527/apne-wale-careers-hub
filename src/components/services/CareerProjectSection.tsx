@@ -10,47 +10,16 @@ const CareerProjectSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-white to-gray-50 -z-10"></div>
       
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="order-2 lg:order-1 relative">
-            <div className="absolute -top-10 -left-10 w-48 h-48 bg-red-100 rounded-full opacity-60 blur-3xl"></div>
-            <div className="grid grid-cols-2 gap-6 relative z-10">
-              <div className="space-y-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Career Guidance" 
-                  className="rounded-lg shadow-lg w-full h-48 object-cover transition-transform hover:scale-105 duration-300"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Coding Project Support" 
-                  className="rounded-lg shadow-lg w-full h-56 object-cover transition-transform hover:scale-105 duration-300"
-                />
-              </div>
-              <div className="pt-10 space-y-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Technical Project Guidance" 
-                  className="rounded-lg shadow-lg w-full h-56 object-cover transition-transform hover:scale-105 duration-300"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                  alt="Portfolio Development" 
-                  className="rounded-lg shadow-lg w-full h-48 object-cover transition-transform hover:scale-105 duration-300"
-                />
-              </div>
-            </div>
-            <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
-          </div>
-          
-          <div className="order-1 lg:order-2">
-            <SectionHeading
-              subtitle="CAREER DEVELOPMENT"
-              title="Career Strategy & Projects"
-              description="Strategic guidance for your career growth and practical projects to enhance your portfolio and marketability"
-              className="text-left"
-            />
-            
-            <div className="mt-10 space-y-8">
+        <SectionHeading
+          subtitle="CAREER DEVELOPMENT"
+          title="Career Strategy & Projects"
+          description="Strategic guidance for your career growth and practical projects to enhance your portfolio and marketability"
+        />
+        
+        <div className="mt-12 space-y-16">
+          {/* First service with image on right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
                 <h3 className="text-2xl font-bold mb-3 text-brand-dark">Career Guidance</h3>
                 <p className="text-gray-600 mb-5">
@@ -65,7 +34,32 @@ const CareerProjectSection = () => {
                   </Button>
                 </div>
               </div>
-              
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-6 -right-6 w-48 h-48 bg-red-100 rounded-full opacity-30 blur-xl"></div>
+              <img 
+                src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                alt="Career Guidance" 
+                className="rounded-lg shadow-xl w-full h-auto object-cover aspect-[4/3]"
+              />
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-red-200 rounded-full opacity-20 blur-lg"></div>
+            </div>
+          </div>
+          
+          {/* Second service with image on left */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1 relative">
+              <div className="absolute -top-6 -left-6 w-48 h-48 bg-red-100 rounded-full opacity-30 blur-xl"></div>
+              <img 
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                alt="Project Help" 
+                className="rounded-lg shadow-xl w-full h-auto object-cover aspect-[4/3]"
+              />
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-red-200 rounded-full opacity-20 blur-lg"></div>
+            </div>
+            
+            <div className="order-1 lg:order-2">
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
                 <h3 className="text-2xl font-bold mb-3 text-brand-dark">Project Help</h3>
                 <p className="text-gray-600 mb-5">
@@ -80,7 +74,12 @@ const CareerProjectSection = () => {
                   </Button>
                 </div>
               </div>
-              
+            </div>
+          </div>
+          
+          {/* Third service with image on right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
                 <h3 className="text-2xl font-bold mb-3 text-brand-dark">Resume Building</h3>
                 <p className="text-gray-600 mb-5">
@@ -95,6 +94,16 @@ const CareerProjectSection = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -top-6 -right-6 w-48 h-48 bg-red-100 rounded-full opacity-30 blur-xl"></div>
+              <img 
+                src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                alt="Resume Building" 
+                className="rounded-lg shadow-xl w-full h-auto object-cover aspect-[4/3]"
+              />
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-red-200 rounded-full opacity-20 blur-lg"></div>
             </div>
           </div>
         </div>
