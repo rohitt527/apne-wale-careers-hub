@@ -2,8 +2,11 @@
 import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const InterviewsSection = () => {
+  const isMobile = useIsMobile();
+
   return (
     <section className="section-padding relative overflow-hidden">
       {/* Background gradient */}
@@ -18,6 +21,17 @@ const InterviewsSection = () => {
               description="Practice with industry experts in realistic interview scenarios and receive detailed feedback to improve your performance"
               className="text-left"
             />
+            
+            {/* Image for mobile view - will show right after the heading on small screens */}
+            <div className="block lg:hidden relative my-8">
+              <div className="absolute -top-6 -right-6 w-64 h-64 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
+              <img 
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+                alt="Mock Interview Session" 
+                className="rounded-lg shadow-xl w-full h-auto relative z-10 object-cover aspect-[4/3]"
+              />
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-red-300 rounded-full opacity-40 blur-xl"></div>
+            </div>
             
             <div className="mt-10">
               <ul className="space-y-6">
@@ -76,7 +90,8 @@ const InterviewsSection = () => {
             </div>
           </div>
           
-          <div className="relative">
+          {/* Image for desktop view - will only show on large screens */}
+          <div className="hidden lg:block relative">
             <div className="absolute -top-6 -right-6 w-64 h-64 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
             <img 
               src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 

@@ -1,7 +1,6 @@
 
 import SectionHeading from "@/components/common/SectionHeading";
 import ServiceCard from "@/components/common/ServiceCard";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Code, Database, FileCode } from "lucide-react";
 
@@ -54,16 +53,7 @@ const AssessmentSection = () => {
           />
         </div>
         
-        <div className="mt-16 text-center">
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild className="bg-brand-red hover:bg-red-700 text-white">
-              <Link to="/booking?service=1">Book Assessment Support</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-brand-red text-brand-red hover:bg-red-50">
-              <Link to="/pricing">View Pricing</Link>
-            </Button>
-          </div>
-        </div>
+        {/* Removed the buttons section */}
       </div>
     </section>
   );
