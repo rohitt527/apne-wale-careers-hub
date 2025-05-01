@@ -10,6 +10,7 @@ export async function createPaymentIntent(amount: number, currency: string = 'us
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
+      payment_method_types: ['card', 'paytm', 'phonepe'], // Added Paytm and PhonePe
     });
 
     return {
@@ -24,7 +25,7 @@ export async function createPaymentIntent(amount: number, currency: string = 'us
 export async function createCheckoutSession(priceId: string, successUrl: string, cancelUrl: string) {
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'paytm', 'phonepe'], // Added Paytm and PhonePe
       line_items: [
         {
           price: priceId, // Use a predefined price ID from Stripe
@@ -39,6 +40,52 @@ export async function createCheckoutSession(priceId: string, successUrl: string,
     return { sessionId: session.id, url: session.url };
   } catch (error) {
     console.error('Error creating checkout session:', error);
+    throw error;
+  }
+}
+
+// Function to send email notification about booking
+export async function sendBookingEmail(bookingDetails: {
+  service: string;
+  date: string;
+  time: string;
+  name: string;
+  email: string;
+  phone: string;
+  companyName?: string;
+  examPattern?: string;
+  duration?: string;
+  notes?: string;
+  price: number;
+}) {
+  try {
+    const subject = `New Booking: ${bookingDetails.service}`;
+    const body = `
+New booking details:
+
+Service: ${bookingDetails.service}
+Date: ${bookingDetails.date}
+Time: ${bookingDetails.time}
+Name: ${bookingDetails.name}
+Email: ${bookingDetails.email}
+Phone: ${bookingDetails.phone}
+${bookingDetails.companyName ? `Company Name: ${bookingDetails.companyName}` : ''}
+${bookingDetails.examPattern ? `Exam Pattern: ${bookingDetails.examPattern}` : ''}
+${bookingDetails.duration ? `Test Duration: ${bookingDetails.duration}` : ''}
+${bookingDetails.notes ? `Additional Notes: ${bookingDetails.notes}` : ''}
+
+Total Amount: $${bookingDetails.price}
+    `;
+
+    // In a real implementation, you would use an email service like SendGrid, Mailgun, etc.
+    // For now, we'll return the email data that can be used by the front end to open the mail client
+    return {
+      to: "apnewalecoders@gmail.com",
+      subject: encodeURIComponent(subject),
+      body: encodeURIComponent(body),
+    };
+  } catch (error) {
+    console.error('Error preparing email:', error);
     throw error;
   }
 }

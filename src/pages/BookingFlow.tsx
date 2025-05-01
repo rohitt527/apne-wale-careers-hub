@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -11,8 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight } from "lucide-react";
-import { createCheckoutSession } from "@/functions/create-payment";
+import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight, Phone, Mail } from "lucide-react";
+import { createCheckoutSession, sendBookingEmail } from "@/functions/create-payment";
 
 // Define services with detailed descriptions and features
 const services = [
@@ -226,26 +225,26 @@ const BookingFlow = () => {
     setLoading(true);
 
     try {
-      const emailSubject = `New Booking: ${selectedService.name}`;
-      const emailBody = `
-New booking details:
-
-Service: ${selectedService.name}
-Date: ${format(selectedDate, 'PP')}
-Time: ${selectedTime}
-Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Company Name: ${companyName}
-Exam Pattern: ${examPattern}
-Test Duration: ${duration}
-Additional Notes: ${notes}
-
-Total Amount: $${selectedService.price}
-      `;
-
+      // Prepare booking details for email
+      const bookingDetails = {
+        service: selectedService.name,
+        date: format(selectedDate, 'PP'),
+        time: selectedTime,
+        name,
+        email,
+        phone,
+        companyName,
+        examPattern,
+        duration,
+        notes,
+        price: selectedService.price
+      };
+      
+      // Generate email data
+      const emailData = await sendBookingEmail(bookingDetails);
+      
       // Open email client with booking details
-      window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
+      window.open(`mailto:${emailData.to}?subject=${emailData.subject}&body=${emailData.body}`);
 
       toast({
         title: "Booking confirmed!",
@@ -485,12 +484,26 @@ Total Amount: $${selectedService.price}
             <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
               <h3 className="text-lg font-semibold mb-4">Complete your Payment</h3>
               <p className="mb-6 text-gray-600">
-                Click the button below to proceed to our secure payment page. You will be redirected to Stripe to complete your payment.
+                Click the button below to proceed to our secure payment page. You can pay using Credit Cards, PhonePe or Paytm.
               </p>
-              <div className="flex items-center mb-6 bg-gray-50 p-4 rounded">
-                <CreditCard className="h-6 w-6 text-gray-400 mr-3" />
-                <span className="text-sm text-gray-600">All payments are secure and encrypted. We accept credit cards, debit cards, and more.</span>
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
+                  <CreditCard className="h-6 w-6 text-gray-400 mr-3" />
+                  <span className="text-sm text-gray-600">Credit/Debit Card</span>
+                </div>
+                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
+                  <Phone className="h-6 w-6 text-blue-500 mr-3" />
+                  <span className="text-sm text-gray-600">PhonePe</span>
+                </div>
+                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
+                  <Phone className="h-6 w-6 text-blue-600 mr-3" />
+                  <span className="text-sm text-gray-600">Paytm</span>
+                </div>
               </div>
+              <p className="text-sm text-gray-600 mb-2">
+                <Mail className="inline h-4 w-4 mr-1" />
+                Booking confirmation will be automatically sent to apnewalecoders@gmail.com
+              </p>
             </div>
           </div>
         );
