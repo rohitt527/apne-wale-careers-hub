@@ -2,8 +2,11 @@
 import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const CareerProjectSection = () => {
+  const isMobile = useIsMobile();
+
   return (
     <section className="section-padding relative overflow-hidden">
       {/* Background gradient */}
@@ -11,6 +14,17 @@ const CareerProjectSection = () => {
       
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Image for mobile view - will show at the top on small screens */}
+          <div className="block lg:hidden relative mb-8">
+            <div className="absolute -top-6 -right-6 w-64 h-64 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
+            <img 
+              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
+              alt="Career Development" 
+              className="rounded-lg shadow-xl w-full h-auto relative z-10 object-cover aspect-[4/3]"
+            />
+            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-red-300 rounded-full opacity-40 blur-xl"></div>
+          </div>
+          
           <div>
             <SectionHeading
               subtitle="CAREER DEVELOPMENT"
@@ -79,7 +93,8 @@ const CareerProjectSection = () => {
             </div>
           </div>
           
-          <div className="relative">
+          {/* Image for desktop view - will only show on large screens */}
+          <div className="hidden lg:block relative">
             <div className="absolute -top-6 -right-6 w-64 h-64 bg-red-200 rounded-full opacity-50 blur-2xl"></div>
             <img 
               src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
