@@ -10,7 +10,7 @@ export async function createPaymentIntent(amount: number, currency: string = 'us
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      payment_method_types: ['card', 'paytm', 'phonepe'], // Added Paytm and PhonePe
+      payment_method_types: ['card'], // Removed Paytm and PhonePe as they may not be supported
     });
 
     return {
@@ -75,6 +75,12 @@ ${bookingDetails.duration ? `Test Duration: ${bookingDetails.duration}` : ''}
 ${bookingDetails.notes ? `Additional Notes: ${bookingDetails.notes}` : ''}
 
 Total Amount: $${bookingDetails.price}
+
+---
+For direct payment, please use the following bank details:
+Bank Name: CANARA BANK
+Account Number: 110132761669
+IFSC Code: CNRB0006088
     `;
 
     // In a real implementation, you would use an email service like SendGrid, Mailgun, etc.
@@ -88,4 +94,13 @@ Total Amount: $${bookingDetails.price}
     console.error('Error preparing email:', error);
     throw error;
   }
+}
+
+// New function to get bank account information for manual transfers
+export function getBankDetails() {
+  return {
+    bankName: "CANARA BANK",
+    accountNumber: "110132761669",
+    ifscCode: "CNRB0006088"
+  };
 }

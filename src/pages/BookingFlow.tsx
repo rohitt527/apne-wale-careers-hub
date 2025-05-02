@@ -10,8 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight, Phone, Mail } from "lucide-react";
-import { createCheckoutSession, sendBookingEmail } from "@/functions/create-payment";
+import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight, Phone, Mail, BankTransfer } from "lucide-react";
+import { createCheckoutSession, sendBookingEmail, getBankDetails } from "@/functions/create-payment";
 
 // Define services with detailed descriptions and features
 const services = [
@@ -117,8 +117,9 @@ const BookingFlow = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank'>('card');
   const { toast } = useToast();
+  const bankDetails = getBankDetails();
 
   // Get service ID from URL parameter
   const serviceParam = searchParams.get('service');
@@ -173,33 +174,38 @@ const BookingFlow = () => {
       setCurrentStep(3);
     }
     else if (currentStep === 3) {
-      // Process payment with Stripe
-      setPaymentProcessing(true);
-      try {
-        if (!selectedService) {
-          throw new Error("Service not found");
+      if (paymentMethod === 'bank') {
+        // For bank transfers, skip the Stripe payment and go straight to confirmation
+        setCurrentStep(4);
+      } else {
+        // Process payment with Stripe
+        setPaymentProcessing(true);
+        try {
+          if (!selectedService) {
+            throw new Error("Service not found");
+          }
+          
+          const amount = selectedService.price * 100; // Convert to cents
+          const { sessionId, url } = await createCheckoutSession(
+            "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
+            `${window.location.origin}/booking?success=true`, // Success URL
+            `${window.location.origin}/booking` // Cancel URL
+          );
+          
+          if (url) {
+            window.location.href = url;
+          } else {
+            throw new Error("Failed to create checkout session");
+          }
+        } catch (error) {
+          console.error("Payment error:", error);
+          toast({
+            title: "Payment error",
+            description: "There was an error processing your payment. Please try again or use bank transfer instead.",
+            variant: "destructive",
+          });
+          setPaymentProcessing(false);
         }
-        
-        const amount = selectedService.price * 100; // Convert to cents
-        const { sessionId, url } = await createCheckoutSession(
-          "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
-          `${window.location.origin}/booking?success=true`, // Success URL
-          `${window.location.origin}/booking` // Cancel URL
-        );
-        
-        if (url) {
-          window.location.href = url;
-        } else {
-          throw new Error("Failed to create checkout session");
-        }
-      } catch (error) {
-        console.error("Payment error:", error);
-        toast({
-          title: "Payment error",
-          description: "There was an error processing your payment. Please try again.",
-          variant: "destructive",
-        });
-        setPaymentProcessing(false);
       }
     }
   };
@@ -484,22 +490,56 @@ const BookingFlow = () => {
             <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
               <h3 className="text-lg font-semibold mb-4">Complete your Payment</h3>
               <p className="mb-6 text-gray-600">
-                Click the button below to proceed to our secure payment page. You can pay using Credit Cards, PhonePe or Paytm.
+                Please select your preferred payment method below:
               </p>
-              <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
-                  <CreditCard className="h-6 w-6 text-gray-400 mr-3" />
-                  <span className="text-sm text-gray-600">Credit/Debit Card</span>
+              
+              <div className="flex flex-col gap-4 mb-6">
+                <div 
+                  className={`flex items-center p-4 rounded cursor-pointer border-2 ${paymentMethod === 'card' ? 'border-brand-red bg-red-50' : 'border-gray-200'}`}
+                  onClick={() => setPaymentMethod('card')}
+                >
+                  <div className="h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center">
+                    {paymentMethod === 'card' && <div className="h-3 w-3 rounded-full bg-brand-red"></div>}
+                  </div>
+                  <CreditCard className="h-6 w-6 text-gray-600 mr-3" />
+                  <span className="font-medium">Credit/Debit Card</span>
                 </div>
-                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
-                  <Phone className="h-6 w-6 text-blue-500 mr-3" />
-                  <span className="text-sm text-gray-600">PhonePe</span>
-                </div>
-                <div className="flex items-center bg-gray-50 p-4 rounded flex-1 min-w-[180px]">
-                  <Phone className="h-6 w-6 text-blue-600 mr-3" />
-                  <span className="text-sm text-gray-600">Paytm</span>
+                
+                <div 
+                  className={`flex items-center p-4 rounded cursor-pointer border-2 ${paymentMethod === 'bank' ? 'border-brand-red bg-red-50' : 'border-gray-200'}`}
+                  onClick={() => setPaymentMethod('bank')}
+                >
+                  <div className="h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center">
+                    {paymentMethod === 'bank' && <div className="h-3 w-3 rounded-full bg-brand-red"></div>}
+                  </div>
+                  <BankTransfer className="h-6 w-6 text-blue-600 mr-3" />
+                  <span className="font-medium">Bank Transfer</span>
                 </div>
               </div>
+              
+              {paymentMethod === 'bank' && (
+                <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200">
+                  <h4 className="font-medium text-blue-800 mb-2">Bank Transfer Details</h4>
+                  <div className="space-y-2 text-gray-700">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Bank Name:</span>
+                      <span>{bankDetails.bankName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Account Number:</span>
+                      <span>{bankDetails.accountNumber}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">IFSC Code:</span>
+                      <span>{bankDetails.ifscCode}</span>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm text-blue-700">
+                    Please include your name and service in the payment reference.
+                  </p>
+                </div>
+              )}
+              
               <p className="text-sm text-gray-600 mb-2">
                 <Mail className="inline h-4 w-4 mr-1" />
                 Booking confirmation will be automatically sent to apnewalecoders@gmail.com
@@ -525,6 +565,25 @@ const BookingFlow = () => {
                   <br />
                   <span className="font-semibold">{selectedDate ? format(selectedDate, 'PPP') : ''} at {selectedTime}</span>
                 </p>
+                {paymentMethod === 'bank' && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200 text-left">
+                    <h4 className="font-medium text-blue-800 mb-2">Please complete your payment via bank transfer:</h4>
+                    <div className="space-y-2 text-gray-700">
+                      <div>
+                        <span className="font-medium">Bank Name: </span>
+                        <span>{bankDetails.bankName}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium">Account Number: </span>
+                        <span>{bankDetails.accountNumber}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium">IFSC Code: </span>
+                        <span>{bankDetails.ifscCode}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
                   <a href="/">Return to Home</a>
                 </Button>
@@ -553,6 +612,29 @@ const BookingFlow = () => {
                     </div>
                   </div>
                 </div>
+
+                {paymentMethod === 'bank' && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200 text-left">
+                    <h4 className="font-medium text-blue-800 mb-2">Payment Method: Bank Transfer</h4>
+                    <p className="text-sm text-gray-700 mb-3">
+                      After confirming your booking, please transfer the payment using these details:
+                    </p>
+                    <div className="space-y-2 text-gray-700">
+                      <div>
+                        <span className="font-medium">Bank Name: </span>
+                        <span>{bankDetails.bankName}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium">Account Number: </span>
+                        <span>{bankDetails.accountNumber}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium">IFSC Code: </span>
+                        <span>{bankDetails.ifscCode}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <p className="mb-8 text-gray-600">
                   By confirming, you agree to our terms of service and cancellation policy.
