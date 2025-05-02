@@ -117,7 +117,7 @@ const BookingFlow = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank' | 'upi'>('card');
   const { toast } = useToast();
   const bankDetails = getBankDetails();
 
@@ -515,24 +515,46 @@ const BookingFlow = () => {
                   <Building className="h-6 w-6 text-blue-600 mr-3" />
                   <span className="font-medium">Bank Transfer</span>
                 </div>
+
+                <div 
+                  className={`flex items-center p-4 rounded cursor-pointer border-2 ${paymentMethod === 'upi' ? 'border-brand-red bg-red-50' : 'border-gray-200'}`}
+                  onClick={() => setPaymentMethod('upi')}
+                >
+                  <div className="h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center">
+                    {paymentMethod === 'upi' && <div className="h-3 w-3 rounded-full bg-brand-red"></div>}
+                  </div>
+                  <span className="inline-flex justify-center items-center h-6 w-6 bg-blue-600 text-white rounded mr-3 text-xs font-bold">UPI</span>
+                  <span className="font-medium">UPI Payment</span>
+                </div>
               </div>
               
-              {paymentMethod === 'bank' && (
+              {(paymentMethod === 'bank' || paymentMethod === 'upi') && (
                 <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200">
-                  <h4 className="font-medium text-blue-800 mb-2">Bank Transfer Details</h4>
+                  <h4 className="font-medium text-blue-800 mb-2">
+                    {paymentMethod === 'bank' ? "Bank Transfer Details" : "UPI Payment Details"}
+                  </h4>
                   <div className="space-y-2 text-gray-700">
-                    <div className="flex justify-between">
-                      <span className="font-medium">Bank Name:</span>
-                      <span>{bankDetails.bankName}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">Account Number:</span>
-                      <span>{bankDetails.accountNumber}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">IFSC Code:</span>
-                      <span>{bankDetails.ifscCode}</span>
-                    </div>
+                    {paymentMethod === 'bank' ? (
+                      <>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Bank Name:</span>
+                          <span>{bankDetails.bankName}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Account Number:</span>
+                          <span>{bankDetails.accountNumber}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">IFSC Code:</span>
+                          <span>{bankDetails.ifscCode}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex justify-between">
+                        <span className="font-medium">UPI ID:</span>
+                        <span>{bankDetails.upiId}</span>
+                      </div>
+                    )}
                   </div>
                   <p className="mt-3 text-sm text-blue-700">
                     Please include your name and service in the payment reference.
@@ -565,22 +587,35 @@ const BookingFlow = () => {
                   <br />
                   <span className="font-semibold">{selectedDate ? format(selectedDate, 'PPP') : ''} at {selectedTime}</span>
                 </p>
-                {paymentMethod === 'bank' && (
+                {(paymentMethod === 'bank' || paymentMethod === 'upi') && (
                   <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200 text-left">
-                    <h4 className="font-medium text-blue-800 mb-2">Please complete your payment via bank transfer:</h4>
+                    <h4 className="font-medium text-blue-800 mb-2">
+                      {paymentMethod === 'bank' 
+                        ? "Please complete your payment via bank transfer:" 
+                        : "Please complete your payment via UPI:"}
+                    </h4>
                     <div className="space-y-2 text-gray-700">
-                      <div>
-                        <span className="font-medium">Bank Name: </span>
-                        <span>{bankDetails.bankName}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium">Account Number: </span>
-                        <span>{bankDetails.accountNumber}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium">IFSC Code: </span>
-                        <span>{bankDetails.ifscCode}</span>
-                      </div>
+                      {paymentMethod === 'bank' ? (
+                        <>
+                          <div>
+                            <span className="font-medium">Bank Name: </span>
+                            <span>{bankDetails.bankName}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Account Number: </span>
+                            <span>{bankDetails.accountNumber}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">IFSC Code: </span>
+                            <span>{bankDetails.ifscCode}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <div>
+                          <span className="font-medium">UPI ID: </span>
+                          <span>{bankDetails.upiId}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -613,25 +648,38 @@ const BookingFlow = () => {
                   </div>
                 </div>
 
-                {paymentMethod === 'bank' && (
+                {(paymentMethod === 'bank' || paymentMethod === 'upi') && (
                   <div className="mb-6 p-4 bg-blue-50 rounded border border-blue-200 text-left">
-                    <h4 className="font-medium text-blue-800 mb-2">Payment Method: Bank Transfer</h4>
+                    <h4 className="font-medium text-blue-800 mb-2">
+                      {paymentMethod === 'bank' 
+                        ? "Payment Method: Bank Transfer" 
+                        : "Payment Method: UPI"}
+                    </h4>
                     <p className="text-sm text-gray-700 mb-3">
                       After confirming your booking, please transfer the payment using these details:
                     </p>
                     <div className="space-y-2 text-gray-700">
-                      <div>
-                        <span className="font-medium">Bank Name: </span>
-                        <span>{bankDetails.bankName}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium">Account Number: </span>
-                        <span>{bankDetails.accountNumber}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium">IFSC Code: </span>
-                        <span>{bankDetails.ifscCode}</span>
-                      </div>
+                      {paymentMethod === 'bank' ? (
+                        <>
+                          <div>
+                            <span className="font-medium">Bank Name: </span>
+                            <span>{bankDetails.bankName}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Account Number: </span>
+                            <span>{bankDetails.accountNumber}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">IFSC Code: </span>
+                            <span>{bankDetails.ifscCode}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <div>
+                          <span className="font-medium">UPI ID: </span>
+                          <span>{bankDetails.upiId}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

@@ -5,12 +5,20 @@ import Stripe from 'stripe';
 // Using import.meta.env instead of process.env for Vite compatibility
 const stripe = new Stripe(import.meta.env.VITE_STRIPE_SECRET_KEY || '');
 
+// Bank account details - kept in backend for security
+const bankDetails = {
+  bankName: "CANARA BANK",
+  accountNumber: "110132761669",
+  ifscCode: "CNRB0006088",
+  upiId: "apnewalecoders@okicici" // Added UPI ID
+};
+
 export async function createPaymentIntent(amount: number, currency: string = 'usd') {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      payment_method_types: ['card'], // Removed Paytm and PhonePe as they may not be supported
+      payment_method_types: ['card'], // Using only card as payment method
     });
 
     return {
@@ -78,9 +86,10 @@ Total Amount: $${bookingDetails.price}
 
 ---
 For direct payment, please use the following bank details:
-Bank Name: CANARA BANK
-Account Number: 110132761669
-IFSC Code: CNRB0006088
+Bank Name: ${bankDetails.bankName}
+Account Number: ${bankDetails.accountNumber}
+IFSC Code: ${bankDetails.ifscCode}
+UPI ID: ${bankDetails.upiId}
     `;
 
     // In a real implementation, you would use an email service like SendGrid, Mailgun, etc.
@@ -96,11 +105,7 @@ IFSC Code: CNRB0006088
   }
 }
 
-// New function to get bank account information for manual transfers
+// Function to get bank account information for manual transfers
 export function getBankDetails() {
-  return {
-    bankName: "CANARA BANK",
-    accountNumber: "110132761669",
-    ifscCode: "CNRB0006088"
-  };
+  return bankDetails;
 }
