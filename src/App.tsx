@@ -1,47 +1,43 @@
 
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "@/pages/Index";
+import About from "@/pages/About";
+import Services from "@/pages/Services";
+import Book from "@/pages/Book";
+import BookingFlow from "@/pages/BookingFlow";
+import Payment from "@/pages/Payment";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import Jobs from "@/pages/Jobs";
+import JobDetail from "@/pages/JobDetail";
+import Blog from "@/pages/Blog";
+import BlogDetail from "@/pages/BlogDetail";
+import Pricing from "@/pages/Pricing";
+import NotFound from "@/pages/NotFound";
 
-// Pages
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Services from "./pages/Services";
-import Blog from "./pages/Blog";
-import BlogDetail from "./pages/BlogDetail";
-import Jobs from "./pages/Jobs";
-import JobDetail from "./pages/JobDetail";
-import Book from "./pages/Book";
-import BookingFlow from "./pages/BookingFlow";
-import NotFound from "./pages/NotFound";
-import Pricing from "./pages/Pricing";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+function App() {
+  return (
+    <>
+      <Router>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/book" element={<Book />} />
           <Route path="/booking" element={<BookingFlow />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/job/:id" element={<JobDetail />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </Router>
+      <Toaster />
+    </>
+  );
+}
 
 export default App;
