@@ -37,7 +37,7 @@ const JobCard = ({
           </div>
         </div>
         <div>
-          <h3 className="font-semibold text-lg"><Link to={`/jobs/${id}`} className="hover:text-brand-red transition-colors">{title}</Link></h3>
+          <h3 className="font-semibold text-lg"><Link to={`/job/${id}`} className="hover:text-brand-red transition-colors">{title}</Link></h3>
           <div className="flex items-center gap-2 text-gray-600">
             <Building className="h-4 w-4" />
             <span>{company}</span>
@@ -72,7 +72,7 @@ const JobCard = ({
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full bg-brand-red hover:bg-red-700 text-white">
-          <Link to={`/jobs/${id}`}>Apply Now</Link>
+          <Link to={`/job/${id}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

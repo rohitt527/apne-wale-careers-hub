@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Briefcase, MapPin, Clock, Building, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import JobApplication from "@/components/jobs/JobApplication";
 
 // Mock job data - this would come from an API in a real app
 const jobsData = [
@@ -45,7 +46,24 @@ const jobsData = [
                    <li>401(k) matching</li>
                    <li>Professional development budget</li>
                  </ul>`,
-    applicationProcess: "Submit your resume and a cover letter. If shortlisted, you'll participate in a technical interview followed by a coding challenge."
+    applicationProcess: "Submit your resume and a cover letter. If shortlisted, you'll participate in a technical interview followed by a coding challenge.",
+    requirements: [
+      "BS/MS degree in Computer Science or related field (or equivalent experience)",
+      "3-5 years of experience with React and TypeScript",
+      "Strong understanding of web fundamentals (HTML, CSS, JavaScript)",
+      "Experience with state management libraries (Redux, Zustand, etc.)",
+      "Knowledge of responsive design principles",
+      "Experience with testing frameworks like Jest",
+      "Understanding of CI/CD pipelines",
+      "Excellent problem-solving and communication skills"
+    ],
+    qualifications: [
+      "Experience with GraphQL is a plus",
+      "Contributions to open source projects",
+      "Experience with Next.js or similar frameworks",
+      "Knowledge of accessibility standards",
+      "Experience with performance optimization techniques"
+    ]
   },
   {
     id: 2,
@@ -182,6 +200,7 @@ const JobDetail = () => {
   const { id } = useParams();
   const [job, setJob] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showApplication, setShowApplication] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -197,13 +216,8 @@ const JobDetail = () => {
   }, [id]);
 
   const handleApply = () => {
-    // Open email client with job application
-    window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(`Application for ${job.title} at ${job.company}`)}&body=${encodeURIComponent(`I am interested in applying for the ${job.title} position at ${job.company}.`)}`);
-    
-    toast({
-      title: "Application initiated!",
-      description: "You'll be redirected to your email client to complete your application.",
-    });
+    setShowApplication(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading) {
@@ -238,6 +252,21 @@ const JobDetail = () => {
     );
   }
 
+  if (showApplication) {
+    return (
+      <Layout>
+        <div className="container-custom py-16">
+          <JobApplication 
+            jobId={job.id}
+            jobTitle={job.title}
+            companyName={job.company}
+            onCancel={() => setShowApplication(false)}
+          />
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="bg-gray-50 py-6">
@@ -263,6 +292,16 @@ const JobDetail = () => {
                 <span>{job.company}</span>
               </div>
             </div>
+          </div>
+          
+          {/* Apply Button - Top */}
+          <div className="mb-8">
+            <Button 
+              onClick={handleApply}
+              className="w-full md:w-auto bg-brand-red hover:bg-red-700 text-white py-3 px-8 text-lg"
+            >
+              Apply Now
+            </Button>
           </div>
           
           {/* Job Meta */}
@@ -318,13 +357,37 @@ const JobDetail = () => {
             <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: job.description }}></div>
           </div>
           
+          {/* Requirements */}
+          {job.requirements && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">Requirements</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                {job.requirements.map((req: string, index: number) => (
+                  <li key={index} className="text-gray-700">{req}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          {/* Preferred Qualifications */}
+          {job.qualifications && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">Preferred Qualifications</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                {job.qualifications.map((qual: string, index: number) => (
+                  <li key={index} className="text-gray-700">{qual}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
           {/* Application Process */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-4">Application Process</h2>
             <p className="text-gray-700">{job.applicationProcess}</p>
           </div>
           
-          {/* Apply Button */}
+          {/* Apply Button - Bottom */}
           <div className="mt-8 mb-12">
             <Button 
               onClick={handleApply}
