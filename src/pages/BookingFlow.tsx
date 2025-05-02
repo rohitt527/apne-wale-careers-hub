@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight, Phone, Mail, BankTransfer } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard, ArrowLeft, ArrowRight, Phone, Mail, Building } from "lucide-react";
 import { createCheckoutSession, sendBookingEmail, getBankDetails } from "@/functions/create-payment";
 
 // Define services with detailed descriptions and features
@@ -512,7 +512,7 @@ const BookingFlow = () => {
                   <div className="h-5 w-5 rounded-full border-2 mr-3 flex items-center justify-center">
                     {paymentMethod === 'bank' && <div className="h-3 w-3 rounded-full bg-brand-red"></div>}
                   </div>
-                  <BankTransfer className="h-6 w-6 text-blue-600 mr-3" />
+                  <Building className="h-6 w-6 text-blue-600 mr-3" />
                   <span className="font-medium">Bank Transfer</span>
                 </div>
               </div>
@@ -561,7 +561,7 @@ const BookingFlow = () => {
                   Thank you for booking with us! We've sent the details to your email client.
                 </p>
                 <p className="mb-6">
-                  Your {selectedService.name} session is scheduled for:
+                  Your {selectedService?.name} session is scheduled for:
                   <br />
                   <span className="font-semibold">{selectedDate ? format(selectedDate, 'PPP') : ''} at {selectedTime}</span>
                 </p>
@@ -596,7 +596,7 @@ const BookingFlow = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-gray-500">Service</p>
-                      <p className="font-medium">{selectedService.name}</p>
+                      <p className="font-medium">{selectedService?.name}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Date & Time</p>
