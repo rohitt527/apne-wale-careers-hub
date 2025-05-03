@@ -11,11 +11,11 @@ interface BookingHeaderProps {
 
 const BookingHeader = ({ selectedService }: BookingHeaderProps) => {
   return (
-    <section className="bg-brand-dark text-white py-20">
+    <section className="bg-brand-dark text-white py-14">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
           <h1 className="heading-xl mb-3">Book {selectedService.name}</h1>
-          <p className="text-lg text-gray-300 mb-6">
+          <p className="text-lg text-gray-300 mb-5">
             {selectedService.description}
           </p>
           <div className="bg-brand-red/20 p-4 rounded-md inline-block">

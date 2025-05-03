@@ -21,11 +21,11 @@ const PaymentHeader = ({
   userPhone,
 }: PaymentHeaderProps) => {
   return (
-    <section className="bg-brand-dark text-white py-20">
+    <section className="bg-brand-dark text-white py-14">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto">
           <h1 className="heading-xl mb-3">Complete Your Payment</h1>
-          <p className="text-lg text-gray-300 mb-6">
+          <p className="text-lg text-gray-300 mb-5">
             Choose your preferred payment method to complete your booking.
           </p>
           <div className="bg-brand-red/20 p-4 rounded-md">

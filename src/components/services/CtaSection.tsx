@@ -5,7 +5,7 @@ import { CalendarDays, DollarSign } from "lucide-react";
 
 const CtaSection = () => {
   return (
-    <section className="py-24 bg-gradient-to-br from-brand-dark to-gray-900 text-white relative overflow-hidden">
+    <section className="py-16 bg-gradient-to-br from-brand-dark to-gray-900 text-white relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-red opacity-20 rounded-full filter blur-3xl -translate-y-1/2 translate-x-1/3"></div>
@@ -14,8 +14,8 @@ const CtaSection = () => {
       
       <div className="container-custom relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="heading-lg mb-8 font-bold">Ready to Transform Your Tech Career?</h2>
-          <p className="text-xl text-gray-300 mb-10 leading-relaxed">
+          <h2 className="heading-lg mb-6 font-bold">Ready to Transform Your Tech Career?</h2>
+          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
             Join hundreds of successful tech professionals who've accelerated their careers with our expert guidance. 
             All services are just $9 per session to make professional support accessible to everyone.
           </p>
@@ -35,7 +35,7 @@ const CtaSection = () => {
             </Button>
           </div>
           
-          <p className="mt-8 text-gray-400">
+          <p className="mt-6 text-gray-400">
             Not sure which service is right for you? 
             <Link to="/book" className="text-brand-red hover:text-red-400 ml-1 underline">
               Schedule a free consultation.
