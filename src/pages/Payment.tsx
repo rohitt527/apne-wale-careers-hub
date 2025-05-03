@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -8,11 +7,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { 
   createCheckoutSession, 
-  verifyUpiPayment, 
+  createPaymentIntent,
+  verifyUpiPayment,
+  verifyCardPayment, 
   getUpiDetails,
   sendBookingEmail
 } from "@/functions/create-payment";
-import { CreditCard, QrCode, Smartphone, CheckCircle, AlertCircle, Phone, Wallet } from "lucide-react";
+import { CreditCard, QrCode, Smartphone, CheckCircle, AlertCircle, Phone, Wallet, Loader2 } from "lucide-react";
+import { loadStripe } from "@stripe/stripe-js";
+
+// Initialize Stripe with the publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 const Payment = () => {
   const [searchParams] = useSearchParams();
@@ -37,6 +42,7 @@ const Payment = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [upiDetails, setUpiDetails] = useState({ upiId: "", qrCodePath: "" });
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   useEffect(() => {
     // Get UPI details from backend
@@ -61,8 +67,8 @@ const Payment = () => {
     try {
       const { sessionId, url } = await createCheckoutSession(
         "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
-        `${window.location.origin}/payment-success?serviceName=${serviceName}&date=${bookingDate}&time=${bookingTime}`, 
-        `${window.location.origin}/payment?serviceId=${serviceId}&serviceName=${serviceName}&servicePrice=${servicePrice}&date=${bookingDate}&time=${bookingTime}&name=${userName}&email=${userEmail}&phone=${userPhone}&companyName=${companyName}&examPattern=${examPattern}&duration=${duration}&notes=${notes}`
+        `${window.location.origin}/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`, 
+        `${window.location.origin}/payment?serviceId=${serviceId}&serviceName=${encodeURIComponent(serviceName || "")}&servicePrice=${servicePrice}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}&name=${encodeURIComponent(userName || "")}&email=${encodeURIComponent(userEmail || "")}&phone=${encodeURIComponent(userPhone || "")}&companyName=${encodeURIComponent(companyName)}&examPattern=${encodeURIComponent(examPattern)}&duration=${encodeURIComponent(duration)}&notes=${encodeURIComponent(notes)}`
       );
       
       if (url) {
@@ -82,8 +88,18 @@ const Payment = () => {
             price: Number(servicePrice),
             paymentMethod: "card"
           });
+          
+          toast({
+            title: "Processing payment",
+            description: "You'll be redirected to the secure payment page.",
+          });
         } catch (emailError) {
           console.error("Error sending email:", emailError);
+          toast({
+            title: "Warning",
+            description: "Payment processing will continue, but there was an issue preparing the confirmation email.",
+            variant: "destructive", 
+          });
         }
         
         window.location.href = url;
@@ -172,7 +188,7 @@ const Payment = () => {
         
         // Redirect to success page after short delay
         setTimeout(() => {
-          navigate(`/payment-success?serviceName=${serviceName}&date=${bookingDate}&time=${bookingTime}`);
+          navigate(`/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`);
         }, 2000);
       } else {
         setPaymentStatus('failed');
@@ -255,7 +271,12 @@ const Payment = () => {
                       disabled={loading}
                       className="w-full md:w-auto bg-brand-red hover:bg-red-700 py-6"
                     >
-                      {loading ? "Processing..." : "Pay with Card"}
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : "Pay with Card"}
                     </Button>
                   </div>
                 </TabsContent>
@@ -314,7 +335,12 @@ const Payment = () => {
                             disabled={verifying || !transactionId.trim()}
                             className="bg-brand-red hover:bg-red-700"
                           >
-                            {verifying ? "Verifying..." : "Verify"}
+                            {verifying ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Verifying...
+                              </>
+                            ) : "Verify"}
                           </Button>
                         </div>
                         
@@ -372,7 +398,12 @@ const Payment = () => {
                           disabled={verifying || !transactionId.trim()}
                           className="bg-brand-red hover:bg-red-700"
                         >
-                          {verifying ? "Verifying..." : "Verify"}
+                          {verifying ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Verifying...
+                            </>
+                          ) : "Verify"}
                         </Button>
                       </div>
                       

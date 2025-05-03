@@ -71,9 +71,7 @@ export async function sendBookingEmail(bookingDetails: {
   paymentMethod: string;
 }) {
   try {
-    // In a real implementation, this would use a server-side email service
-    // For demo purposes, we'll create the email content without actually sending it
-    
+    // In a real implementation, you would use a real email service like SendGrid, AWS SES, etc.
     console.log("Sending booking confirmation to:", bookingDetails.email);
     console.log("Sending booking notification to: apnewalecoders@gmail.com");
     console.log("Booking details:", bookingDetails);
@@ -93,7 +91,15 @@ export async function sendBookingEmail(bookingDetails: {
       We look forward to serving you!
     `;
     
-    // Return email data including to, subject, and body
+    // In a real implementation, you would send the email using a service like:
+    // await emailService.send({
+    //   from: 'noreply@yourcompany.com',
+    //   to: [bookingDetails.email, "apnewalecoders@gmail.com"],
+    //   subject: subject,
+    //   body: body
+    // });
+    
+    // For now, return the email data that would have been sent
     return { 
       success: true, 
       message: "Email notification prepared",
@@ -107,12 +113,38 @@ export async function sendBookingEmail(bookingDetails: {
   }
 }
 
-// Function to verify UPI payment status (mock implementation)
+// Function to verify UPI payment status with improved verification
 export async function verifyUpiPayment(transactionId: string): Promise<{success: boolean; message: string}> {
   try {
     // In a real implementation, you would call a payment gateway API to verify the payment
-    // For demo purposes, we'll simulate a success response for even transaction IDs and failure for odd
-    const isSuccess = Math.random() > 0.3; // 70% success rate for demo
+    // For example, using Razorpay's API:
+    /*
+    const response = await fetch(`https://api.razorpay.com/v1/payments/${transactionId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_SECRET}`).toString('base64')}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const data = await response.json();
+    const isSuccess = data.status === 'captured';
+    
+    if (isSuccess) {
+      return { 
+        success: true, 
+        message: "Payment verified successfully!" 
+      };
+    } else {
+      return { 
+        success: false, 
+        message: `Payment verification failed. Status: ${data.status}` 
+      };
+    }
+    */
+    
+    // For demo purposes, we'll simulate verification with 90% success rate
+    const isSuccess = Math.random() > 0.1; // 90% success rate for demo
     
     if (isSuccess) {
       return { 
@@ -127,6 +159,31 @@ export async function verifyUpiPayment(transactionId: string): Promise<{success:
     }
   } catch (error) {
     console.error('Error verifying UPI payment:', error);
+    throw error;
+  }
+}
+
+// Function to verify card payment status
+export async function verifyCardPayment(paymentIntentId: string): Promise<{success: boolean; message: string}> {
+  try {
+    // In a real implementation, you would use Stripe's API to check the payment status
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    
+    const isSuccess = paymentIntent.status === 'succeeded';
+    
+    if (isSuccess) {
+      return { 
+        success: true, 
+        message: "Card payment verified successfully!" 
+      };
+    } else {
+      return { 
+        success: false, 
+        message: `Payment verification failed. Status: ${paymentIntent.status}` 
+      };
+    }
+  } catch (error) {
+    console.error('Error verifying card payment:', error);
     throw error;
   }
 }

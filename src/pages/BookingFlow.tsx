@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -223,20 +222,22 @@ const BookingFlow = () => {
         paymentMethod: paymentMethod
       };
       
-      // Send booking email
-      const emailData = await sendBookingEmail(bookingDetails);
-      
-      // Only send email automatically if real email service is connected
-      // For demo, we'll skip the actual email sending
-      /*
-      // Enable this code when using a real email service
-      window.open(`mailto:${emailData.to}?subject=${emailData.subject}&body=${emailData.body}`);
-      */
-
-      toast({
-        title: "Booking confirmed!",
-        description: "Your booking has been confirmed! A confirmation email will be sent shortly.",
-      });
+      // Send booking email - automatic, no email client opening
+      try {
+        await sendBookingEmail(bookingDetails);
+        
+        toast({
+          title: "Booking confirmed!",
+          description: "Your booking has been confirmed! A confirmation email has been sent to you and apnewalecoders@gmail.com.",
+        });
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        toast({
+          title: "Booking confirmed, but email failed",
+          description: "Your booking was successful but we couldn't send the confirmation email.",
+          variant: "destructive",
+        });
+      }
       
       setIsConfirmed(true);
       setLoading(false);

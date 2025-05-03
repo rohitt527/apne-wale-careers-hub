@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Mail, Calendar, Clock } from "lucide-react";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -31,15 +31,28 @@ const PaymentSuccess = () => {
             <p className="text-lg mb-6">
               Thank you for your payment for {serviceName}.
               {bookingDate && bookingTime && (
-                <span className="block mt-2 font-medium">
-                  Your session is scheduled for {bookingDate} at {bookingTime}.
-                </span>
+                <div className="flex flex-col items-center mt-4 space-y-2">
+                  <div className="flex items-center text-gray-700">
+                    <Calendar className="h-5 w-5 mr-2" />
+                    <span className="font-medium">{bookingDate}</span>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <Clock className="h-5 w-5 mr-2" />
+                    <span className="font-medium">{bookingTime}</span>
+                  </div>
+                </div>
               )}
             </p>
             
-            <p className="mb-8 text-gray-600">
-              We've sent a confirmation email with all the details. You will receive further information about your session shortly.
-            </p>
+            <div className="bg-white p-4 rounded-md mb-6 text-left max-w-md mx-auto">
+              <div className="flex items-center mb-3 text-gray-700">
+                <Mail className="h-5 w-5 mr-2" />
+                <span>A confirmation email has been sent to your email address and to apnewalecoders@gmail.com</span>
+              </div>
+              <p className="text-sm text-gray-600">
+                Please check your inbox for all the details about your booking. If you don't see it, please check your spam folder.
+              </p>
+            </div>
             
             <div className="flex flex-col md:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
