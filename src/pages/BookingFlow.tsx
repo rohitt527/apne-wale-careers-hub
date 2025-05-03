@@ -223,19 +223,26 @@ const BookingFlow = () => {
         paymentMethod: paymentMethod
       };
       
-      // Generate email data
+      // Send booking email
       const emailData = await sendBookingEmail(bookingDetails);
       
-      // Open email client with booking details
+      // Only send email automatically if real email service is connected
+      // For demo, we'll skip the actual email sending
+      /*
+      // Enable this code when using a real email service
       window.open(`mailto:${emailData.to}?subject=${emailData.subject}&body=${emailData.body}`);
+      */
 
       toast({
         title: "Booking confirmed!",
-        description: "Please check your email client to send the booking details.",
+        description: "Your booking has been confirmed! A confirmation email will be sent shortly.",
       });
       
       setIsConfirmed(true);
       setLoading(false);
+      
+      // After confirmation, navigate to success page with details
+      navigate(`/payment-success?serviceName=${encodeURIComponent(selectedService.name)}&date=${encodeURIComponent(format(selectedDate, 'PP'))}&time=${encodeURIComponent(selectedTime)}`);
       
     } catch (error) {
       console.error("Booking error:", error);

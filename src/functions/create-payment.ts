@@ -72,34 +72,35 @@ export async function sendBookingEmail(bookingDetails: {
 }) {
   try {
     // In a real implementation, this would use a server-side email service
-    // For demo purposes, we'll simulate sending an email
+    // For demo purposes, we'll create the email content without actually sending it
     
     console.log("Sending booking confirmation to:", bookingDetails.email);
     console.log("Sending booking notification to: apnewalecoders@gmail.com");
     console.log("Booking details:", bookingDetails);
     
-    // In production, you would use a real email sending service like SendGrid, AWS SES, etc.
-    // Example with a hypothetical email service:
-    /*
-    await emailService.send({
-      to: [bookingDetails.email, "apnewalecoders@gmail.com"],
-      subject: `Booking Confirmation: ${bookingDetails.service}`,
-      body: `
-        Thank you for your booking!
-        
-        Service: ${bookingDetails.service}
-        Date: ${bookingDetails.date}
-        Time: ${bookingDetails.time}
-        
-        Payment Method: ${bookingDetails.paymentMethod}
-        Amount: $${bookingDetails.price}
-        
-        We look forward to serving you!
-      `
-    });
-    */
+    // Create email content
+    const subject = `Booking Confirmation: ${bookingDetails.service}`;
+    const body = `
+      Thank you for your booking!
+      
+      Service: ${bookingDetails.service}
+      Date: ${bookingDetails.date}
+      Time: ${bookingDetails.time}
+      
+      Payment Method: ${bookingDetails.paymentMethod}
+      Amount: $${bookingDetails.price}
+      
+      We look forward to serving you!
+    `;
     
-    return { success: true, message: "Email notification sent" };
+    // Return email data including to, subject, and body
+    return { 
+      success: true, 
+      message: "Email notification prepared",
+      to: [bookingDetails.email, "apnewalecoders@gmail.com"].join(","),
+      subject: subject,
+      body: encodeURIComponent(body)
+    };
   } catch (error) {
     console.error('Error sending email notification:', error);
     throw error;
