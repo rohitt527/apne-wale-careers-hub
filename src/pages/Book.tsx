@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,6 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard } from "lucide-react";
 import ServiceCard from "@/components/common/ServiceCard";
 import { useSearchParams } from "react-router-dom";
-import { createCheckoutSession } from "@/functions/create-payment";
 
 // Services available for booking with detailed descriptions and features
 const services = [
@@ -143,9 +143,9 @@ const Book = () => {
   const [examPattern, setExamPattern] = useState("");
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
-  const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const { toast } = useToast();
 
@@ -171,42 +171,16 @@ const Book = () => {
         });
         return;
       }
-    }
 
-    if (currentStep === 2) {
-      // Process payment with Stripe
-      setPaymentProcessing(true);
-      try {
-        const selectedServiceDetails = services.find(s => s.id === selectedService);
-        if (!selectedServiceDetails) {
-          throw new Error("Service not found");
-        }
-        
-        const amount = selectedServiceDetails.price * 100; // Convert to cents
-        const { sessionId, url } = await createCheckoutSession(
-          "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
-          `${window.location.origin}/book?step=3&success=true`, // Success URL
-          `${window.location.origin}/book` // Cancel URL
-        );
-        
-        if (url) {
-          window.location.href = url;
-        } else {
-          throw new Error("Failed to create checkout session");
-        }
-      } catch (error) {
-        console.error("Payment error:", error);
-        toast({
-          title: "Payment error",
-          description: "There was an error processing your payment. Please try again.",
-          variant: "destructive",
-        });
-        setPaymentProcessing(false);
+      // Proceed to payment page with booking details
+      const selectedServiceDetails = services.find(s => s.id === selectedService);
+      if (selectedServiceDetails) {
+        navigate(`/payment?serviceId=${selectedService}&serviceName=${encodeURIComponent(selectedServiceDetails.name)}&servicePrice=${selectedServiceDetails.price}&date=${encodeURIComponent(format(selectedDate!, 'PP'))}&time=${encodeURIComponent(selectedTime!)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&companyName=${encodeURIComponent(companyName)}&examPattern=${encodeURIComponent(examPattern)}&duration=${encodeURIComponent(duration)}&notes=${encodeURIComponent(notes)}`);
       }
       return;
     }
 
-    // Move to the next step
+    // Move to the next step (for handling other steps if needed)
     setCurrentStep(currentStep + 1);
   };
 
@@ -239,48 +213,10 @@ const Book = () => {
       return;
     }
 
+    // This will be handled by the payment page
     setLoading(true);
-
-    try {
-      const selectedServiceDetails = services.find(s => s.id === selectedService);
-      const emailSubject = `New Booking: ${selectedServiceDetails?.name}`;
-      const emailBody = `
-New booking details:
-
-Service: ${selectedServiceDetails?.name}
-Date: ${format(selectedDate, 'PP')}
-Time: ${selectedTime}
-Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Company Name: ${companyName}
-Exam Pattern: ${examPattern}
-Test Duration: ${duration}
-Additional Notes: ${notes}
-
-Total Amount: $${selectedServiceDetails?.price}
-      `;
-
-      // Open email client with booking details
-      window.open(`mailto:apnewalecoders@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
-
-      toast({
-        title: "Booking confirmed!",
-        description: "Please check your email client to send the booking details.",
-      });
-      
-      setIsConfirmed(true);
-      setLoading(false);
-      
-    } catch (error) {
-      console.error("Booking error:", error);
-      toast({
-        title: "Booking failed",
-        description: "There was a problem processing your booking. Please try again.",
-        variant: "destructive",
-      });
-      setLoading(false);
-    }
+    setIsConfirmed(true);
+    setLoading(false);
   };
 
   const isDateDisabled = (date: Date) => {
@@ -655,7 +591,7 @@ Total Amount: $${selectedServiceDetails?.price}
                 <Button 
                   onClick={handlePreviousStep} 
                   variant="outline"
-                  disabled={loading || paymentProcessing}
+                  disabled={loading}
                 >
                   Back
                 </Button>
@@ -665,9 +601,9 @@ Total Amount: $${selectedServiceDetails?.price}
                 <Button 
                   onClick={handleNextStep} 
                   className="bg-brand-red hover:bg-red-700 text-white ml-auto"
-                  disabled={loading || paymentProcessing}
+                  disabled={loading}
                 >
-                  {currentStep === 2 && paymentProcessing ? "Processing..." : "Continue"}
+                  {currentStep === 2 ? "Continue" : "Next"}
                 </Button>
               )}
             </div>

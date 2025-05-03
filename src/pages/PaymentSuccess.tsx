@@ -9,6 +9,8 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const serviceName = searchParams.get("serviceName");
+  const bookingDate = searchParams.get("date");
+  const bookingTime = searchParams.get("time");
 
   useEffect(() => {
     // If no service name is provided, redirect to home
@@ -27,7 +29,12 @@ const PaymentSuccess = () => {
             </div>
             <h1 className="text-2xl font-bold mb-4 text-green-700">Payment Successful!</h1>
             <p className="text-lg mb-6">
-              Thank you for your payment for {serviceName}. Your booking has been confirmed.
+              Thank you for your payment for {serviceName}.
+              {bookingDate && bookingTime && (
+                <span className="block mt-2 font-medium">
+                  Your session is scheduled for {bookingDate} at {bookingTime}.
+                </span>
+              )}
             </p>
             
             <p className="mb-8 text-gray-600">

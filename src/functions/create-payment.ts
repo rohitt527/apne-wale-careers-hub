@@ -10,7 +10,7 @@ const bankDetails = {
   bankName: "CANARA BANK",
   accountNumber: "110132761669",
   ifscCode: "CNRB000608",
-  upiId: "yourhelper1@ybl" // Added UPI ID
+  upiId: "yourhelper1@ybl" // UPI ID
 };
 
 // QR code image path
@@ -71,41 +71,37 @@ export async function sendBookingEmail(bookingDetails: {
   paymentMethod: string;
 }) {
   try {
-    const subject = `New Booking: ${bookingDetails.service}`;
-    const body = `
-New booking details:
-
-Service: ${bookingDetails.service}
-Date: ${bookingDetails.date}
-Time: ${bookingDetails.time}
-Name: ${bookingDetails.name}
-Email: ${bookingDetails.email}
-Phone: ${bookingDetails.phone}
-${bookingDetails.companyName ? `Company Name: ${bookingDetails.companyName}` : ''}
-${bookingDetails.examPattern ? `Exam Pattern: ${bookingDetails.examPattern}` : ''}
-${bookingDetails.duration ? `Test Duration: ${bookingDetails.duration}` : ''}
-${bookingDetails.notes ? `Additional Notes: ${bookingDetails.notes}` : ''}
-
-Payment Method: ${bookingDetails.paymentMethod}
-Total Amount: $${bookingDetails.price}
-
----
-Payment received in:
-Bank Name: ${bankDetails.bankName}
-Account Number: ${bankDetails.accountNumber}
-IFSC Code: ${bankDetails.ifscCode}
-UPI ID: ${bankDetails.upiId}
-    `;
-
-    // In a real implementation, you would use an email service like SendGrid, Mailgun, etc.
-    // For now, we'll return the email data that can be used by the front end to open the mail client
-    return {
-      to: "apnewalecoders@gmail.com",
-      subject: encodeURIComponent(subject),
-      body: encodeURIComponent(body),
-    };
+    // In a real implementation, this would use a server-side email service
+    // For demo purposes, we'll simulate sending an email
+    
+    console.log("Sending booking confirmation to:", bookingDetails.email);
+    console.log("Sending booking notification to: apnewalecoders@gmail.com");
+    console.log("Booking details:", bookingDetails);
+    
+    // In production, you would use a real email sending service like SendGrid, AWS SES, etc.
+    // Example with a hypothetical email service:
+    /*
+    await emailService.send({
+      to: [bookingDetails.email, "apnewalecoders@gmail.com"],
+      subject: `Booking Confirmation: ${bookingDetails.service}`,
+      body: `
+        Thank you for your booking!
+        
+        Service: ${bookingDetails.service}
+        Date: ${bookingDetails.date}
+        Time: ${bookingDetails.time}
+        
+        Payment Method: ${bookingDetails.paymentMethod}
+        Amount: $${bookingDetails.price}
+        
+        We look forward to serving you!
+      `
+    });
+    */
+    
+    return { success: true, message: "Email notification sent" };
   } catch (error) {
-    console.error('Error preparing email:', error);
+    console.error('Error sending email notification:', error);
     throw error;
   }
 }

@@ -2,12 +2,16 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import SectionHeading from "@/components/common/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { createCheckoutSession, verifyUpiPayment, getUpiDetails } from "@/functions/create-payment";
+import { 
+  createCheckoutSession, 
+  verifyUpiPayment, 
+  getUpiDetails,
+  sendBookingEmail
+} from "@/functions/create-payment";
 import { CreditCard, QrCode, Smartphone, CheckCircle, AlertCircle, Phone, Wallet } from "lucide-react";
 
 const Payment = () => {
@@ -15,6 +19,16 @@ const Payment = () => {
   const serviceId = searchParams.get("serviceId");
   const serviceName = searchParams.get("serviceName");
   const servicePrice = searchParams.get("servicePrice");
+  const bookingDate = searchParams.get("date");
+  const bookingTime = searchParams.get("time");
+  const userName = searchParams.get("name");
+  const userEmail = searchParams.get("email");
+  const userPhone = searchParams.get("phone");
+  const companyName = searchParams.get("companyName") || "";
+  const examPattern = searchParams.get("examPattern") || "";
+  const duration = searchParams.get("duration") || "";
+  const notes = searchParams.get("notes") || "";
+  
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'phonepe' | 'paytm' | 'qrcode'>('card');
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
@@ -32,26 +46,46 @@ const Payment = () => {
 
   // If essential params are missing, redirect to services
   useEffect(() => {
-    if (!serviceId || !serviceName || !servicePrice) {
+    if (!serviceId || !serviceName || !servicePrice || !bookingDate || !bookingTime || !userName || !userEmail || !userPhone) {
       toast({
-        title: "Missing information",
-        description: "Please select a service first.",
+        title: "Missing booking information",
+        description: "Please complete the booking form first.",
         variant: "destructive",
       });
-      navigate("/services");
+      navigate("/book");
     }
-  }, [serviceId, serviceName, servicePrice, toast, navigate]);
+  }, [serviceId, serviceName, servicePrice, bookingDate, bookingTime, userName, userEmail, userPhone, toast, navigate]);
 
   const handleCardPayment = async () => {
     setLoading(true);
     try {
       const { sessionId, url } = await createCheckoutSession(
         "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
-        `${window.location.origin}/payment-success?serviceName=${serviceName}`, 
-        `${window.location.origin}/payment?serviceId=${serviceId}&serviceName=${serviceName}&servicePrice=${servicePrice}`
+        `${window.location.origin}/payment-success?serviceName=${serviceName}&date=${bookingDate}&time=${bookingTime}`, 
+        `${window.location.origin}/payment?serviceId=${serviceId}&serviceName=${serviceName}&servicePrice=${servicePrice}&date=${bookingDate}&time=${bookingTime}&name=${userName}&email=${userEmail}&phone=${userPhone}&companyName=${companyName}&examPattern=${examPattern}&duration=${duration}&notes=${notes}`
       );
       
       if (url) {
+        // Before redirecting, send the booking email
+        try {
+          await sendBookingEmail({
+            service: serviceName || "",
+            date: bookingDate || "",
+            time: bookingTime || "",
+            name: userName || "",
+            email: userEmail || "",
+            phone: userPhone || "",
+            companyName,
+            examPattern,
+            duration,
+            notes,
+            price: Number(servicePrice),
+            paymentMethod: "card"
+          });
+        } catch (emailError) {
+          console.error("Error sending email:", emailError);
+        }
+        
         window.location.href = url;
       } else {
         throw new Error("Failed to create checkout session");
@@ -106,13 +140,39 @@ const Payment = () => {
       
       if (result.success) {
         setPaymentStatus('success');
-        toast({
-          title: "Payment successful!",
-          description: "Your payment has been verified successfully.",
-        });
+        
+        // Send booking confirmation email
+        try {
+          await sendBookingEmail({
+            service: serviceName || "",
+            date: bookingDate || "",
+            time: bookingTime || "",
+            name: userName || "",
+            email: userEmail || "",
+            phone: userPhone || "",
+            companyName,
+            examPattern,
+            duration,
+            notes,
+            price: Number(servicePrice),
+            paymentMethod: paymentMethod === 'qrcode' ? 'QR Code UPI' : paymentMethod
+          });
+          
+          toast({
+            title: "Booking confirmed!",
+            description: "Your payment has been verified and booking confirmed. An email has been sent with details.",
+          });
+        } catch (emailError) {
+          console.error("Error sending email:", emailError);
+          toast({
+            title: "Booking confirmed, but email failed",
+            description: "Your payment was successful but we couldn't send the confirmation email.",
+          });
+        }
+        
         // Redirect to success page after short delay
         setTimeout(() => {
-          navigate(`/payment-success?serviceName=${serviceName}`);
+          navigate(`/payment-success?serviceName=${serviceName}&date=${bookingDate}&time=${bookingTime}`);
         }, 2000);
       } else {
         setPaymentStatus('failed');
@@ -144,9 +204,19 @@ const Payment = () => {
             <p className="text-lg text-gray-300 mb-6">
               Choose your preferred payment method to complete your booking.
             </p>
-            <div className="bg-brand-red/20 p-4 rounded-md inline-block">
-              <span className="text-lg font-semibold">${servicePrice}</span>
-              <span className="ml-2">• {serviceName}</span>
+            <div className="bg-brand-red/20 p-4 rounded-md">
+              <div className="flex flex-col md:flex-row justify-between mb-2">
+                <div>
+                  <span className="text-lg font-semibold">${servicePrice}</span>
+                  <span className="ml-2">• {serviceName}</span>
+                </div>
+                <div className="text-gray-300">
+                  {bookingDate} at {bookingTime}
+                </div>
+              </div>
+              <div className="text-sm text-gray-300">
+                {userName} • {userEmail} • {userPhone}
+              </div>
             </div>
           </div>
         </div>
@@ -329,7 +399,7 @@ const Payment = () => {
           <div className="text-center">
             <Button 
               variant="outline"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/book")}
               className="w-full md:w-auto"
             >
               Back to Booking
