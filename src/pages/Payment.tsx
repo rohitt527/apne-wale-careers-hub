@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -5,19 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  createCheckoutSession, 
-  createPaymentIntent,
-  verifyUpiPayment,
-  verifyCardPayment, 
-  getUpiDetails,
-  sendBookingEmail
-} from "@/functions/create-payment";
-import { CreditCard, QrCode, Smartphone, CheckCircle, AlertCircle, Phone, Wallet, Loader2 } from "lucide-react";
-import { loadStripe } from "@stripe/stripe-js";
-
-// Initialize Stripe with the publishable key
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+import { CreditCard, QrCode, Smartphone } from "lucide-react";
+import { PaymentService } from "@/services/PaymentService";
+import PaymentHeader from "@/components/payment/PaymentHeader";
+import CardPayment from "@/components/payment/CardPayment";
+import UpiPayment from "@/components/payment/UpiPayment";
+import QrCodePayment from "@/components/payment/QrCodePayment";
 
 const Payment = () => {
   const [searchParams] = useSearchParams();
@@ -42,12 +36,15 @@ const Payment = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [upiDetails, setUpiDetails] = useState({ upiId: "", qrCodePath: "" });
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   useEffect(() => {
     // Get UPI details from backend
-    const details = getUpiDetails();
-    setUpiDetails(details);
+    const fetchUpiDetails = async () => {
+      const details = await PaymentService.getUpiDetails();
+      setUpiDetails(details);
+    };
+    
+    fetchUpiDetails();
   }, []);
 
   // If essential params are missing, redirect to services
@@ -65,54 +62,33 @@ const Payment = () => {
   const handleCardPayment = async () => {
     setLoading(true);
     try {
-      const { sessionId, url } = await createCheckoutSession(
-        "price_1Ow0VdLJZfxVtt9CluDBpZEU", // Replace with actual price ID
-        `${window.location.origin}/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`, 
-        `${window.location.origin}/payment?serviceId=${serviceId}&serviceName=${encodeURIComponent(serviceName || "")}&servicePrice=${servicePrice}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}&name=${encodeURIComponent(userName || "")}&email=${encodeURIComponent(userEmail || "")}&phone=${encodeURIComponent(userPhone || "")}&companyName=${encodeURIComponent(companyName)}&examPattern=${encodeURIComponent(examPattern)}&duration=${encodeURIComponent(duration)}&notes=${encodeURIComponent(notes)}`
-      );
-      
-      if (url) {
-        // Before redirecting, send the booking email
-        try {
-          await sendBookingEmail({
-            service: serviceName || "",
-            date: bookingDate || "",
-            time: bookingTime || "",
-            name: userName || "",
-            email: userEmail || "",
-            phone: userPhone || "",
-            companyName,
-            examPattern,
-            duration,
-            notes,
-            price: Number(servicePrice),
-            paymentMethod: "card"
-          });
-          
+      await PaymentService.handleCardPayment(
+        serviceId,
+        serviceName,
+        servicePrice,
+        bookingDate,
+        bookingTime,
+        userName,
+        userEmail,
+        userPhone,
+        companyName,
+        examPattern,
+        duration,
+        notes,
+        (message) => {
           toast({
             title: "Processing payment",
-            description: "You'll be redirected to the secure payment page.",
+            description: message,
           });
-        } catch (emailError) {
-          console.error("Error sending email:", emailError);
+        },
+        (errorMessage) => {
           toast({
-            title: "Warning",
-            description: "Payment processing will continue, but there was an issue preparing the confirmation email.",
-            variant: "destructive", 
+            title: "Payment error",
+            description: errorMessage,
+            variant: "destructive",
           });
         }
-        
-        window.location.href = url;
-      } else {
-        throw new Error("Failed to create checkout session");
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast({
-        title: "Payment error",
-        description: "There was an error processing your card payment. Please try again.",
-        variant: "destructive",
-      });
+      );
     } finally {
       setLoading(false);
     }
@@ -120,14 +96,7 @@ const Payment = () => {
 
   const handleUpiApp = (app: 'phonepe' | 'paytm') => {
     setPaymentMethod(app);
-    
-    // Deep linking to respective UPI apps
-    const upiLink = app === 'phonepe' 
-      ? `phonepe://pay?pa=${upiDetails.upiId}&pn=Service&am=${servicePrice}&cu=INR&tn=Payment for ${serviceName}`
-      : `paytmmp://pay?pa=${upiDetails.upiId}&pn=Service&am=${servicePrice}&cu=INR&tn=Payment for ${serviceName}`;
-    
-    // Try to open the app, if it fails (desktop or app not installed), show fallback
-    window.location.href = upiLink;
+    PaymentService.handleUpiApp(app, upiDetails.upiId, servicePrice, serviceName);
     
     // After some delay, check if the app was opened, if not, show QR code option
     setTimeout(() => {
@@ -152,60 +121,45 @@ const Payment = () => {
 
     setVerifying(true);
     try {
-      const result = await verifyUpiPayment(transactionId);
-      
-      if (result.success) {
-        setPaymentStatus('success');
-        
-        // Send booking confirmation email
-        try {
-          await sendBookingEmail({
-            service: serviceName || "",
-            date: bookingDate || "",
-            time: bookingTime || "",
-            name: userName || "",
-            email: userEmail || "",
-            phone: userPhone || "",
-            companyName,
-            examPattern,
-            duration,
-            notes,
-            price: Number(servicePrice),
-            paymentMethod: paymentMethod === 'qrcode' ? 'QR Code UPI' : paymentMethod
-          });
-          
+      const success = await PaymentService.verifyPayment(
+        transactionId,
+        serviceName,
+        bookingDate,
+        bookingTime,
+        userName,
+        userEmail,
+        userPhone,
+        companyName,
+        examPattern,
+        duration,
+        notes,
+        servicePrice,
+        paymentMethod,
+        () => {
+          setPaymentStatus('success');
           toast({
             title: "Booking confirmed!",
             description: "Your payment has been verified and booking confirmed. An email has been sent with details.",
           });
-        } catch (emailError) {
-          console.error("Error sending email:", emailError);
+          
+          // Redirect to success page after short delay
+          setTimeout(() => {
+            navigate(`/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`);
+          }, 2000);
+        },
+        (errorMessage) => {
+          setPaymentStatus('failed');
           toast({
-            title: "Booking confirmed, but email failed",
-            description: "Your payment was successful but we couldn't send the confirmation email.",
+            title: "Payment verification failed",
+            description: errorMessage,
+            variant: "destructive",
           });
         }
-        
-        // Redirect to success page after short delay
-        setTimeout(() => {
-          navigate(`/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`);
-        }, 2000);
-      } else {
+      );
+      
+      if (!success) {
         setPaymentStatus('failed');
-        toast({
-          title: "Payment verification failed",
-          description: result.message,
-          variant: "destructive",
-        });
       }
-    } catch (error) {
-      console.error("Verification error:", error);
-      setPaymentStatus('failed');
-      toast({
-        title: "Verification error",
-        description: "There was an error verifying your payment. Please try again.",
-        variant: "destructive",
-      });
     } finally {
       setVerifying(false);
     }
@@ -213,30 +167,15 @@ const Payment = () => {
 
   return (
     <Layout>
-      <section className="bg-brand-dark text-white py-20">
-        <div className="container-custom">
-          <div className="max-w-3xl mx-auto">
-            <h1 className="heading-xl mb-3">Complete Your Payment</h1>
-            <p className="text-lg text-gray-300 mb-6">
-              Choose your preferred payment method to complete your booking.
-            </p>
-            <div className="bg-brand-red/20 p-4 rounded-md">
-              <div className="flex flex-col md:flex-row justify-between mb-2">
-                <div>
-                  <span className="text-lg font-semibold">${servicePrice}</span>
-                  <span className="ml-2">• {serviceName}</span>
-                </div>
-                <div className="text-gray-300">
-                  {bookingDate} at {bookingTime}
-                </div>
-              </div>
-              <div className="text-sm text-gray-300">
-                {userName} • {userEmail} • {userPhone}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PaymentHeader 
+        serviceName={serviceName}
+        servicePrice={servicePrice}
+        bookingDate={bookingDate}
+        bookingTime={bookingTime}
+        userName={userName}
+        userEmail={userEmail}
+        userPhone={userPhone}
+      />
 
       <section className="section-padding">
         <div className="container-custom max-w-3xl">
@@ -256,172 +195,31 @@ const Payment = () => {
                 </TabsList>
 
                 <TabsContent value="card">
-                  <div className="text-center space-y-6 py-4">
-                    <div className="bg-blue-50 p-4 rounded-md text-blue-800 text-left">
-                      <h3 className="font-medium mb-2 flex items-center">
-                        <CreditCard className="h-5 w-5 mr-2" />
-                        Secure Card Payment
-                      </h3>
-                      <p className="text-sm">
-                        Your payment will be processed securely through Stripe. We never store your card details.
-                      </p>
-                    </div>
-                    <Button
-                      onClick={handleCardPayment}
-                      disabled={loading}
-                      className="w-full md:w-auto bg-brand-red hover:bg-red-700 py-6"
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processing...
-                        </>
-                      ) : "Pay with Card"}
-                    </Button>
-                  </div>
+                  <CardPayment loading={loading} handleCardPayment={handleCardPayment} />
                 </TabsContent>
 
                 <TabsContent value="upi-apps">
-                  <div className="text-center space-y-8 py-4">
-                    <div className="bg-blue-50 p-4 rounded-md text-blue-800 text-left">
-                      <h3 className="font-medium mb-2 flex items-center">
-                        <Wallet className="h-5 w-5 mr-2" />
-                        UPI Payment
-                      </h3>
-                      <p className="text-sm">
-                        Select an app to make a UPI payment. After completing the payment, 
-                        you'll need to enter the transaction ID for verification.
-                      </p>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <Button
-                        onClick={() => handleUpiApp('phonepe')}
-                        variant="outline"
-                        className="h-24 flex flex-col items-center justify-center border-2"
-                      >
-                        <Phone className="h-8 w-8 text-purple-600 mb-2" />
-                        <span>PhonePe</span>
-                      </Button>
-                      
-                      <Button
-                        onClick={() => handleUpiApp('paytm')}
-                        variant="outline" 
-                        className="h-24 flex flex-col items-center justify-center border-2"
-                      >
-                        <Wallet className="h-8 w-8 text-blue-600 mb-2" />
-                        <span>Paytm</span>
-                      </Button>
-                    </div>
-                    
-                    {(paymentMethod === 'phonepe' || paymentMethod === 'paytm') && (
-                      <div className="space-y-4 pt-4 border-t">
-                        <h3 className="text-lg font-medium">Verify Your Payment</h3>
-                        <p className="text-sm text-gray-600">
-                          After completing your payment in {paymentMethod === 'phonepe' ? 'PhonePe' : 'Paytm'}, 
-                          enter the transaction ID below to verify your payment.
-                        </p>
-                        
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={transactionId}
-                            onChange={(e) => setTransactionId(e.target.value)}
-                            placeholder="Enter Transaction ID"
-                            className="flex-1 px-3 py-2 border rounded"
-                          />
-                          <Button 
-                            onClick={verifyPayment}
-                            disabled={verifying || !transactionId.trim()}
-                            className="bg-brand-red hover:bg-red-700"
-                          >
-                            {verifying ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Verifying...
-                              </>
-                            ) : "Verify"}
-                          </Button>
-                        </div>
-                        
-                        {paymentStatus === 'success' && (
-                          <div className="bg-green-50 p-3 rounded flex items-center text-green-700">
-                            <CheckCircle className="h-5 w-5 mr-2" />
-                            Payment successful! Redirecting...
-                          </div>
-                        )}
-                        
-                        {paymentStatus === 'failed' && (
-                          <div className="bg-red-50 p-3 rounded flex items-center text-red-700">
-                            <AlertCircle className="h-5 w-5 mr-2" />
-                            Payment verification failed. Please try again or choose another payment method.
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  <UpiPayment
+                    paymentMethod={paymentMethod as 'phonepe' | 'paytm'}
+                    setPaymentMethod={(method) => setPaymentMethod(method)}
+                    handleUpiApp={handleUpiApp}
+                    transactionId={transactionId}
+                    setTransactionId={setTransactionId}
+                    verifying={verifying}
+                    paymentStatus={paymentStatus}
+                    verifyPayment={verifyPayment}
+                  />
                 </TabsContent>
 
                 <TabsContent value="qrcode">
-                  <div className="text-center space-y-6 py-4">
-                    <div className="bg-blue-50 p-4 rounded-md text-blue-800 text-left">
-                      <h3 className="font-medium mb-2 flex items-center">
-                        <QrCode className="h-5 w-5 mr-2" />
-                        QR Code Payment
-                      </h3>
-                      <p className="text-sm">
-                        Scan this QR code using any UPI app to make your payment. After payment, 
-                        enter the transaction ID below for verification.
-                      </p>
-                    </div>
-                    
-                    <div className="flex justify-center p-4">
-                      <img 
-                        src={upiDetails.qrCodePath} 
-                        alt="UPI QR Code" 
-                        className="max-w-xs w-full border p-2 rounded"
-                      />
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">Verify Your Payment</h3>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={transactionId}
-                          onChange={(e) => setTransactionId(e.target.value)}
-                          placeholder="Enter Transaction ID"
-                          className="flex-1 px-3 py-2 border rounded"
-                        />
-                        <Button 
-                          onClick={verifyPayment}
-                          disabled={verifying || !transactionId.trim()}
-                          className="bg-brand-red hover:bg-red-700"
-                        >
-                          {verifying ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Verifying...
-                            </>
-                          ) : "Verify"}
-                        </Button>
-                      </div>
-                      
-                      {paymentStatus === 'success' && (
-                        <div className="bg-green-50 p-3 rounded flex items-center text-green-700">
-                          <CheckCircle className="h-5 w-5 mr-2" />
-                          Payment successful! Redirecting...
-                        </div>
-                      )}
-                      
-                      {paymentStatus === 'failed' && (
-                        <div className="bg-red-50 p-3 rounded flex items-center text-red-700">
-                          <AlertCircle className="h-5 w-5 mr-2" />
-                          Payment verification failed. Please try again or choose another payment method.
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <QrCodePayment
+                    qrCodePath={upiDetails.qrCodePath}
+                    transactionId={transactionId}
+                    setTransactionId={setTransactionId}
+                    verifying={verifying}
+                    paymentStatus={paymentStatus}
+                    verifyPayment={verifyPayment}
+                  />
                 </TabsContent>
               </Tabs>
             </CardContent>
