@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -44,6 +45,9 @@ const BookingFlow = () => {
   const serviceParam = searchParams.get('service');
   const serviceId = serviceParam ? parseInt(serviceParam) : null;
   const selectedService = services.find(s => s.id === serviceId);
+  
+  // Check if we should proceed directly to payment
+  const directPay = searchParams.get('direct-pay') === 'true';
 
   // Redirect to services page if no service is selected
   useEffect(() => {
@@ -56,6 +60,26 @@ const BookingFlow = () => {
       });
     }
   }, [selectedService, navigate, toast]);
+  
+  // If direct-pay is true, proceed directly to payment
+  useEffect(() => {
+    if (directPay && selectedService) {
+      // Set some default values for direct payment
+      setName("Guest User");
+      setEmail("guest@example.com");
+      setPhone("1234567890");
+      if (!selectedDate) setSelectedDate(new Date());
+      if (!selectedTime) setSelectedTime("12:00 PM");
+      
+      // Go straight to payment
+      navigate(`/payment?serviceId=${selectedService.id}&serviceName=${encodeURIComponent(selectedService.name)}&servicePrice=${selectedService.price}&direct=true`);
+      
+      toast({
+        title: "Direct payment started",
+        description: `Proceeding to payment for ${selectedService.name}`,
+      });
+    }
+  }, [directPay, selectedService, navigate, selectedDate, selectedTime, toast]);
 
   // Check for success parameter in URL when returning from Stripe
   useEffect(() => {

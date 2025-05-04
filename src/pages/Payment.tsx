@@ -27,6 +27,7 @@ const Payment = () => {
   const examPattern = searchParams.get("examPattern") || "";
   const duration = searchParams.get("duration") || "";
   const notes = searchParams.get("notes") || "";
+  const direct = searchParams.get("direct") === "true";
   
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'phonepe' | 'paytm' | 'qrcode' | 'razorpay'>('razorpay');
   const [loading, setLoading] = useState(false);
@@ -47,17 +48,29 @@ const Payment = () => {
     fetchUpiDetails();
   }, []);
 
+  // If direct payment and service info is available, automatically trigger Razorpay
+  useEffect(() => {
+    if (direct && serviceId && serviceName && servicePrice) {
+      // Short delay to allow page to render before opening Razorpay popup
+      const timer = setTimeout(() => {
+        handleRazorpayPayment();
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [direct, serviceId, serviceName, servicePrice]);
+
   // If essential params are missing, redirect to services
   useEffect(() => {
-    if (!serviceId || !serviceName || !servicePrice || !bookingDate || !bookingTime || !userName || !userEmail || !userPhone) {
+    if (!serviceId || !serviceName || !servicePrice) {
       toast({
-        title: "Missing booking information",
-        description: "Please complete the booking form first.",
+        title: "Missing service information",
+        description: "Please select a service first.",
         variant: "destructive",
       });
-      navigate("/book");
+      navigate("/services");
     }
-  }, [serviceId, serviceName, servicePrice, bookingDate, bookingTime, userName, userEmail, userPhone, toast, navigate]);
+  }, [serviceId, serviceName, servicePrice, toast, navigate]);
 
   const handleCardPayment = async () => {
     setLoading(true);
@@ -101,11 +114,11 @@ const Payment = () => {
         serviceId,
         serviceName,
         servicePrice,
-        bookingDate,
-        bookingTime,
-        userName,
-        userEmail,
-        userPhone,
+        bookingDate || new Date().toISOString(),
+        bookingTime || "Not specified",
+        userName || "Guest User",
+        userEmail || "guest@example.com",
+        userPhone || "Not provided",
         companyName,
         examPattern,
         duration,
@@ -129,7 +142,7 @@ const Payment = () => {
     }
   };
 
-  const handleUpiApp = (app: 'phonepe' | 'paytm') => {
+  const handleUpiApp = (app: 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card') => {
     setPaymentMethod(app);
     PaymentService.handleUpiApp(app, upiDetails.upiId, servicePrice, serviceName);
     
@@ -242,7 +255,7 @@ const Payment = () => {
 
                 <TabsContent value="upi-apps">
                   <UpiPayment
-                    paymentMethod={paymentMethod as 'phonepe' | 'paytm'}
+                    paymentMethod={paymentMethod as 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card'}
                     setPaymentMethod={(method) => setPaymentMethod(method)}
                     handleUpiApp={handleUpiApp}
                     transactionId={transactionId}
@@ -270,10 +283,10 @@ const Payment = () => {
           <div className="text-center">
             <Button 
               variant="outline"
-              onClick={() => navigate("/book")}
+              onClick={() => navigate("/services")}
               className="w-full md:w-auto"
             >
-              Back to Booking
+              {direct ? "Back to Services" : "Back to Booking"}
             </Button>
           </div>
         </div>
