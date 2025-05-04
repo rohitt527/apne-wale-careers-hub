@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -7,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { sendBookingEmail } from "@/functions/create-payment";
+import { useDirectBooking } from "@/utils/routing";
 
 // Import refactored components
 import BookingSteps from "@/components/booking/BookingSteps";
@@ -20,6 +20,9 @@ import BookingHeader from "@/components/booking/BookingHeader";
 import { services, timeSlots } from "@/data/services";
 
 const BookingFlow = () => {
+  // Add direct booking hook
+  useDirectBooking();
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);

@@ -14,6 +14,7 @@ import Blog from "@/pages/Blog";
 import BlogDetail from "@/pages/BlogDetail";
 import Pricing from "@/pages/Pricing";
 import NotFound from "@/pages/NotFound";
+import AdminPost from "@/pages/AdminPost";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/admin-post" element={<AdminPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

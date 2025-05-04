@@ -1,4 +1,3 @@
-
 import Stripe from 'stripe';
 
 // Initialize Stripe with the secret key
@@ -15,6 +14,9 @@ const bankDetails = {
 
 // QR code image path
 const qrCodePath = "/lovable-uploads/3be58449-197e-4cfb-9455-d0852e44a445.png";
+
+// Razorpay key
+const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SomSAxySJg33ZA';
 
 export async function createPaymentIntent(amount: number, currency: string = 'usd') {
   try {
@@ -55,6 +57,25 @@ export async function createCheckoutSession(priceId: string, successUrl: string,
   }
 }
 
+// Function to create a Razorpay order
+export async function createRazorpayOrder(amount: number, serviceName: string, customerName: string, customerEmail: string) {
+  try {
+    // In a real implementation, you would call your backend to create an order
+    // For demo purposes, we'll simulate creating an order with a dummy ID
+    const orderId = "order_" + Math.random().toString(36).substring(2, 15);
+    
+    return {
+      id: orderId,
+      amount: amount * 100, // Razorpay expects amount in paise
+      currency: "INR",
+      receipt: `receipt_${Math.random().toString(36).substring(2, 10)}`
+    };
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+    throw error;
+  }
+}
+
 // Function to send email notification about booking
 export async function sendBookingEmail(bookingDetails: {
   service: string;
@@ -91,21 +112,60 @@ export async function sendBookingEmail(bookingDetails: {
       We look forward to serving you!
     `;
     
+    // Admin notification email
+    const adminSubject = `New Payment Received: ${bookingDetails.service}`;
+    const adminBody = `
+      New payment received!
+      
+      Service: ${bookingDetails.service}
+      Price: $${bookingDetails.price}
+      Payment Method: ${bookingDetails.paymentMethod}
+      
+      Customer Details:
+      Name: ${bookingDetails.name}
+      Email: ${bookingDetails.email}
+      Phone: ${bookingDetails.phone}
+      ${bookingDetails.companyName ? `Company: ${bookingDetails.companyName}` : ''}
+      ${bookingDetails.examPattern ? `Exam Pattern: ${bookingDetails.examPattern}` : ''}
+      ${bookingDetails.duration ? `Duration: ${bookingDetails.duration}` : ''}
+      ${bookingDetails.notes ? `Notes: ${bookingDetails.notes}` : ''}
+      
+      Date: ${bookingDetails.date}
+      Time: ${bookingDetails.time}
+    `;
+    
     // In a real implementation, you would send the email using a service like:
-    // await emailService.send({
-    //   from: 'noreply@yourcompany.com',
-    //   to: [bookingDetails.email, "apnewalecoders@gmail.com"],
-    //   subject: subject,
-    //   body: body
-    // });
+    // await emailService.send([
+    //   {
+    //     from: 'noreply@yourcompany.com',
+    //     to: bookingDetails.email,
+    //     subject: subject,
+    //     body: body
+    //   },
+    //   {
+    //     from: 'noreply@yourcompany.com',
+    //     to: "apnewalecoders@gmail.com",
+    //     subject: adminSubject,
+    //     body: adminBody
+    //   }
+    // ]);
     
     // For now, return the email data that would have been sent
     return { 
       success: true, 
-      message: "Email notification prepared",
-      to: [bookingDetails.email, "apnewalecoders@gmail.com"].join(","),
-      subject: subject,
-      body: encodeURIComponent(body)
+      message: "Email notifications prepared",
+      emails: [
+        {
+          to: bookingDetails.email,
+          subject: subject,
+          body: encodeURIComponent(body)
+        },
+        {
+          to: "apnewalecoders@gmail.com",
+          subject: adminSubject,
+          body: encodeURIComponent(adminBody)
+        }
+      ]
     };
   } catch (error) {
     console.error('Error sending email notification:', error);
@@ -199,4 +259,9 @@ export function getUpiDetails() {
 // Function to get bank account information for manual transfers
 export function getBankDetails() {
   return bankDetails;
+}
+
+// Export Razorpay key ID for frontend
+export function getRazorpayKeyId() {
+  return RAZORPAY_KEY_ID;
 }

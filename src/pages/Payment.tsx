@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -6,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, QrCode, Smartphone } from "lucide-react";
+import { CreditCard, QrCode, Smartphone, CreditCardIcon } from "lucide-react";
 import { PaymentService } from "@/services/PaymentService";
 import PaymentHeader from "@/components/payment/PaymentHeader";
 import CardPayment from "@/components/payment/CardPayment";
 import UpiPayment from "@/components/payment/UpiPayment";
 import QrCodePayment from "@/components/payment/QrCodePayment";
+import RazorpayPayment from "@/components/payment/RazorpayPayment";
 
 const Payment = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,7 @@ const Payment = () => {
   const duration = searchParams.get("duration") || "";
   const notes = searchParams.get("notes") || "";
   
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'phonepe' | 'paytm' | 'qrcode'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'phonepe' | 'paytm' | 'qrcode' | 'razorpay'>('razorpay');
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [transactionId, setTransactionId] = useState("");
@@ -63,6 +63,41 @@ const Payment = () => {
     setLoading(true);
     try {
       await PaymentService.handleCardPayment(
+        serviceId,
+        serviceName,
+        servicePrice,
+        bookingDate,
+        bookingTime,
+        userName,
+        userEmail,
+        userPhone,
+        companyName,
+        examPattern,
+        duration,
+        notes,
+        (message) => {
+          toast({
+            title: "Processing payment",
+            description: message,
+          });
+        },
+        (errorMessage) => {
+          toast({
+            title: "Payment error",
+            description: errorMessage,
+            variant: "destructive",
+          });
+        }
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRazorpayPayment = async () => {
+    setLoading(true);
+    try {
+      await PaymentService.handleRazorpayPayment(
         serviceId,
         serviceName,
         servicePrice,
@@ -181,8 +216,11 @@ const Payment = () => {
         <div className="container-custom max-w-3xl">
           <Card className="mb-8">
             <CardContent className="p-6">
-              <Tabs defaultValue="card" className="w-full">
-                <TabsList className="grid grid-cols-3 mb-8">
+              <Tabs defaultValue="razorpay" className="w-full">
+                <TabsList className="grid grid-cols-4 mb-8">
+                  <TabsTrigger value="razorpay" onClick={() => setPaymentMethod('razorpay')} className="flex items-center gap-2">
+                    <CreditCardIcon className="h-4 w-4" /> Razorpay
+                  </TabsTrigger>
                   <TabsTrigger value="card" onClick={() => setPaymentMethod('card')} className="flex items-center gap-2">
                     <CreditCard className="h-4 w-4" /> Card
                   </TabsTrigger>
@@ -193,6 +231,10 @@ const Payment = () => {
                     <QrCode className="h-4 w-4" /> Scan QR
                   </TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="razorpay">
+                  <RazorpayPayment loading={loading} handleRazorpayPayment={handleRazorpayPayment} />
+                </TabsContent>
 
                 <TabsContent value="card">
                   <CardPayment loading={loading} handleCardPayment={handleCardPayment} />
