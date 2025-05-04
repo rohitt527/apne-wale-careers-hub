@@ -142,7 +142,7 @@ const Payment = () => {
     }
   };
 
-  const handleUpiApp = (app: 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card') => {
+  const handleUpiApp = (app: 'phonepe' | 'paytm') => {
     setPaymentMethod(app);
     PaymentService.handleUpiApp(app, upiDetails.upiId, servicePrice, serviceName);
     
@@ -255,7 +255,7 @@ const Payment = () => {
 
                 <TabsContent value="upi-apps">
                   <UpiPayment
-                    paymentMethod={paymentMethod as 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card'}
+                    paymentMethod={paymentMethod}
                     setPaymentMethod={(method) => setPaymentMethod(method)}
                     handleUpiApp={handleUpiApp}
                     transactionId={transactionId}

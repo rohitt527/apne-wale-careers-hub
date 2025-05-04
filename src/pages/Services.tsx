@@ -22,8 +22,8 @@ const Services = () => {
     const directPay = searchParams.get('direct-pay');
     
     if (serviceId && directPay === 'true') {
-      // Redirect to booking with direct payment
-      navigate(`/booking?service=${serviceId}&direct-pay=true`);
+      // Redirect to payment with direct payment flag
+      navigate(`/payment?serviceId=${serviceId}&direct=true`);
       
       toast({
         title: "Direct payment",
