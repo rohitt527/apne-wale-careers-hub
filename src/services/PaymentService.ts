@@ -121,8 +121,8 @@ export class PaymentService {
             // Send booking confirmation email
             await sendBookingEmail({
               service: serviceName || "",
-              date: bookingDate || "Not specified",
-              time: bookingTime || "Not specified",
+              date: bookingDate || "",
+              time: bookingTime || "",
               name: userName || "",
               email: userEmail || "",
               phone: userPhone || "",
@@ -190,7 +190,7 @@ export class PaymentService {
     duration: string,
     notes: string,
     servicePrice: string | null,
-    paymentMethod: 'card' | 'phonepe' | 'paytm' | 'qrcode',
+    paymentMethod: 'card' | 'phonepe' | 'paytm' | 'qrcode' | 'razorpay',
     onSuccess: () => void,
     onError: (message: string) => void
   ) {

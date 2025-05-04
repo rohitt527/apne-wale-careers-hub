@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Phone, Wallet, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 interface UpiPaymentProps {
-  paymentMethod: 'phonepe' | 'paytm';
-  setPaymentMethod: (method: 'phonepe' | 'paytm') => void;
+  paymentMethod: 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card';
+  setPaymentMethod: (method: 'phonepe' | 'paytm' | 'qrcode' | 'razorpay' | 'card') => void;
   handleUpiApp: (app: 'phonepe' | 'paytm') => void;
   transactionId: string;
   setTransactionId: (id: string) => void;
