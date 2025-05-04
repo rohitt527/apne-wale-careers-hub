@@ -14,7 +14,6 @@ export const useDirectBooking = () => {
   
   useEffect(() => {
     // Check if user came from services page with service selection
-    const referrer = document.referrer;
     const serviceParam = searchParams.get('service');
     const directBook = searchParams.get('direct') === 'true';
     
