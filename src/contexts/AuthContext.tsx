@@ -13,10 +13,13 @@ type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (phoneNumber: string, otp: string) => Promise<boolean>;
+  login: (phoneNumber: string, otp: string, name: string) => Promise<boolean>;
   logout: () => void;
   startOtpFlow: (phoneNumber: string) => Promise<boolean>;
   verifyingOtp: boolean;
+  isAdmin: boolean;
+  adminLogin: (username: string, password: string) => boolean;
+  adminLogout: () => void;
 };
 
 // Create the context with default values
@@ -28,6 +31,9 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   startOtpFlow: async () => false,
   verifyingOtp: false,
+  isAdmin: false,
+  adminLogin: () => false,
+  adminLogout: () => {},
 });
 
 // Custom hook to use the auth context
@@ -38,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
   // Check for existing session on mount
@@ -51,6 +58,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem('user');
       }
     }
+    
+    // Check for admin session
+    const adminLoggedIn = localStorage.getItem('adminLoggedIn');
+    if (adminLoggedIn === 'true') {
+      setIsAdmin(true);
+    }
+    
     setIsLoading(false);
   }, []);
 
@@ -80,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Complete login by verifying the OTP
-  const login = async (phoneNumber: string, otp: string): Promise<boolean> => {
+  const login = async (phoneNumber: string, otp: string, name: string): Promise<boolean> => {
     try {
       setVerifyingOtp(true);
       
@@ -101,6 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Create a user object
       const newUser: User = {
         phoneNumber,
+        name,
         // In a real app, you might get additional user details from your backend
       };
       
@@ -136,6 +151,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       description: "You have been successfully logged out.",
     });
   };
+  
+  // Admin login function
+  const adminLogin = (username: string, password: string): boolean => {
+    if (username === "apnewalecoders" && password === "apne1234") {
+      setIsAdmin(true);
+      localStorage.setItem('adminLoggedIn', 'true');
+      toast({
+        title: "Admin Login Successful",
+        description: "Welcome to the admin dashboard",
+      });
+      return true;
+    } else {
+      toast({
+        title: "Admin Login Failed",
+        description: "Invalid username or password",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+  
+  // Admin logout function
+  const adminLogout = () => {
+    setIsAdmin(false);
+    localStorage.removeItem('adminLoggedIn');
+    toast({
+      title: "Admin Logged Out",
+      description: "You have been logged out of admin account.",
+    });
+  };
 
   return (
     <AuthContext.Provider 
@@ -147,6 +192,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         startOtpFlow,
         verifyingOtp,
+        isAdmin,
+        adminLogin,
+        adminLogout,
       }}
     >
       {children}

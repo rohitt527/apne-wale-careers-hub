@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const PhoneLoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [fullName, setFullName] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState("");
@@ -38,6 +39,15 @@ export const PhoneLoginForm = () => {
       toast({
         title: "Invalid phone number",
         description: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!fullName || fullName.trim() === "") {
+      toast({
+        title: "Missing full name",
+        description: "Please enter your full name",
         variant: "destructive",
       });
       return;
@@ -82,7 +92,7 @@ export const PhoneLoginForm = () => {
     
     // Check if OTP matches
     if (otp === generatedOtp) {
-      const success = await login(phoneNumber, otp);
+      const success = await login(phoneNumber, otp, fullName);
       
       if (success) {
         toast({
@@ -117,6 +127,20 @@ export const PhoneLoginForm = () => {
     <div className="w-full max-w-md mx-auto">
       {!showOtpField ? (
         <form onSubmit={handlePhoneNumberSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="fullName" className="block text-sm font-medium mb-1">
+              Full Name
+            </label>
+            <Input
+              id="fullName"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Enter your full name"
+              className="w-full"
+              required
+            />
+          </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium mb-1">
               Phone Number

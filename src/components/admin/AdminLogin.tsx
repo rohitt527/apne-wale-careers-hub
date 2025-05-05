@@ -39,6 +39,9 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
           <Lock className="h-6 w-6 text-brand-dark" />
         </div>
         <h2 className="text-xl font-semibold mt-2">Admin Login</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Please login to access admin features
+        </p>
       </div>
       
       <div className="space-y-2">

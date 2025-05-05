@@ -17,6 +17,8 @@ import Pricing from "@/pages/Pricing";
 import NotFound from "@/pages/NotFound";
 import AdminPost from "@/pages/AdminPost";
 import Dashboard from "@/pages/Dashboard";
+import CreateJobPost from "@/pages/CreateJobPost";
+import CreateBlogPost from "@/pages/CreateBlogPost";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 function App() {
@@ -33,8 +35,10 @@ function App() {
             <Route path="/payment" element={<Payment />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/create" element={<CreateJobPost />} />
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/create" element={<CreateBlogPost />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin-post" element={<AdminPost />} />
