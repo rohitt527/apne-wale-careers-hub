@@ -15,10 +15,12 @@ import BlogDetail from "@/pages/BlogDetail";
 import Pricing from "@/pages/Pricing";
 import NotFound from "@/pages/NotFound";
 import AdminPost from "@/pages/AdminPost";
+import Dashboard from "@/pages/Dashboard";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -34,11 +36,12 @@ function App() {
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/admin-post" element={<AdminPost />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
       <Toaster />
-    </>
+    </AuthProvider>
   );
 }
 

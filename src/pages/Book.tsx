@@ -12,6 +12,10 @@ import { Calendar as CalendarIcon, Clock, CheckCircle, CreditCard } from "lucide
 import ServiceCard from "@/components/common/ServiceCard";
 import { useSearchParams } from "react-router-dom";
 
+// Add imports at the top
+import { LoginModal } from "@/components/auth/LoginModal";
+import { useAuth } from "@/contexts/AuthContext";
+
 // Services available for booking with detailed descriptions and features
 const services = [
   { 
@@ -146,6 +150,8 @@ const Book = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const { toast } = useToast();
 
@@ -566,6 +572,18 @@ const Book = () => {
     }
   };
 
+  // Show login modal if user is not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLoginModalOpen(true);
+    }
+  }, [isAuthenticated]);
+
+  // Handle login modal close
+  const handleLoginModalClose = () => {
+    setLoginModalOpen(false);
+  };
+
   return (
     <Layout>
       <section className="bg-brand-dark text-white py-20">
@@ -610,6 +628,13 @@ const Book = () => {
           )}
         </div>
       </section>
+      
+      <LoginModal 
+        isOpen={loginModalOpen} 
+        onClose={handleLoginModalClose}
+        title="Login to Book a Session"
+        description="Please login with your phone number to continue booking."
+      />
     </Layout>
   );
 };

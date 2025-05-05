@@ -1,10 +1,15 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -33,9 +38,31 @@ const Navbar = () => {
           <Link to="/blog" className="text-foreground hover:text-brand-red transition-colors font-medium">Blog</Link>
           <Link to="/jobs" className="text-foreground hover:text-brand-red transition-colors font-medium">Jobs</Link>
           <Link to="/pricing" className="text-foreground hover:text-brand-red transition-colors font-medium">Pricing</Link>
-          <Link to="/book">
-            <Button size="sm" className="bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-          </Link>
+          
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard" className="text-foreground hover:text-brand-red transition-colors font-medium">Dashboard</Link>
+              <Link to="/book">
+                <Button size="sm" className="bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
+              </Link>
+              <Button size="sm" variant="ghost" onClick={logout}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => setLoginModalOpen(true)}
+                className="flex items-center gap-1"
+              >
+                <User className="h-4 w-4" />
+                Login
+              </Button>
+              <Link to="/book">
+                <Button size="sm" className="bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
+              </Link>
+            </>
+          )}
         </nav>
 
         {isOpen && (
@@ -83,16 +110,59 @@ const Navbar = () => {
               >
                 Pricing
               </Link>
-              <Link 
-                to="/book"
-                onClick={() => setIsOpen(false)}
-              >
-                <Button className="w-full bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-              </Link>
+              
+              {isAuthenticated ? (
+                <>
+                  <Link 
+                    to="/dashboard" 
+                    onClick={() => setIsOpen(false)}
+                    className="text-lg font-medium hover:text-brand-red"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link 
+                    to="/book"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Button className="w-full bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
+                  </Link>
+                  <Button variant="outline" className="w-full" onClick={() => {
+                    logout();
+                    setIsOpen(false);
+                  }}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-2"
+                    onClick={() => {
+                      setLoginModalOpen(true);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <User className="h-4 w-4" />
+                    Login
+                  </Button>
+                  <Link 
+                    to="/book"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Button className="w-full bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}
       </div>
+      
+      <LoginModal 
+        isOpen={loginModalOpen} 
+        onClose={() => setLoginModalOpen(false)} 
+      />
     </header>
   );
 };
