@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { OtpInput } from "./OtpInput";
@@ -11,8 +11,17 @@ export const PhoneLoginForm = () => {
   const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState("");
-  const { login, verifyingOtp } = useAuth();
+  const { login, startOtpFlow, verifyingOtp } = useAuth();
   const { toast } = useToast();
+
+  // Load any pending verification
+  useEffect(() => {
+    const pendingPhone = localStorage.getItem('pendingPhoneVerification');
+    if (pendingPhone) {
+      setPhoneNumber(pendingPhone);
+      setShowOtpField(true);
+    }
+  }, []);
 
   const generateRandomOtp = () => {
     // Generate a random 4-digit OTP
@@ -29,6 +38,17 @@ export const PhoneLoginForm = () => {
       toast({
         title: "Invalid phone number",
         description: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Start the OTP flow
+    const success = await startOtpFlow(phoneNumber);
+    if (!success) {
+      toast({
+        title: "Error",
+        description: "Failed to start OTP verification",
         variant: "destructive",
       });
       return;
@@ -85,6 +105,14 @@ export const PhoneLoginForm = () => {
     }
   };
 
+  const handleResendOtp = () => {
+    const newOtp = generateRandomOtp();
+    toast({
+      title: "OTP Resent",
+      description: `Your new OTP is: ${newOtp}`,
+    });
+  };
+
   return (
     <div className="w-full max-w-md mx-auto">
       {!showOtpField ? (
@@ -132,6 +160,15 @@ export const PhoneLoginForm = () => {
                 Change
               </button>
             </p>
+          </div>
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              className="text-sm text-brand-red hover:underline"
+            >
+              Resend OTP
+            </button>
           </div>
           <Button 
             type="submit" 

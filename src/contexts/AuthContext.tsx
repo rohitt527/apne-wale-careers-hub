@@ -1,5 +1,6 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useToast } from "@/hooks/use-toast";
 
 // Define types for our context
 type User = {
@@ -37,12 +38,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const { toast } = useToast();
 
   // Check for existing session on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Failed to parse stored user:', error);
+        localStorage.removeItem('user');
+      }
     }
     setIsLoading(false);
   }, []);
@@ -61,6 +68,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return true;
     } catch (error) {
       console.error('Failed to send OTP:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send OTP. Please try again.",
+        variant: "destructive",
+      });
       return false;
     } finally {
       setVerifyingOtp(false);
@@ -75,6 +87,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Check if this is the phone number we're expecting
       const pendingPhone = localStorage.getItem('pendingPhoneVerification');
       if (pendingPhone !== phoneNumber) {
+        toast({
+          title: "Authentication Error",
+          description: "Phone number mismatch. Please try again.",
+          variant: "destructive",
+        });
         throw new Error('Phone number mismatch');
       }
       
@@ -91,9 +108,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(newUser);
       localStorage.setItem('user', JSON.stringify(newUser));
       
+      toast({
+        title: "Login Successful",
+        description: "You have successfully logged in.",
+      });
+      
       return true;
     } catch (error) {
       console.error('Login failed:', error);
+      toast({
+        title: "Login Failed",
+        description: "Invalid OTP or phone number. Please try again.",
+        variant: "destructive",
+      });
       return false;
     } finally {
       setVerifyingOtp(false);
@@ -104,6 +131,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.removeItem('user');
     setUser(null);
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
   };
 
   return (
