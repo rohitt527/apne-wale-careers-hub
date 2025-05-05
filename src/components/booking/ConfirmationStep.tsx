@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { CheckCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface ConfirmationStepProps {
   isConfirmed: boolean;
@@ -27,6 +28,14 @@ const ConfirmationStep = ({
   loading,
   handleFinalConfirmation,
 }: ConfirmationStepProps) => {
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isConfirmed) {
+      setShowConfirmation(true);
+    }
+  }, [isConfirmed]);
+
   return (
     <div className="max-w-3xl mx-auto text-center">
       {isConfirmed ? (
@@ -36,7 +45,7 @@ const ConfirmationStep = ({
           </div>
           <h3 className="text-2xl font-bold mb-4 text-green-700">Booking Confirmed!</h3>
           <p className="text-lg mb-6">
-            Thank you for booking with us! We've sent the details to your email client.
+            Thank you for booking with us! We've sent the details to your email.
           </p>
           <p className="mb-6">
             Your {selectedService?.name} session is scheduled for:
@@ -86,6 +95,27 @@ const ConfirmationStep = ({
           </Button>
         </div>
       )}
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Booking Successful!</DialogTitle>
+            <DialogDescription>
+              Your booking for {selectedService?.name} on {selectedDate ? format(selectedDate, 'PPP') : ''} at {selectedTime} has been confirmed.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="mb-4">A confirmation email has been sent to your email address.</p>
+            <p className="font-medium">Thank you for choosing ApneWale Careers!</p>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => setShowConfirmation(false)} className="bg-brand-red hover:bg-red-700 text-white">
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

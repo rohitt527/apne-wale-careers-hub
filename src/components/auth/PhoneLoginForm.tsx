@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { OtpInput } from "./OtpInput";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -9,8 +10,16 @@ export const PhoneLoginForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
-  const { startOtpFlow, login, verifyingOtp } = useAuth();
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const { login, verifyingOtp } = useAuth();
   const { toast } = useToast();
+
+  const generateRandomOtp = () => {
+    // Generate a random 4-digit OTP
+    const randomOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    setGeneratedOtp(randomOtp);
+    return randomOtp;
+  };
 
   const handlePhoneNumberSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,21 +34,17 @@ export const PhoneLoginForm = () => {
       return;
     }
     
-    const success = await startOtpFlow(phoneNumber);
+    // Generate OTP
+    const randomOtp = generateRandomOtp();
     
-    if (success) {
-      setShowOtpField(true);
-      toast({
-        title: "OTP Sent",
-        description: "Please check your phone for the OTP",
-      });
-    } else {
-      toast({
-        title: "Failed to send OTP",
-        description: "Please try again later",
-        variant: "destructive",
-      });
-    }
+    // Simulate sending OTP to the phone number
+    toast({
+      title: "OTP Sent",
+      description: `Your OTP is: ${randomOtp}`,
+    });
+    
+    // Show OTP field
+    setShowOtpField(true);
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
@@ -55,13 +60,22 @@ export const PhoneLoginForm = () => {
       return;
     }
     
-    const success = await login(phoneNumber, otp);
-    
-    if (success) {
-      toast({
-        title: "Login Successful",
-        description: "Welcome back!",
-      });
+    // Check if OTP matches
+    if (otp === generatedOtp) {
+      const success = await login(phoneNumber, otp);
+      
+      if (success) {
+        toast({
+          title: "Login Successful",
+          description: "Welcome back!",
+        });
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "There was an issue with your login. Please try again.",
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: "Invalid OTP",
@@ -103,16 +117,10 @@ export const PhoneLoginForm = () => {
             <label htmlFor="otp" className="block text-sm font-medium mb-1">
               One-Time Password
             </label>
-            <Input
-              id="otp"
-              type="text"
-              inputMode="numeric"
-              maxLength={4}
+            <OtpInput
               value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-              placeholder="Enter 4-digit OTP"
-              className="w-full text-center text-xl tracking-widest"
-              required
+              onChange={setOtp}
+              length={4}
             />
             <p className="text-sm text-gray-500 mt-2">
               OTP sent to {phoneNumber}

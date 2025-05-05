@@ -53,8 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setVerifyingOtp(true);
       
       // In a real app, you would call an API to send an OTP
-      // For demo purposes, we'll simulate an API call with a timeout
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // For this implementation, we're now handling the OTP generation in the PhoneLoginForm
       
       // Save the phone number to verify against when the OTP is submitted
       localStorage.setItem('pendingPhoneVerification', phoneNumber);
@@ -72,10 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (phoneNumber: string, otp: string): Promise<boolean> => {
     try {
       setVerifyingOtp(true);
-      
-      // In a real app, you would verify the OTP with your backend
-      // For demo purposes, any 4-digit OTP will work
-      await new Promise((resolve) => setTimeout(resolve, 1500));
       
       // Check if this is the phone number we're expecting
       const pendingPhone = localStorage.getItem('pendingPhoneVerification');
