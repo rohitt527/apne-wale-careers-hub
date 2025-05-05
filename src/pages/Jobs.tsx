@@ -17,6 +17,10 @@ const jobsData = [
     salary: "₹5-8 LPA",
     jobType: "Full-time",
     postedDate: "3 days ago",
+    type: "Full-time",
+    experience: "2-4 years",
+    logo: "/placeholder.svg",
+    tags: ["React", "TypeScript", "Tailwind"]
   },
   {
     id: 2,
@@ -26,6 +30,10 @@ const jobsData = [
     salary: "₹8-12 LPA",
     jobType: "Full-time",
     postedDate: "1 week ago",
+    type: "Full-time",
+    experience: "3-5 years",
+    logo: "/placeholder.svg",
+    tags: ["Node.js", "Express", "MongoDB"]
   },
   {
     id: 3,
@@ -35,7 +43,11 @@ const jobsData = [
     salary: "₹6-9 LPA",
     jobType: "Full-time",
     postedDate: "2 days ago",
-  },
+    type: "Full-time",
+    experience: "2-3 years",
+    logo: "/placeholder.svg",
+    tags: ["Figma", "Adobe XD", "UI Design"]
+  }
 ];
 
 const Jobs = () => {
@@ -73,7 +85,18 @@ const Jobs = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobsData.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard
+                key={job.id}
+                id={job.id}
+                title={job.title}
+                company={job.company}
+                location={job.location}
+                type={job.type}
+                experience={job.experience}
+                logo={job.logo}
+                tags={job.tags}
+                postedDate={job.postedDate}
+              />
             ))}
           </div>
         </div>
