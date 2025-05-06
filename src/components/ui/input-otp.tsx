@@ -29,13 +29,21 @@ const InputOTPGroup = React.forwardRef<
 ))
 InputOTPGroup.displayName = "InputOTPGroup"
 
+// Define a type for the slot to help TypeScript understand the expected structure
+interface InputOTPSlotProps {
+  char?: string;
+  hasFakeCaret?: boolean;
+  isActive?: boolean;
+}
+
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext)
-  // Add a safety check to prevent accessing properties of undefined
-  const slot = inputOTPContext?.slots?.[index] || {}
+  
+  // Now TypeScript knows what properties should be in a slot
+  const slot: InputOTPSlotProps = inputOTPContext?.slots?.[index] || {}
   const { char = '', hasFakeCaret = false, isActive = false } = slot
 
   return (
