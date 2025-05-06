@@ -50,48 +50,68 @@ export const useUserAuth = () => {
         }
       }
       
-      // API call to send OTP
-      const response = await fetch('https://api.apnewalecoders.com/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber }),
-      }).catch(error => {
-        console.error('API call failed:', error);
-        // For development, simulate successful OTP sending even if API fails
-        return { ok: true };
-      });
+      // Generate an OTP for development/fallback use
+      const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
       
-      if (response.ok) {
-        // Save rate limiting info
-        localStorage.setItem('lastOtpRequest', JSON.stringify({
-          phoneNumber,
-          timestamp: Date.now()
-        }));
-        
-        // Generate OTP session
-        const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-        const session: OtpSession = {
-          phoneNumber,
-          attempts: 0,
-          expiresAt: Date.now() + OTP_EXPIRY_TIME,
-          otp: generatedOtp // Only in dev mode
-        };
-        
-        // In production, we wouldn't store the OTP client-side
-        // We'd only store the session info and validate against the server
-        localStorage.setItem('otpSession', JSON.stringify(session));
-        
-        toast({
-          title: "OTP Sent",
-          description: `Your OTP has been sent to ${phoneNumber}. For development: ${generatedOtp}`,
+      // Send OTP via API
+      let apiSuccess = false;
+      try {
+        const response = await fetch('https://api.apnewalecoders.com/send-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ phoneNumber }),
         });
         
-        return true;
-      } else {
-        throw new Error('Failed to send OTP');
+        if (response.ok) {
+          const data = await response.json();
+          apiSuccess = true;
+          
+          toast({
+            title: "OTP Sent",
+            description: `Your OTP has been sent to ${phoneNumber}`,
+          });
+        } else {
+          throw new Error(`API error: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('API call failed:', error);
+        
+        // In development or if API fails, we use the locally generated OTP
+        apiSuccess = false;
+        
+        toast({
+          title: "API Error",
+          description: "Using fallback OTP for development. In production, this would send an actual SMS.",
+        });
       }
+      
+      // Save rate limiting info
+      localStorage.setItem('lastOtpRequest', JSON.stringify({
+        phoneNumber,
+        timestamp: Date.now()
+      }));
+      
+      // Generate OTP session
+      const session: OtpSession = {
+        phoneNumber,
+        attempts: 0,
+        expiresAt: Date.now() + OTP_EXPIRY_TIME,
+      };
+      
+      // Only in development mode or when API fails, we store the OTP
+      if (!apiSuccess) {
+        session.otp = generatedOtp;
+        toast({
+          title: "Development OTP",
+          description: `For development: ${generatedOtp}`,
+        });
+      }
+      
+      localStorage.setItem('otpSession', JSON.stringify(session));
+      
+      return true;
     } catch (error) {
       console.error('Failed to send OTP:', error);
       toast({
@@ -166,11 +186,10 @@ export const useUserAuth = () => {
       session.attempts += 1;
       localStorage.setItem('otpSession', JSON.stringify(session));
       
-      // In development mode, we validate against the stored OTP
-      // In production, we'd call the API to validate
+      // Verify OTP
       let isValid = false;
       
-      // Try API validation first
+      // First try to validate with the API
       try {
         const response = await fetch('https://api.apnewalecoders.com/verify-otp', {
           method: 'POST',
@@ -183,10 +202,12 @@ export const useUserAuth = () => {
         if (response.ok) {
           const data = await response.json();
           isValid = data.success === true;
+        } else {
+          throw new Error(`API error: ${response.status}`);
         }
       } catch (error) {
         console.error('API validation failed, falling back to dev mode:', error);
-        // Fall back to dev mode validation
+        // Fall back to dev mode validation if API call fails
         isValid = session.otp === otp;
       }
       
