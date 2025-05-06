@@ -16,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   isAdmin: false,
   adminLogin: () => false,
   adminLogout: () => {},
+  resendOtp: async () => false,
 });
 
 // Custom hook to use the auth context
@@ -29,7 +30,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     verifyingOtp, 
     login, 
     logout, 
-    startOtpFlow, 
+    startOtpFlow,
+    resendOtp, 
     setUser 
   } = useUserAuth();
   
@@ -76,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAdmin,
         adminLogin,
         adminLogout,
+        resendOtp,
       }}
     >
       {children}

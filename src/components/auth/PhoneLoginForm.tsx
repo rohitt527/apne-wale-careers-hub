@@ -11,9 +11,9 @@ export const PhoneLoginForm = () => {
   const [fullName, setFullName] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtpField, setShowOtpField] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState("");
-  const { login, startOtpFlow, verifyingOtp } = useAuth();
+  const { login, startOtpFlow, verifyingOtp, resendOtp } = useAuth();
   const { toast } = useToast();
+  const [otpResendTimer, setOtpResendTimer] = useState(0);
 
   // Load any pending verification
   useEffect(() => {
@@ -24,12 +24,20 @@ export const PhoneLoginForm = () => {
     }
   }, []);
 
-  const generateRandomOtp = () => {
-    // Generate a random 4-digit OTP
-    const randomOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    setGeneratedOtp(randomOtp);
-    return randomOtp;
-  };
+  // Handle OTP resend timer
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    
+    if (otpResendTimer > 0) {
+      interval = setInterval(() => {
+        setOtpResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [otpResendTimer]);
 
   const handlePhoneNumberSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,26 +63,12 @@ export const PhoneLoginForm = () => {
     
     // Start the OTP flow
     const success = await startOtpFlow(phoneNumber);
-    if (!success) {
-      toast({
-        title: "Error",
-        description: "Failed to start OTP verification",
-        variant: "destructive",
-      });
-      return;
+    
+    if (success) {
+      // Show OTP field and start the resend timer
+      setShowOtpField(true);
+      setOtpResendTimer(30); // 30 second cooldown before resend
     }
-    
-    // Generate OTP
-    const randomOtp = generateRandomOtp();
-    
-    // Simulate sending OTP to the phone number
-    toast({
-      title: "OTP Sent",
-      description: `Your OTP is: ${randomOtp}`,
-    });
-    
-    // Show OTP field
-    setShowOtpField(true);
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
@@ -90,37 +84,25 @@ export const PhoneLoginForm = () => {
       return;
     }
     
-    // Check if OTP matches
-    if (otp === generatedOtp) {
-      const success = await login(phoneNumber, otp, fullName);
-      
-      if (success) {
-        toast({
-          title: "Login Successful",
-          description: "Welcome back!",
-        });
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "There was an issue with your login. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } else {
+    // Verify the OTP and complete login
+    const success = await login(phoneNumber, otp, fullName);
+    
+    if (!success) {
       toast({
         title: "Invalid OTP",
-        description: "The OTP you entered is incorrect",
+        description: "The OTP you entered is incorrect or has expired",
         variant: "destructive",
       });
     }
   };
 
-  const handleResendOtp = () => {
-    const newOtp = generateRandomOtp();
-    toast({
-      title: "OTP Resent",
-      description: `Your new OTP is: ${newOtp}`,
-    });
+  const handleResendOtp = async () => {
+    if (otpResendTimer > 0) return;
+    
+    const success = await resendOtp(phoneNumber);
+    if (success) {
+      setOtpResendTimer(30); // Reset the timer
+    }
   };
 
   return (
@@ -189,9 +171,12 @@ export const PhoneLoginForm = () => {
             <button
               type="button"
               onClick={handleResendOtp}
-              className="text-sm text-brand-red hover:underline"
+              className={`text-sm ${otpResendTimer > 0 ? 'text-gray-400' : 'text-brand-red hover:underline'}`}
+              disabled={otpResendTimer > 0}
             >
-              Resend OTP
+              {otpResendTimer > 0 
+                ? `Resend OTP in ${otpResendTimer}s` 
+                : "Resend OTP"}
             </button>
           </div>
           <Button 

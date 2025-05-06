@@ -16,4 +16,5 @@ export type AuthContextType = {
   isAdmin: boolean;
   adminLogin: (username: string, password: string) => boolean;
   adminLogout: () => void;
+  resendOtp: (phoneNumber: string) => Promise<boolean>;
 };

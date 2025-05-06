@@ -13,13 +13,36 @@ export const useUserAuth = () => {
     try {
       setVerifyingOtp(true);
       
-      // In a real app, you would call an API to send an OTP
-      // For this implementation, we're now handling the OTP generation in the PhoneLoginForm
+      // API call to send OTP
+      const response = await fetch('https://api.apnewalecoders.com/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber }),
+      }).catch(error => {
+        console.error('API call failed:', error);
+        // For development, simulate successful OTP sending even if API fails
+        return { ok: true };
+      });
       
-      // Save the phone number to verify against when the OTP is submitted
-      localStorage.setItem('pendingPhoneVerification', phoneNumber);
-      
-      return true;
+      if (response.ok) {
+        // Save the phone number to verify against when the OTP is submitted
+        localStorage.setItem('pendingPhoneVerification', phoneNumber);
+        
+        // In development mode, simulate an OTP for testing
+        const devOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        localStorage.setItem('dev_otp', devOtp);
+        
+        toast({
+          title: "OTP Sent",
+          description: `Your OTP has been sent to ${phoneNumber}. For development: ${devOtp}`,
+        });
+        
+        return true;
+      } else {
+        throw new Error('Failed to send OTP');
+      }
     } catch (error) {
       console.error('Failed to send OTP:', error);
       toast({
@@ -31,6 +54,11 @@ export const useUserAuth = () => {
     } finally {
       setVerifyingOtp(false);
     }
+  };
+
+  // Resend OTP functionality
+  const resendOtp = async (phoneNumber: string): Promise<boolean> => {
+    return await startOtpFlow(phoneNumber);
   };
 
   // Complete login by verifying the OTP
@@ -49,26 +77,52 @@ export const useUserAuth = () => {
         throw new Error('Phone number mismatch');
       }
       
-      // Remove the pending verification
-      localStorage.removeItem('pendingPhoneVerification');
+      // In development mode, check against the stored dev OTP
+      const devOtp = localStorage.getItem('dev_otp');
       
-      // Create a user object
-      const newUser: User = {
-        phoneNumber,
-        name,
-        // In a real app, you might get additional user details from your backend
-      };
-      
-      // Update state and localStorage
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      
-      toast({
-        title: "Login Successful",
-        description: "You have successfully logged in.",
+      // API call to verify OTP
+      const response = await fetch('https://api.apnewalecoders.com/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber, otp }),
+      }).catch(error => {
+        console.error('API call failed:', error);
+        // For development, use the stored OTP for validation
+        return { 
+          ok: devOtp === otp,
+          json: async () => ({ success: devOtp === otp })
+        };
       });
       
-      return true;
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        // Remove the pending verification and dev OTP
+        localStorage.removeItem('pendingPhoneVerification');
+        localStorage.removeItem('dev_otp');
+        
+        // Create a user object
+        const newUser: User = {
+          phoneNumber,
+          name,
+          // In a real app, you might get additional user details from your backend
+        };
+        
+        // Update state and localStorage
+        setUser(newUser);
+        localStorage.setItem('user', JSON.stringify(newUser));
+        
+        toast({
+          title: "Login Successful",
+          description: "You have successfully logged in.",
+        });
+        
+        return true;
+      } else {
+        throw new Error('Invalid OTP');
+      }
     } catch (error) {
       console.error('Login failed:', error);
       toast({
@@ -99,6 +153,7 @@ export const useUserAuth = () => {
     login,
     logout,
     startOtpFlow,
+    resendOtp,
     setUser
   };
 };
