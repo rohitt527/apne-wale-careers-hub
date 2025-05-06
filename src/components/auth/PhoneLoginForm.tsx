@@ -78,8 +78,8 @@ export const PhoneLoginForm = () => {
     }
   };
 
-  const handleResendOtp = async () => {
-    return await resendOtp(phoneNumber);
+  const handleResendOtp = async (): Promise<void> => {
+    await resendOtp(phoneNumber);
   };
 
   return (

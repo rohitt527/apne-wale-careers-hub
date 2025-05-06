@@ -28,10 +28,8 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
   const handleResendOtp = async () => {
     if (otpResendTimer > 0) return;
     
-    const success = await onResendOtp();
-    if (success) {
-      startTimer();
-    }
+    await onResendOtp();
+    startTimer();
   };
 
   return (
