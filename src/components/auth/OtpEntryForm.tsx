@@ -10,7 +10,7 @@ type OtpEntryFormProps = {
   phoneNumber: string;
   onBack: () => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
-  onResendOtp: () => Promise<void>;
+  onResendOtp: () => Promise<boolean>;
   isLoading: boolean;
 };
 
@@ -28,8 +28,10 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
   const handleResendOtp = async () => {
     if (otpResendTimer > 0) return;
     
-    await onResendOtp();
-    startTimer();
+    const success = await onResendOtp();
+    if (success) {
+      startTimer();
+    }
   };
 
   return (
