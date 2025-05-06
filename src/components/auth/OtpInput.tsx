@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   InputOTP, 
   InputOTPGroup, 
   InputOTPSlot 
 } from "@/components/ui/input-otp";
+import { toast } from "@/hooks/use-toast";
 
 type OtpInputProps = {
   value: string;
@@ -21,6 +22,9 @@ export const OtpInput: React.FC<OtpInputProps> = ({
     onChange(value);
   };
 
+  // Create an array of indices based on length
+  const indices = Array.from({ length }, (_, i) => i);
+
   return (
     <div className="w-full">
       <InputOTP
@@ -28,14 +32,13 @@ export const OtpInput: React.FC<OtpInputProps> = ({
         value={value}
         onChange={onChange}
         onComplete={handleComplete}
-        render={({ slots }) => (
-          <InputOTPGroup>
-            {slots.map((slot, index) => (
-              <InputOTPSlot key={index} {...slot} index={index} />
-            ))}
-          </InputOTPGroup>
-        )}
-      />
+      >
+        <InputOTPGroup>
+          {indices.map((index) => (
+            <InputOTPSlot key={index} index={index} />
+          ))}
+        </InputOTPGroup>
+      </InputOTP>
     </div>
   );
 };
