@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -15,10 +14,21 @@ export const PhoneLoginForm = () => {
 
   // Load any pending verification
   useEffect(() => {
-    const pendingPhone = localStorage.getItem('pendingPhoneVerification');
-    if (pendingPhone) {
-      setPhoneNumber(pendingPhone);
-      setShowOtpField(true);
+    const sessionData = localStorage.getItem('otpSession');
+    if (sessionData) {
+      try {
+        const session = JSON.parse(sessionData);
+        if (session.phoneNumber && Date.now() < session.expiresAt) {
+          setPhoneNumber(session.phoneNumber);
+          setShowOtpField(true);
+        } else {
+          // Clear expired session
+          localStorage.removeItem('otpSession');
+        }
+      } catch (error) {
+        console.error('Failed to parse OTP session:', error);
+        localStorage.removeItem('otpSession');
+      }
     }
   }, []);
 
@@ -50,6 +60,7 @@ export const PhoneLoginForm = () => {
     if (success) {
       // Show OTP field
       setShowOtpField(true);
+      setOtp(''); // Clear any previous OTP
     }
   };
 
@@ -70,16 +81,18 @@ export const PhoneLoginForm = () => {
     const success = await login(phoneNumber, otp, fullName);
     
     if (!success) {
-      toast({
-        title: "Invalid OTP",
-        description: "The OTP you entered is incorrect or has expired",
-        variant: "destructive",
-      });
+      // If failed, clear the OTP field but keep the OTP entry form open
+      setOtp('');
     }
   };
 
   const handleResendOtp = async (): Promise<boolean> => {
     return await resendOtp(phoneNumber);
+  };
+
+  const handleBackToPhone = () => {
+    setShowOtpField(false);
+    setOtp('');
   };
 
   return (
@@ -98,7 +111,7 @@ export const PhoneLoginForm = () => {
           otp={otp}
           setOtp={setOtp}
           phoneNumber={phoneNumber}
-          onBack={() => setShowOtpField(false)}
+          onBack={handleBackToPhone}
           onSubmit={handleOtpSubmit}
           onResendOtp={handleResendOtp}
           isLoading={verifyingOtp}

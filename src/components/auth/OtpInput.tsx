@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { 
   InputOTP, 
   InputOTPGroup, 
@@ -11,13 +11,26 @@ type OtpInputProps = {
   value: string;
   onChange: (value: string) => void;
   length?: number;
+  autoFocus?: boolean;
 };
 
 export const OtpInput: React.FC<OtpInputProps> = ({ 
   value, 
   onChange, 
-  length = 4 
+  length = 4,
+  autoFocus = true
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Auto-focus the input when the component mounts
+    if (autoFocus && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [autoFocus]);
+
   const handleComplete = (value: string) => {
     onChange(value);
   };
@@ -32,6 +45,7 @@ export const OtpInput: React.FC<OtpInputProps> = ({
         value={value}
         onChange={onChange}
         onComplete={handleComplete}
+        ref={inputRef}
       >
         <InputOTPGroup>
           {indices.map((index) => (

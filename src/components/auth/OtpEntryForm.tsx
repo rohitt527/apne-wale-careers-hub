@@ -1,8 +1,9 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "./OtpInput";
 import { useOtpTimer } from "@/hooks/useOtpTimer";
+import { AlertCircle } from "lucide-react";
 
 type OtpEntryFormProps = {
   otp: string;
@@ -23,13 +24,21 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
   onResendOtp,
   isLoading,
 }) => {
-  const { otpResendTimer, startTimer } = useOtpTimer();
+  const { otpResendTimer, startTimer } = useOtpTimer(30); // 30 seconds timer
+  
+  // Start timer when component mounts
+  useEffect(() => {
+    if (otpResendTimer === 0) {
+      startTimer();
+    }
+  }, []);
   
   const handleResendOtp = async () => {
     if (otpResendTimer > 0) return;
     
     const success = await onResendOtp();
     if (success) {
+      setOtp(''); // Clear the OTP input
       startTimer();
     }
   };
@@ -44,9 +53,10 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
           value={otp}
           onChange={setOtp}
           length={4}
+          autoFocus={true}
         />
-        <p className="text-sm text-gray-500 mt-2">
-          OTP sent to {phoneNumber}
+        <p className="text-sm text-gray-500 mt-2 flex items-center">
+          <span>OTP sent to {phoneNumber}</span>
           <button
             type="button"
             onClick={onBack}
@@ -55,6 +65,10 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
             Change
           </button>
         </p>
+        <div className="mt-2 text-xs text-amber-600 flex items-center">
+          <AlertCircle size={12} className="mr-1" />
+          <span>OTP will expire in 5 minutes</span>
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <button
@@ -71,7 +85,7 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
       <Button 
         type="submit" 
         className="w-full bg-brand-red hover:bg-red-700 text-white"
-        disabled={isLoading}
+        disabled={isLoading || otp.length !== 4}
       >
         {isLoading ? "Verifying..." : "Verify & Login"}
       </Button>
