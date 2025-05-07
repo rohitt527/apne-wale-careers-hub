@@ -8,6 +8,7 @@ import RazorpayPayment from "./RazorpayPayment";
 import { usePaymentContext } from "@/contexts/PaymentContext";
 import { PaymentService } from "@/services/PaymentService";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const PaymentMethods = () => {
   const { 
@@ -20,9 +21,20 @@ const PaymentMethods = () => {
     setTransactionId,
     verifying,
     paymentStatus,
-    upiDetails
+    upiDetails,
+    setPaymentStatus
   } = usePaymentContext();
   const { toast } = useToast();
+
+  // Preload Razorpay script
+  useEffect(() => {
+    if (!(window as any).Razorpay) {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
 
   const handleCardPayment = async () => {
     setLoading(true);
@@ -82,6 +94,7 @@ const PaymentMethods = () => {
           });
         },
         (errorMessage) => {
+          setLoading(false);
           toast({
             title: "Payment error",
             description: errorMessage,
@@ -89,8 +102,13 @@ const PaymentMethods = () => {
           });
         }
       );
-    } finally {
+    } catch (error) {
       setLoading(false);
+      toast({
+        title: "Payment error",
+        description: "Failed to initialize payment. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -135,6 +153,7 @@ const PaymentMethods = () => {
         serviceDetails.servicePrice,
         paymentMethod,
         () => {
+          setPaymentStatus('success');
           toast({
             title: "Booking confirmed!",
             description: "Your payment has been verified and booking confirmed. An email has been sent with details.",

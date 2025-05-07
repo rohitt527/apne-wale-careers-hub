@@ -1,27 +1,27 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export const useOtpTimer = (initialTime = 30) => {
   const [otpResendTimer, setOtpResendTimer] = useState(initialTime);
   const timerRef = useRef<number | null>(null);
 
   // Start the timer with the specified duration
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     // Clear any existing timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
     setOtpResendTimer(initialTime);
-  };
+  }, [initialTime]);
 
   // Reset timer
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
     setOtpResendTimer(0);
-  };
+  }, []);
 
   // Handle OTP resend timer
   useEffect(() => {

@@ -40,18 +40,28 @@ export class RazorpayPaymentService {
         userEmail || "customer@example.com"
       );
       
+      if (!order || !order.id) {
+        onError("Failed to create order. Please try again.");
+        return;
+      }
+      
+      const razorpayKeyId = getRazorpayKeyId();
+      if (!razorpayKeyId) {
+        onError("Payment configuration is missing. Please contact support.");
+        return;
+      }
+
       const options = {
-        key: getRazorpayKeyId(),
-        amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise or INR 500.
+        key: razorpayKeyId,
+        amount: order.amount, 
         currency: "INR",
         name: "ApneWale Careers",
         description: serviceName || "Service Booking",
         image: "/logo.png",
         order_id: order.id,
         handler: async function (response: any) {
-          // On successful payment
           try {
-            // Send booking confirmation email
+            // On successful payment
             await sendBookingEmail({
               service: serviceName || "",
               date: bookingDate || "",
@@ -67,8 +77,7 @@ export class RazorpayPaymentService {
               paymentMethod: "Razorpay"
             });
             
-            // Show confirmation message
-            alert("Booking Confirmed! A confirmation email has been sent to your email address.");
+            onSuccess("Payment successful! A confirmation email has been sent.");
             
             // Redirect to success page
             window.location.href = `${window.location.origin}/payment-success?serviceName=${encodeURIComponent(serviceName || "")}&date=${encodeURIComponent(bookingDate || "")}&time=${encodeURIComponent(bookingTime || "")}`;
@@ -90,24 +99,20 @@ export class RazorpayPaymentService {
         theme: {
           color: "#E53935"
         },
-        // Ensure automatic transfer to bank account
         modal: {
           ondismiss: function() {
             console.log('Payment popup closed without completing payment');
+            onError("Payment was cancelled. Please try again.");
           }
-        },
-        // Add bank account details for transfer
-        bank_account: {
-          account_number: "110132761669",
-          ifsc_code: "CNRB000608",
-          beneficiary_name: "ApneWale Careers",
-          account_type: "current"
         }
       };
       
       const rzp = new (window as any).Razorpay(options);
-      rzp.open();
+      rzp.on('payment.failed', function (response: any) {
+        onError("Payment failed. Please try again.");
+      });
       
+      rzp.open();
       onSuccess("Opening Razorpay payment gateway...");
       
     } catch (error) {

@@ -29,7 +29,7 @@ export const OtpEntryForm: React.FC<OtpEntryFormProps> = ({
   // Start timer when component mounts
   useEffect(() => {
     startTimer();
-  }, []);
+  }, [startTimer]);
   
   const handleResendOtp = async () => {
     if (otpResendTimer > 0) return;
