@@ -1,9 +1,8 @@
-
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User, TrendingUp } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Share2, BookOpen, TrendingUp, Eye, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import BlogCard from "@/components/common/BlogCard";
 
@@ -12,46 +11,58 @@ const blogData = [
   {
     id: 1,
     title: "10 Essential Tips for Technical Interviews",
-    content: `<p class="mb-4">Technical interviews can be intimidating, but with the right preparation, you can approach them with confidence. This article provides proven strategies to help you stand out from the competition and succeed in your next technical interview.</p>
+    content: `<div class="prose prose-lg max-w-none">
+              <p class="lead mb-6">Technical interviews can be intimidating, but with the right preparation, you can approach them with confidence. This comprehensive guide provides proven strategies to help you stand out from the competition and succeed in your next technical interview.</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">1. Understand the Basics</h2>
-              <p class="mb-4">Make sure you have a solid grasp of fundamental concepts in your field. For software engineering roles, this means data structures, algorithms, system design, and programming languages relevant to the position.</p>
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">1. Master the Fundamentals</h2>
+              <p class="mb-6">Before diving into complex problems, ensure you have a rock-solid understanding of fundamental concepts. For software engineering roles, this includes data structures (arrays, linked lists, trees, graphs), algorithms (sorting, searching, dynamic programming), and system design principles.</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">2. Practice, Practice, Practice</h2>
-              <p class="mb-4">Regular practice is key to interview success. Use platforms like LeetCode, HackerRank, or CodeSignal to solve problems. Try to solve at least 2-3 problems daily leading up to your interview.</p>
+              <div class="bg-blue-50 border-l-4 border-blue-500 p-6 my-8">
+                <p class="text-blue-800 font-medium">💡 Pro Tip: Create a checklist of fundamental topics and review them regularly. Consistency is key to retaining information.</p>
+              </div>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">3. Think Out Loud</h2>
-              <p class="mb-4">During the interview, communicate your thought process. Interviewers want to understand how you approach problems, not just the final solution.</p>
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">2. Practice Deliberately and Consistently</h2>
+              <p class="mb-6">Random practice won't cut it. Use platforms like LeetCode, HackerRank, or CodeSignal to solve problems systematically. Focus on different categories of problems and gradually increase difficulty.</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">4. Ask Clarifying Questions</h2>
-              <p class="mb-4">Don't rush into solving a problem. Take time to understand requirements and constraints by asking clarifying questions. This shows thoughtfulness and attention to detail.</p>
+              <ul class="list-disc pl-6 mb-6 space-y-2">
+                <li>Solve 2-3 problems daily leading up to your interview</li>
+                <li>Time yourself to simulate interview pressure</li>
+                <li>Review and understand solutions even for problems you solve correctly</li>
+                <li>Keep a log of patterns you encounter frequently</li>
+              </ul>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">5. Learn to Analyze Time and Space Complexity</h2>
-              <p class="mb-4">Being able to analyze and optimize your solutions is a crucial skill. Practice identifying the time and space complexity of your algorithms and discussing potential optimizations.</p>
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">3. Communicate Your Thought Process</h2>
+              <p class="mb-6">During the interview, think out loud. Interviewers are as interested in your problem-solving approach as they are in the final solution. This also helps them guide you if you're going off track.</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">6. Prepare for System Design Questions</h2>
-              <p class="mb-4">For senior roles, system design questions are common. Study scalability, reliability, and other architectural concepts. Practice designing systems like a URL shortener, social media feed, or e-commerce platform.</p>
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">4. Ask the Right Questions</h2>
+              <p class="mb-6">Don't rush into coding. Take time to understand the problem completely by asking clarifying questions:</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">7. Review Your Projects</h2>
-              <p class="mb-4">Be prepared to discuss your previous work in detail. Know the challenges you faced, how you solved them, and what you learned. Use the STAR method (Situation, Task, Action, Result) to structure your responses.</p>
+              <ul class="list-disc pl-6 mb-6 space-y-2">
+                <li>What are the input constraints?</li>
+                <li>Should I handle edge cases like empty inputs?</li>
+                <li>Are there any performance requirements?</li>
+                <li>Can I use additional data structures?</li>
+              </ul>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">8. Study the Company</h2>
-              <p class="mb-4">Research the company's products, technologies, and culture. This will help you tailor your answers and ask insightful questions at the end of the interview.</p>
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">5. Master Time and Space Complexity</h2>
+              <p class="mb-6">Being able to analyze and optimize your solutions is crucial. Practice identifying the time and space complexity of your algorithms and discussing potential optimizations. This shows technical depth and understanding.</p>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">9. Mock Interviews</h2>
-              <p class="mb-4">Conduct mock interviews with friends or mentors, or use services like Pramp or Interviewing.io. Simulating the interview environment helps reduce anxiety and improves performance.</p>
+              <div class="bg-green-50 border-l-4 border-green-500 p-6 my-8">
+                <p class="text-green-800 font-medium">🎯 Remember: It's often better to start with a brute force solution and then optimize, rather than jumping straight to the optimal solution.</p>
+              </div>
               
-              <h2 class="text-2xl font-bold mt-8 mb-4">10. Take Care of Yourself</h2>
-              <p class="mb-4">Ensure you're well-rested and mentally prepared on the day of the interview. Avoid cramming the night before, and take time to relax and clear your mind.</p>
-              
-              <h2 class="text-2xl font-bold mt-8 mb-4">Conclusion</h2>
-              <p class="mb-4">Technical interviews are not just about testing your knowledge; they assess your problem-solving abilities, communication skills, and how you handle pressure. By following these tips and maintaining a positive mindset, you'll be well-equipped to succeed in your technical interviews and take the next step in your career.</p>`,
+              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">Conclusion</h2>
+              <p class="mb-6">Technical interviews are challenging, but they're also an opportunity to showcase your skills and passion for technology. With consistent preparation, clear communication, and the right mindset, you'll be well-equipped to succeed and land your dream job.</p>
+              </div>`,
     excerpt: "Prepare for your next technical interview with these proven strategies and approaches that will help you stand out from the competition.",
     author: "Vikram Singh",
     date: "Apr 15, 2023",
     category: "Interview Tips",
     image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    tags: ["interviews", "career", "technical"]
+    tags: ["interviews", "career", "technical"],
+    readTime: "8 min read",
+    views: "12.4k",
+    likes: "342"
   },
   {
     id: 2,
@@ -119,6 +130,34 @@ const blogData = [
   }
 ];
 
+// Related blogs for sidebar
+const relatedBlogs = [
+  {
+    id: 2,
+    title: "System Design Interview Guide",
+    author: "Ananya Mehta",
+    date: "Mar 22, 2023",
+    image: "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+    readTime: "10 min read"
+  },
+  {
+    id: 3,
+    title: "Building Your Tech Portfolio",
+    author: "Priya Sharma",
+    date: "Mar 5, 2023",
+    image: "https://images.unsplash.com/photo-1579389083395-4507e98b5e67?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+    readTime: "6 min read"
+  },
+  {
+    id: 4,
+    title: "5 Algorithm Patterns to Master",
+    author: "Rahul Kapoor",
+    date: "Feb 18, 2023",
+    image: "https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+    readTime: "12 min read"
+  }
+];
+
 // All categories from blogs
 const allCategories = Array.from(new Set(blogData.map(blog => blog.category)));
 
@@ -129,6 +168,7 @@ const BlogDetail = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     // In a real app, this would be an API call
@@ -147,10 +187,15 @@ const BlogDetail = () => {
       <Layout>
         <div className="container-custom py-16">
           <div className="flex justify-center items-center h-[60vh]">
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-60"></div>
-              <div className="h-4 bg-gray-200 rounded w-40"></div>
-              <div className="h-4 bg-gray-200 rounded w-80"></div>
+            <div className="animate-pulse space-y-4 w-full max-w-4xl">
+              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-64 bg-gray-200 rounded"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -162,12 +207,15 @@ const BlogDetail = () => {
     return (
       <Layout>
         <div className="container-custom py-16">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Blog Not Found</h1>
-            <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist or has been removed.</p>
-            <Button asChild>
-              <Link to="/blog">Back to All Blogs</Link>
-            </Button>
+          <div className="text-center animate-fade-in">
+            <div className="bg-white rounded-2xl p-12 shadow-lg max-w-md mx-auto">
+              <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold mb-4">Article Not Found</h1>
+              <p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p>
+              <Button asChild className="bg-brand-red hover:bg-red-700">
+                <Link to="/blog">Back to All Articles</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </Layout>
@@ -176,119 +224,150 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <div className="bg-gray-50 py-6">
+      {/* Breadcrumb Navigation */}
+      <div className="bg-gray-50 py-4 border-b animate-fade-in">
         <div className="container-custom">
-          <Link to="/blog" className="flex items-center text-brand-red hover:underline mb-4">
-            <ArrowLeft className="h-4 w-4 mr-1" />
+          <Link to="/blog" className="flex items-center text-brand-red hover:text-red-700 transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to all articles
           </Link>
         </div>
       </div>
 
-      {/* Blog Header */}
-      <div 
-        className="w-full h-[40vh] bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${blog.image})` }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center">
-          <div className="container-custom text-white">
-            <Badge className="mb-4">{blog.category}</Badge>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 max-w-3xl">{blog.title}</h1>
-            <div className="flex items-center gap-6 text-gray-200">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-brand-dark to-gray-900 text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <img 
+            src={blog.image} 
+            alt={blog.title} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
+        
+        <div className="container-custom relative z-10">
+          <div className="max-w-4xl mx-auto text-center animate-slide-up">
+            <Badge className="mb-6 bg-brand-red/90 text-white text-sm px-4 py-2">
+              {blog.category}
+            </Badge>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              {blog.title}
+            </h1>
+            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+              {blog.excerpt}
+            </p>
+            
+            {/* Author and Meta Info */}
+            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-300 animate-fade-in delay-300">
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>{blog.author}</span>
+                <User className="h-5 w-5" />
+                <span className="font-medium">{blog.author}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="h-5 w-5" />
                 <span>{blog.date}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                <span>{blog.readTime}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                <span>{blog.views} views</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Three Column Layout */}
+      {/* Main Content */}
       <div className="container-custom py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Left Sidebar - Categories */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border">
-                <h3 className="font-bold text-xl mb-4">Categories</h3>
-                <div className="flex flex-col space-y-2">
-                  <Button 
-                    variant="ghost" 
-                    className="justify-start hover:text-brand-red"
-                    asChild
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+          {/* Article Content */}
+          <div className="lg:col-span-3">
+            <article className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 animate-fade-in">
+              {/* Article Actions */}
+              <div className="flex items-center justify-between mb-8 pb-6 border-b">
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant={liked ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setLiked(!liked)}
+                    className={`transition-all duration-300 ${liked ? 'bg-red-500 hover:bg-red-600 text-white' : 'hover:bg-red-50 hover:text-red-600'}`}
                   >
-                    <Link to="/blog">All Categories</Link>
+                    <Heart className={`h-4 w-4 mr-2 ${liked ? 'fill-current' : ''}`} />
+                    {liked ? parseInt(blog.likes) + 1 : blog.likes}
                   </Button>
-                  {allCategories.map(category => (
-                    <Button 
-                      key={category} 
-                      variant="ghost" 
-                      className={`justify-start ${blog.category === category ? 'text-brand-red' : ''} hover:text-brand-red`}
-                      asChild
-                    >
-                      <Link to={`/blog?category=${category}`}>{category}</Link>
-                    </Button>
+                  <Button variant="outline" size="sm" className="hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                </div>
+                <Button asChild className="bg-brand-red hover:bg-red-700">
+                  <Link to="/book">Book a Career Session</Link>
+                </Button>
+              </div>
+
+              {/* Article Body */}
+              <div 
+                className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
+              
+              {/* Tags */}
+              <div className="mt-12 pt-8 border-t">
+                <div className="flex flex-wrap gap-3 mb-8">
+                  <span className="font-semibold text-gray-900">Tags:</span>
+                  {blog.tags.map((tag: string) => (
+                    <Badge key={tag} variant="outline" className="bg-gray-50 hover:bg-brand-red hover:text-white transition-colors cursor-pointer">
+                      {tag}
+                    </Badge>
                   ))}
                 </div>
               </div>
-            </div>
+            </article>
           </div>
           
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
-            
-            <div className="mt-12 border-t pt-6">
-              <div className="flex flex-wrap gap-2 mb-8">
-                <span className="font-medium">Tags:</span>
-                {blog.tags.map((tag: string) => (
-                  <Badge key={tag} variant="outline" className="bg-gray-100">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              
-              <Button asChild className="bg-brand-red hover:bg-red-700">
-                <Link to="/book">Book a Career Session</Link>
-              </Button>
-            </div>
-          </div>
-          
-          {/* Right Sidebar - Trending Posts */}
+          {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <div className="flex items-center gap-2 mb-5">
+            <div className="sticky top-24 space-y-8">
+              {/* Related Posts */}
+              <div className="bg-white p-6 rounded-2xl shadow-lg animate-fade-in delay-300">
+                <div className="flex items-center gap-2 mb-6">
                   <TrendingUp className="h-5 w-5 text-brand-red" />
-                  <h3 className="font-bold text-xl">Trending Posts</h3>
+                  <h3 className="font-bold text-xl">Related Articles</h3>
                 </div>
                 <div className="space-y-6">
-                  {trendingBlogs.map(trendingBlog => (
-                    <div key={trendingBlog.id} className="group">
-                      <Link to={`/blog/${trendingBlog.id}`} className="block mb-2">
-                        <div className="overflow-hidden rounded-md mb-2 h-32">
+                  {relatedBlogs.map(relatedBlog => (
+                    <div key={relatedBlog.id} className="group">
+                      <Link to={`/blog/${relatedBlog.id}`} className="block">
+                        <div className="overflow-hidden rounded-lg mb-3 h-24">
                           <img 
-                            src={trendingBlog.image} 
-                            alt={trendingBlog.title} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                            src={relatedBlog.image} 
+                            alt={relatedBlog.title} 
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         </div>
-                        <h4 className="font-medium text-base line-clamp-2 group-hover:text-brand-red transition-colors">
-                          {trendingBlog.title}
+                        <h4 className="font-semibold text-sm line-clamp-2 group-hover:text-brand-red transition-colors mb-2">
+                          {relatedBlog.title}
                         </h4>
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <span>{relatedBlog.author}</span>
+                          <span>{relatedBlog.readTime}</span>
+                        </div>
                       </Link>
-                      <div className="flex items-center text-xs text-gray-500">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        <span>{trendingBlog.date}</span>
-                      </div>
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Newsletter Signup */}
+              <div className="bg-gradient-to-br from-brand-red to-red-600 p-6 rounded-2xl text-white animate-fade-in delay-500">
+                <h3 className="font-bold text-lg mb-3">Stay Updated</h3>
+                <p className="text-red-100 text-sm mb-4">Get the latest career insights delivered to your inbox.</p>
+                <Button className="w-full bg-white text-brand-red hover:bg-gray-100 transition-colors">
+                  Subscribe Now
+                </Button>
               </div>
             </div>
           </div>
