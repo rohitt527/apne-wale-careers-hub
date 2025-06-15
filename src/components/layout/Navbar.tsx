@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -59,7 +58,7 @@ const Navbar = () => {
           <Link to="/services" className="text-foreground hover:text-brand-red transition-colors font-medium">Services</Link>
           <Link to="/blog" className="text-foreground hover:text-brand-red transition-colors font-medium">Blog</Link>
           <Link to="/jobs" className="text-foreground hover:text-brand-red transition-colors font-medium">Jobs</Link>
-          <Link to="/pricing" className="text-foreground hover:text-brand-red transition-colors font-medium">Pricing</Link>
+          <Link to="/study-material" className="text-foreground hover:text-brand-red transition-colors font-medium">Study Material</Link>
           
           {isAuthenticated ? (
             <>
@@ -128,11 +127,11 @@ const Navbar = () => {
                 Jobs
               </Link>
               <Link 
-                to="/pricing" 
+                to="/study-material" 
                 onClick={() => setIsOpen(false)}
                 className="text-lg font-medium hover:text-brand-red"
               >
-                Pricing
+                Study Material
               </Link>
               
               {isAuthenticated ? (
