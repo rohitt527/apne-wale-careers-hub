@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,7 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-brand-dark via-gray-900 to-brand-dark text-white overflow-hidden">
+      <section className="relative min-h-screen bg-gradient-to-br from-brand-dark via-gray-900 to-brand-dark dark:from-gray-900 dark:via-black dark:to-gray-900 text-white overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-brand-red/20 rounded-full blur-3xl animate-pulse"></div>
@@ -152,7 +151,7 @@ const Home = () => {
       </section>
 
       {/* Services Section */}
-      <section className="section-padding bg-gradient-to-b from-gray-50 to-white">
+      <section className="section-padding bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="container-custom">
           <div className="text-center mb-16 animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-brand-red/10 text-brand-red rounded-full px-4 py-2 mb-4">
@@ -163,7 +162,7 @@ const Home = () => {
               Comprehensive Career Support for
               <span className="text-brand-red"> Every Stage</span>
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               From interview preparation to career guidance, we provide end-to-end support to help you succeed in your tech journey.
             </p>
           </div>
@@ -270,25 +269,33 @@ const Home = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center text-white">
             <div className="animate-scale-in delay-100">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
-                <Counter end={5000} suffix="+" className="text-3xl lg:text-4xl font-bold mb-2" />
+                <div className="text-3xl lg:text-4xl font-bold mb-2">
+                  <Counter end={5000} suffix="+" />
+                </div>
                 <p className="text-lg">Learners Helped</p>
               </div>
             </div>
             <div className="animate-scale-in delay-200">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
-                <Counter end={1200} suffix="+" className="text-3xl lg:text-4xl font-bold mb-2" />
+                <div className="text-3xl lg:text-4xl font-bold mb-2">
+                  <Counter end={1200} suffix="+" />
+                </div>
                 <p className="text-lg">Mock Interviews</p>
               </div>
             </div>
             <div className="animate-scale-in delay-300">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
-                <Counter end={850} suffix="+" className="text-3xl lg:text-4xl font-bold mb-2" />
+                <div className="text-3xl lg:text-4xl font-bold mb-2">
+                  <Counter end={850} suffix="+" />
+                </div>
                 <p className="text-lg">Job Placements</p>
               </div>
             </div>
             <div className="animate-scale-in delay-400">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
-                <Counter end={98} suffix="%" className="text-3xl lg:text-4xl font-bold mb-2" />
+                <div className="text-3xl lg:text-4xl font-bold mb-2">
+                  <Counter end={98} suffix="%" />
+                </div>
                 <p className="text-lg">Satisfaction Rate</p>
               </div>
             </div>
@@ -297,7 +304,7 @@ const Home = () => {
       </section>
 
       {/* Featured Jobs Section */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-white dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-12 animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-600 rounded-full px-4 py-2 mb-4">
@@ -417,7 +424,7 @@ const Home = () => {
       </section>
 
       {/* Featured Blog Posts Section */}
-      <section className="section-padding bg-gradient-to-b from-gray-50 to-white">
+      <section className="section-padding bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
         <div className="container-custom">
           <div className="text-center mb-12 animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-600 rounded-full px-4 py-2 mb-4">
@@ -464,7 +471,7 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-white dark:bg-gray-900">
         <div className="container-custom">
           <div className="text-center mb-12 animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-600 rounded-full px-4 py-2 mb-4">
@@ -512,7 +519,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-brand-dark via-gray-900 to-brand-dark text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-brand-dark via-gray-900 to-brand-dark dark:from-black dark:via-gray-900 dark:to-black text-white relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>

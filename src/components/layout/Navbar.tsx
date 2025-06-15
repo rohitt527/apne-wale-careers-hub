@@ -1,6 +1,8 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Menu, X, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -44,7 +46,8 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMenu} aria-label="Toggle menu">
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -75,6 +78,8 @@ const Navbar = () => {
             </Button>
           )}
           
+          <ThemeToggle />
+          
           <Button 
             size="sm" 
             className="bg-brand-red hover:bg-red-700 text-white"
@@ -85,7 +90,7 @@ const Navbar = () => {
         </nav>
 
         {isOpen && (
-          <div className="fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto bg-white p-6 md:hidden animate-fade-in">
+          <div className="fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto bg-background p-6 md:hidden animate-fade-in">
             <nav className="flex flex-col space-y-6">
               <Link 
                 to="/" 
