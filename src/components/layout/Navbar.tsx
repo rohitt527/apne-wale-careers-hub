@@ -1,18 +1,37 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoginModal } from "@/components/auth/LoginModal";
+import AdminLogin from "@/components/admin/AdminLogin";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const [adminLoginModalOpen, setAdminLoginModalOpen] = useState(false);
+  const { isAuthenticated, logout, isAdmin, adminLogin } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handlePostJobClick = () => {
+    if (isAdmin) {
+      navigate('/admin-post');
+    } else {
+      setAdminLoginModalOpen(true);
+    }
+  };
+
+  const handleAdminLogin = (username: string, password: string) => {
+    const success = adminLogin(username, password);
+    if (success) {
+      setAdminLoginModalOpen(false);
+      navigate('/admin-post');
+    }
+    return success;
   };
 
   return (
@@ -42,27 +61,27 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Link to="/dashboard" className="text-foreground hover:text-brand-red transition-colors font-medium">Dashboard</Link>
-              <Link to="/book">
-                <Button size="sm" className="bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-              </Link>
               <Button size="sm" variant="ghost" onClick={logout}>Logout</Button>
             </>
           ) : (
-            <>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                onClick={() => setLoginModalOpen(true)}
-                className="flex items-center gap-1"
-              >
-                <User className="h-4 w-4" />
-                Login
-              </Button>
-              <Link to="/book">
-                <Button size="sm" className="bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-              </Link>
-            </>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => setLoginModalOpen(true)}
+              className="flex items-center gap-1"
+            >
+              <User className="h-4 w-4" />
+              Login
+            </Button>
           )}
+          
+          <Button 
+            size="sm" 
+            className="bg-brand-red hover:bg-red-700 text-white"
+            onClick={handlePostJobClick}
+          >
+            Post a Job
+          </Button>
         </nav>
 
         {isOpen && (
@@ -120,12 +139,6 @@ const Navbar = () => {
                   >
                     Dashboard
                   </Link>
-                  <Link 
-                    to="/book"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Button className="w-full bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-                  </Link>
                   <Button variant="outline" className="w-full" onClick={() => {
                     logout();
                     setIsOpen(false);
@@ -134,26 +147,28 @@ const Navbar = () => {
                   </Button>
                 </>
               ) : (
-                <>
-                  <Button 
-                    variant="outline" 
-                    className="w-full flex items-center justify-center gap-2"
-                    onClick={() => {
-                      setLoginModalOpen(true);
-                      setIsOpen(false);
-                    }}
-                  >
-                    <User className="h-4 w-4" />
-                    Login
-                  </Button>
-                  <Link 
-                    to="/book"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Button className="w-full bg-brand-red hover:bg-red-700 text-white">Book a Slot</Button>
-                  </Link>
-                </>
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={() => {
+                    setLoginModalOpen(true);
+                    setIsOpen(false);
+                  }}
+                >
+                  <User className="h-4 w-4" />
+                  Login
+                </Button>
               )}
+              
+              <Button 
+                className="w-full bg-brand-red hover:bg-red-700 text-white"
+                onClick={() => {
+                  handlePostJobClick();
+                  setIsOpen(false);
+                }}
+              >
+                Post a Job
+              </Button>
             </nav>
           </div>
         )}
@@ -163,6 +178,24 @@ const Navbar = () => {
         isOpen={loginModalOpen} 
         onClose={() => setLoginModalOpen(false)} 
       />
+      
+      {/* Admin Login Modal */}
+      {adminLoginModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Admin Login Required</h2>
+              <button 
+                onClick={() => setAdminLoginModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <AdminLogin onLogin={handleAdminLogin} />
+          </div>
+        </div>
+      )}
     </header>
   );
 };

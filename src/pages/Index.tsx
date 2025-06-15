@@ -75,7 +75,7 @@ const Home = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
             <Button asChild size="lg" className="bg-brand-red hover:bg-red-700 text-white">
-              <Link to="/book">Book Your Slot</Link>
+              <Link to="/services">Explore Services</Link>
             </Button>
           </div>
         </div>

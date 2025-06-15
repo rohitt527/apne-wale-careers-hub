@@ -1,93 +1,82 @@
 
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { Lock, FileText, Briefcase } from "lucide-react";
-import AdminLogin from "@/components/admin/AdminLogin";
-import JobPostForm from "@/components/admin/JobPostForm";
-import BlogPostForm from "@/components/admin/BlogPostForm";
 import SectionHeading from "@/components/common/SectionHeading";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { AdminAuth } from "@/components/admin/AdminAuth";
+import { FileText, Briefcase, LogOut } from "lucide-react";
 
 const AdminPost = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState<'jobs' | 'blogs'>('jobs');
-  const { toast } = useToast();
+  const { adminLogout } = useAuth();
+  const navigate = useNavigate();
 
-  const handleLogin = (username: string, password: string): boolean => {
-    if (username === "apneblogs" && password === "apnecoders") {
-      setIsAuthenticated(true);
-      toast({
-        title: "Login successful",
-        description: "Welcome to the admin dashboard",
-      });
-      return true;
-    } else {
-      toast({
-        title: "Login failed",
-        description: "Invalid username or password",
-        variant: "destructive",
-      });
-      return false;
-    }
+  const handleLogout = () => {
+    adminLogout();
+    navigate("/");
   };
 
   return (
     <Layout>
       <section className="section-padding">
         <div className="container-custom">
-          {!isAuthenticated ? (
-            <>
-              <SectionHeading 
-                title="Admin Login" 
-                description="Please enter your credentials to access the admin dashboard."
-                align="center"
-              />
-              <div className="max-w-md mx-auto">
-                <Card>
-                  <CardContent className="p-6">
-                    <AdminLogin onLogin={handleLogin} />
-                  </CardContent>
-                </Card>
+          <div className="flex justify-between items-center mb-8">
+            <SectionHeading 
+              title="Admin Panel" 
+              subtitle="Manage jobs and blog posts"
+              align="center"
+            />
+            <Button 
+              variant="destructive"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
+          
+          <AdminAuth>
+            <div className="max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-8 rounded-lg shadow-md border hover:shadow-lg transition-shadow">
+                  <div className="text-center">
+                    <div className="bg-brand-red/10 p-4 rounded-full inline-block mb-4">
+                      <Briefcase className="h-8 w-8 text-brand-red" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">Post a Job</h3>
+                    <p className="text-gray-600 mb-6">
+                      Create and publish new job opportunities for the community
+                    </p>
+                    <Button 
+                      className="w-full bg-brand-red hover:bg-red-700 text-white"
+                      onClick={() => navigate("/jobs/create")}
+                    >
+                      Create Job Post
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-8 rounded-lg shadow-md border hover:shadow-lg transition-shadow">
+                  <div className="text-center">
+                    <div className="bg-blue-500/10 p-4 rounded-full inline-block mb-4">
+                      <FileText className="h-8 w-8 text-blue-500" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">Write a Blog</h3>
+                    <p className="text-gray-600 mb-6">
+                      Share insights and knowledge with the community
+                    </p>
+                    <Button 
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                      onClick={() => navigate("/blog/create")}
+                    >
+                      Create Blog Post
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </>
-          ) : (
-            <>
-              <SectionHeading 
-                title="Admin Dashboard" 
-                description="Manage job postings and blog content."
-                align="center"
-              />
-              <Card className="mb-8">
-                <CardContent className="p-6">
-                  <Tabs 
-                    defaultValue="jobs" 
-                    className="w-full"
-                    onValueChange={(value) => setActiveTab(value as 'jobs' | 'blogs')}
-                  >
-                    <TabsList className="grid grid-cols-2 mb-8">
-                      <TabsTrigger value="jobs" className="flex items-center gap-2">
-                        <Briefcase className="h-4 w-4" /> Job Posts
-                      </TabsTrigger>
-                      <TabsTrigger value="blogs" className="flex items-center gap-2">
-                        <FileText className="h-4 w-4" /> Blog Posts
-                      </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="jobs">
-                      <JobPostForm />
-                    </TabsContent>
-
-                    <TabsContent value="blogs">
-                      <BlogPostForm />
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            </>
-          )}
+            </div>
+          </AdminAuth>
         </div>
       </section>
     </Layout>
