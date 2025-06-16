@@ -1,9 +1,19 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Folder } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Search, Folder, Download, Star, Clock, FileText, Filter, BookOpen, Users, Trophy } from "lucide-react";
+
+const categories = [
+  { id: "all", name: "All Materials", icon: BookOpen },
+  { id: "system-design", name: "System Design", icon: FileText },
+  { id: "behavioral", name: "Behavioral", icon: Users },
+  { id: "technical", name: "Technical", icon: Trophy },
+  { id: "assessment", name: "Assessment", icon: Clock },
+];
 
 const studyMaterials = [
   {
@@ -13,10 +23,11 @@ const studyMaterials = [
     format: "PDF",
     size: "6.1 MB",
     type: "Premium",
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=80",
-    desc:
-      "Learn proven system design strategies with detailed examples, diagrams, and best practices.",
+    category: "system-design",
+    downloads: 2547,
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=80",
+    desc: "Master system design with comprehensive examples, scalability patterns, and real-world case studies from top tech companies.",
   },
   {
     id: 2,
@@ -25,10 +36,11 @@ const studyMaterials = [
     format: "PDF",
     size: "2.5 MB",
     type: "Free",
-    image:
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=80",
-    desc:
-      "Comprehensive list of classic and modern behavioral questions with sample answers.",
+    category: "behavioral",
+    downloads: 5432,
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=80",
+    desc: "Complete collection of behavioral questions with STAR method examples and proven strategies for success.",
   },
   {
     id: 3,
@@ -37,148 +49,263 @@ const studyMaterials = [
     format: "PDF",
     size: "4.8 MB",
     type: "Premium",
-    image:
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80",
-    desc:
-      "Essential, easily-focused technical rounds with question banks and tips.",
+    category: "technical",
+    downloads: 3210,
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80",
+    desc: "Essential algorithms, data structures, and coding patterns with detailed explanations and practice problems.",
   },
-  // Add more as needed
+  {
+    id: 4,
+    title: "Assessment Test Strategies",
+    date: "April 20, 2024",
+    format: "PDF",
+    size: "3.2 MB",
+    type: "Free",
+    category: "assessment",
+    downloads: 1876,
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=500&q=80",
+    desc: "Proven techniques for online assessments, aptitude tests, and coding challenges with time management tips.",
+  },
+  {
+    id: 5,
+    title: "Advanced System Architecture",
+    date: "May 10, 2024",
+    format: "PDF",
+    size: "8.3 MB",
+    type: "Premium",
+    category: "system-design",
+    downloads: 987,
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=500&q=80",
+    desc: "Deep dive into microservices, distributed systems, and cloud architecture patterns for senior roles.",
+  },
+  {
+    id: 6,
+    title: "Communication Skills for Interviews",
+    date: "April 15, 2024",
+    format: "PDF",
+    size: "1.9 MB",
+    type: "Free",
+    category: "behavioral",
+    downloads: 3456,
+    rating: 4.4,
+    image: "https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=500&q=80",
+    desc: "Master verbal and non-verbal communication techniques to excel in any interview scenario.",
+  },
 ];
 
-function MaterialCard({ material }: { material: typeof studyMaterials[0] }) {
+const stats = [
+  { number: "10K+", label: "Downloads", icon: Download },
+  { number: "500+", label: "Study Materials", icon: FileText },
+  { number: "4.8", label: "Average Rating", icon: Star },
+  { number: "50+", label: "Categories", icon: Folder },
+];
+
+function MaterialCard({ material, index }: { material: typeof studyMaterials[0]; index: number }) {
   return (
-    <div className="rounded-xl overflow-hidden shadow group bg-white dark:bg-gray-900 transition-all border border-gray-100 dark:border-gray-800 hover:shadow-lg">
-      <div className="relative h-44 md:h-40 w-full overflow-hidden">
+    <Card className="group overflow-hidden shadow-lg border-0 bg-white dark:bg-gray-900 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-fade-in" 
+          style={{ animationDelay: `${index * 150}ms` }}>
+      <div className="relative h-48 overflow-hidden">
         <img
           src={material.image}
           alt={material.title}
-          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {material.type === "Premium" && (
-          <span className="absolute top-3 right-3 z-10">
-            <Badge className="bg-brand-red text-white px-3 py-1 text-xs font-semibold shadow">
-              Premium
-            </Badge>
-          </span>
+          <Badge className="absolute top-3 right-3 z-10 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 text-xs font-semibold shadow-lg">
+            <Star className="w-3 h-3 mr-1" />
+            Premium
+          </Badge>
         )}
         {material.type === "Free" && (
-          <span className="absolute top-3 right-3 z-10">
-            <Badge className="bg-green-600 text-white px-3 py-1 text-xs font-semibold shadow">
-              Free
-            </Badge>
-          </span>
+          <Badge className="absolute top-3 right-3 z-10 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 text-xs font-semibold shadow-lg">
+            Free
+          </Badge>
         )}
-      </div>
-      <div className="p-4 flex flex-col gap-2">
-        <div className="flex items-center gap-2 mb-1">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">
-            {material.title}
-          </h3>
-          {material.type === "Premium" && (
-            <span title="Premium" className="ml-2">
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-                className="inline-block text-yellow-400"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8 12.19l-4.472 2.352.855-4.987L1 5.94l5.014-.728L8 1l1.986 4.212L15 5.94l-3.383 3.615.855 4.987z"
-                  fill="currentColor"
-                />
-              </svg>
-            </span>
-          )}
-          {material.type === "Free" && (
-            <span title="Free" className="ml-2">
-              <svg 
-                width="16" 
-                height="16" 
-                fill="none" 
-                className="inline-block text-green-500" 
-                viewBox="0 0 16 16" 
-                aria-hidden="true"
-              >
-                <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="2"/>
-                <path d="M5.5 8.5l2 2 3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </span>
-          )}
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center gap-1 text-xs bg-black/30 rounded-full px-2 py-1">
+            <Download className="w-3 h-3" />
+            {material.downloads.toLocaleString()}
+          </div>
+          <div className="flex items-center gap-1 text-xs bg-black/30 rounded-full px-2 py-1">
+            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+            {material.rating}
+          </div>
         </div>
-        <div className="text-xs text-gray-600 dark:text-gray-300 mb-1">
-          {material.date} &bull; {material.format} &bull; {material.size}
-        </div>
-        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 mb-2">{material.desc}</p>
-        {material.type === "Free" ? (
-          <Button variant="outline" size="sm" className="w-full mt-auto">
-            Download
-          </Button>
-        ) : (
-          <Button variant="secondary" size="sm" className="w-full mt-auto">
-            Unlock Premium
-          </Button>
-        )}
       </div>
-    </div>
+      
+      <CardContent className="p-6">
+        <CardTitle className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-red transition-colors">
+          {material.title}
+        </CardTitle>
+        
+        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 mb-3">
+          <Clock className="w-3 h-3" />
+          {material.date}
+          <span>•</span>
+          {material.format}
+          <span>•</span>
+          {material.size}
+        </div>
+        
+        <CardDescription className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 mb-4">
+          {material.desc}
+        </CardDescription>
+        
+        <div className="flex gap-2">
+          {material.type === "Free" ? (
+            <Button variant="default" size="sm" className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0">
+              <Download className="w-4 h-4 mr-1" />
+              Download
+            </Button>
+          ) : (
+            <Button variant="default" size="sm" className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black border-0">
+              <Star className="w-4 h-4 mr-1" />
+              Unlock Premium
+            </Button>
+          )}
+          <Button variant="outline" size="sm" asChild>
+            <Link to={`/study-material/${material.id}`}>
+              <FileText className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 const StudyMaterial: React.FC = () => {
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
 
-  const filtered = search
-    ? studyMaterials.filter((mat) =>
-        mat.title.toLowerCase().includes(search.toLowerCase())
-      )
-    : studyMaterials;
+  const filtered = studyMaterials.filter((mat) => {
+    const matchesSearch = mat.title.toLowerCase().includes(search.toLowerCase()) ||
+                         mat.desc.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || mat.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-neutral-50 dark:bg-[#1a1f2c] transition-all">
-      <div className="container-custom section-padding pb-4">
-        <h1 className="text-4xl md:text-5xl font-black text-center text-gray-900 dark:text-white mb-5 animate-fade-in">
-          Study Material
-        </h1>
-        <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 dark:text-gray-300 text-center mb-8 animate-fade-in delay-300">
-          Access our curated collection of resources to prepare for interviews, assessments, and enhance your technical skills.
-        </p>
-
-        {/* Search bar */}
-        <div className="flex justify-center mb-6 animate-fade-in delay-400">
-          <div className="relative w-full max-w-lg">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search for study materials..."
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow focus:outline-none focus:ring-2 focus:ring-brand-red transition-all"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search size={20} />
-            </span>
+    <Layout>
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10" />
+          <div className="container-custom relative">
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6 animate-fade-in">
+                Study Materials
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
+                Access our curated collection of premium resources to ace your interviews and advance your career
+              </p>
+              
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 animate-fade-in" style={{ animationDelay: "400ms" }}>
+                {stats.map((stat, index) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-2">
+                      <stat.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.number}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Results/headline */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-gray-700 dark:text-gray-300 text-sm animate-fade-in delay-500">
-            Showing {filtered.length} study material{filtered.length !== 1 && "s"}
-          </span>
-          <Button variant="outline" className="flex items-center gap-2 border-brand-red text-brand-red hover:bg-brand-red hover:text-white animate-fade-in delay-600">
-            <Folder className="h-4 w-4" />
-            Browse Categories
-          </Button>
-        </div>
+        <div className="container-custom pb-16">
+          {/* Search and Filters */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 animate-fade-in" style={{ animationDelay: "600ms" }}>
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search for study materials..."
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-red transition-all"
+                />
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 px-6 py-3"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+              </Button>
+            </div>
+            
+            {/* Categories */}
+            <div className={`mt-6 transition-all duration-300 ${showFilters ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Button
+                    key={category.id}
+                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`flex items-center gap-2 ${
+                      selectedCategory === category.id 
+                        ? "bg-brand-red text-white" 
+                        : "hover:bg-brand-red hover:text-white"
+                    }`}
+                  >
+                    <category.icon className="w-4 h-4" />
+                    {category.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((mat) => (
-            <MaterialCard material={mat} key={mat.id} />
-          ))}
+          {/* Results header */}
+          <div className="flex items-center justify-between mb-6 animate-fade-in" style={{ animationDelay: "800ms" }}>
+            <div className="text-gray-700 dark:text-gray-300">
+              Showing <span className="font-semibold text-brand-red">{filtered.length}</span> study materials
+              {selectedCategory !== "all" && (
+                <span className="ml-2 text-sm text-gray-500">
+                  in {categories.find(c => c.id === selectedCategory)?.name}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Materials Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filtered.map((material, index) => (
+              <MaterialCard key={material.id} material={material} index={index} />
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filtered.length === 0 && (
+            <div className="text-center py-16 animate-fade-in">
+              <BookOpen className="w-24 h-24 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                No materials found
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
+                Try adjusting your search terms or filters
+              </p>
+              <Button onClick={() => { setSearch(""); setSelectedCategory("all"); }}>
+                Clear Filters
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

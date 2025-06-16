@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -20,6 +21,7 @@ import Dashboard from "@/pages/Dashboard";
 import CreateJobPost from "@/pages/CreateJobPost";
 import CreateBlogPost from "@/pages/CreateBlogPost";
 import StudyMaterial from "@/pages/StudyMaterial";
+import StudyMaterialDetail from "@/pages/StudyMaterialDetail";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
               <Route path="/admin-post" element={<AdminPost />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/study-material" element={<StudyMaterial />} />
+              <Route path="/study-material/:id" element={<StudyMaterialDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
