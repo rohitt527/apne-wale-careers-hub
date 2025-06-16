@@ -10,36 +10,36 @@ import BlogCard from "@/components/common/BlogCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Star, Users, Award, Target, TrendingUp, CheckCircle, Sparkles, Zap, Shield, Rocket, Globe, Code, BrainCircuit } from "lucide-react";
+import { ArrowRight, Star, Users, Award, Target, TrendingUp, CheckCircle, Sparkles, Zap, Shield, Rocket, Globe, Code, BrainCircuit, Heart, Building, Trophy, Mail } from "lucide-react";
 
-// Mock data for blogs - Adding a small subset for home page display
+// Featured blogs data
 const featuredBlogs = [
   {
     id: 1,
     title: "10 Essential Tips for Technical Interviews",
-    excerpt: "Prepare for your next technical interview with these proven strategies and approaches that will help you stand out from the competition.",
+    excerpt: "Master technical interviews with these proven strategies that help you stand out from the competition and land your dream job.",
     author: "Vikram Singh",
-    date: "Apr 15, 2023",
+    date: "Dec 15, 2024",
     category: "Interview Tips",
     image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     readTime: "8 min read"
   },
   {
     id: 2,
-    title: "Understanding System Design: A Beginner's Guide",
-    excerpt: "System design is a critical skill for senior engineering roles. Learn the fundamental concepts and frameworks to approach any system design problem.",
+    title: "System Design Mastery: Complete Guide",
+    excerpt: "Learn system design fundamentals and advanced concepts that will help you excel in senior engineering interviews.",
     author: "Ananya Mehta",
-    date: "Mar 22, 2023",
+    date: "Dec 10, 2024",
     category: "Tech Concepts",
     image: "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     readTime: "12 min read"
   },
   {
     id: 3,
-    title: "How I Landed My Dream Job at Google",
-    excerpt: "A personal journey through the preparation, application, and interview process that led to a successful role at one of tech's biggest companies.",
+    title: "From Rejection to Google: My Journey",
+    excerpt: "A personal story of persistence, learning, and growth that led to landing a software engineer role at Google.",
     author: "Priya Sharma",
-    date: "Mar 5, 2023",
+    date: "Dec 5, 2024",
     category: "Success Story",
     image: "https://images.unsplash.com/photo-1579389083395-4507e98b5e67?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
     readTime: "6 min read"
@@ -67,23 +67,21 @@ const Home = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 dark:from-black dark:via-gray-900 dark:to-black text-white overflow-hidden">
         {/* Enhanced Animated Background */}
         <div className="absolute inset-0">
-          {/* Primary gradient orbs */}
           <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-brand-red/30 to-pink-500/30 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-gradient-to-l from-blue-600/30 to-purple-600/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse delay-500"></div>
           
-          {/* Secondary gradient effects */}
+          {/* Secondary effects */}
           <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-2xl animate-pulse delay-700"></div>
           <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-gradient-to-tr from-violet-500/20 to-indigo-500/20 rounded-full blur-2xl animate-pulse delay-300"></div>
         </div>
         
-        {/* Animated grid pattern */}
+        {/* Grid pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -94,9 +92,9 @@ const Home = () => {
           </svg>
         </div>
 
-        {/* Floating elements */}
+        {/* Floating particles */}
         <div className="absolute inset-0 opacity-20">
-          {[...Array(30)].map((_, i) => (
+          {[...Array(40)].map((_, i) => (
             <div
               key={i}
               className="absolute bg-gradient-to-r from-white/40 to-brand-red/40 rounded-full animate-float"
@@ -113,7 +111,7 @@ const Home = () => {
         </div>
 
         <div className="container-custom relative z-10 py-20 lg:py-32 flex flex-col items-center text-center">
-          {/* Trust badge with enhanced animation */}
+          {/* Trust badge */}
           <div className="animate-fade-in">
             <div className="inline-flex items-center gap-3 bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-lg border border-white/20 rounded-full px-8 py-3 mb-8 shadow-2xl hover:shadow-brand-red/25 transition-all duration-500 hover:scale-105 group">
               <div className="relative">
@@ -131,7 +129,7 @@ const Home = () => {
             </div>
           </div>
           
-          {/* Main heading with enhanced typography */}
+          {/* Enhanced main heading */}
           <h1 className="heading-xl max-w-6xl animate-slide-up delay-200 mb-8 leading-[1.1]">
             <span className="block mb-4">
               Accelerate Your{" "}
@@ -157,7 +155,7 @@ const Home = () => {
             Join thousands of successful professionals who transformed their careers with us.
           </p>
           
-          {/* Enhanced CTA buttons */}
+          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-6 animate-slide-up delay-500 mb-16">
             <Button asChild size="lg" className="relative bg-gradient-to-r from-brand-red via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 text-white shadow-2xl hover:shadow-brand-red/40 transform hover:scale-110 transition-all duration-500 px-10 py-6 text-lg group overflow-hidden">
               <Link to="/services" className="flex items-center gap-3">
@@ -175,7 +173,7 @@ const Home = () => {
             </Button>
           </div>
 
-          {/* Enhanced trust indicators */}
+          {/* Trust indicators */}
           <div className="flex flex-wrap items-center justify-center gap-12 text-base text-gray-300 animate-fade-in delay-700">
             <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/10 transition-all duration-300 group">
               <div className="relative">
@@ -209,7 +207,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Enhanced Services Section */}
       <section className="section-padding bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -326,7 +324,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Enhanced Stats Section */}
       <section className="py-24 bg-gradient-to-br from-brand-red via-red-600 to-pink-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/30"></div>
         <div className="absolute inset-0">
@@ -395,7 +393,7 @@ const Home = () => {
                 <div className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-300 to-purple-100 bg-clip-text text-transparent">
                   <Counter end={98} suffix="%" />
                 </div>
-                <p className="text-xl font-medium text-red-100">Satisfaction Rate</p>
+                <p className="text-xl font-medium text-red-100">Success Rate</p>
                 <div className="mt-4 flex justify-center">
                   <Star className="w-8 h-8 text-purple-300 group-hover:animate-bounce fill-current" />
                 </div>
@@ -538,9 +536,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Blog Posts Section */}
+      {/* Enhanced Blog Section */}
       <section className="section-padding bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-900 dark:to-black relative overflow-hidden">
-        {/* Background decoration */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-tr from-blue-500 to-cyan-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -667,16 +664,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Enhanced CTA Section */}
       <section className="py-24 bg-gradient-to-br from-brand-dark via-gray-900 to-black dark:from-black dark:via-gray-900 dark:to-brand-dark text-white relative overflow-hidden">
-        {/* Enhanced background effects */}
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-brand-red/30 to-pink-500/30 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
         </div>
         
-        {/* Animated particles */}
         <div className="absolute inset-0 opacity-30">
           {[...Array(50)].map((_, i) => (
             <div
@@ -718,7 +713,7 @@ const Home = () => {
                 required
               />
               <Button type="submit" size="lg" className="bg-gradient-to-r from-brand-red via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 text-white shadow-2xl hover:shadow-brand-red/40 transition-all duration-500 transform hover:scale-110 px-10 py-6 text-lg rounded-2xl group">
-                <Zap className="w-6 h-6 mr-2 group-hover:animate-pulse" />
+                <Mail className="w-6 h-6 mr-2 group-hover:animate-pulse" />
                 Get Started
                 <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
