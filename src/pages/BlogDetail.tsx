@@ -1,8 +1,9 @@
+
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User, Clock, Share2, BookOpen, TrendingUp, Eye, Heart } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Share2, BookOpen, TrendingUp, Eye, Heart, ChevronRight, MessageCircle, ThumbsUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import BlogCard from "@/components/common/BlogCard";
 
@@ -12,47 +13,47 @@ const blogData = [
     id: 1,
     title: "10 Essential Tips for Technical Interviews",
     content: `<div class="prose prose-lg max-w-none">
-              <p class="lead mb-6">Technical interviews can be intimidating, but with the right preparation, you can approach them with confidence. This comprehensive guide provides proven strategies to help you stand out from the competition and succeed in your next technical interview.</p>
+              <p class="lead mb-8 text-xl leading-relaxed">Technical interviews can be intimidating, but with the right preparation, you can approach them with confidence. This comprehensive guide provides proven strategies to help you stand out from the competition and succeed in your next technical interview.</p>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">1. Master the Fundamentals</h2>
-              <p class="mb-6">Before diving into complex problems, ensure you have a rock-solid understanding of fundamental concepts. For software engineering roles, this includes data structures (arrays, linked lists, trees, graphs), algorithms (sorting, searching, dynamic programming), and system design principles.</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">1. Master the Fundamentals</h2>
+              <p class="mb-8 text-lg leading-relaxed">Before diving into complex problems, ensure you have a rock-solid understanding of fundamental concepts. For software engineering roles, this includes data structures (arrays, linked lists, trees, graphs), algorithms (sorting, searching, dynamic programming), and system design principles.</p>
               
-              <div class="bg-blue-50 border-l-4 border-blue-500 p-6 my-8">
-                <p class="text-blue-800 font-medium">💡 Pro Tip: Create a checklist of fundamental topics and review them regularly. Consistency is key to retaining information.</p>
+              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-8 border-blue-500 p-8 my-12 rounded-r-2xl shadow-lg">
+                <p class="text-blue-900 font-semibold text-lg">💡 Pro Tip: Create a checklist of fundamental topics and review them regularly. Consistency is key to retaining information.</p>
               </div>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">2. Practice Deliberately and Consistently</h2>
-              <p class="mb-6">Random practice won't cut it. Use platforms like LeetCode, HackerRank, or CodeSignal to solve problems systematically. Focus on different categories of problems and gradually increase difficulty.</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">2. Practice Deliberately and Consistently</h2>
+              <p class="mb-8 text-lg leading-relaxed">Random practice won't cut it. Use platforms like LeetCode, HackerRank, or CodeSignal to solve problems systematically. Focus on different categories of problems and gradually increase difficulty.</p>
               
-              <ul class="list-disc pl-6 mb-6 space-y-2">
+              <ul class="list-disc pl-8 mb-8 space-y-4 text-lg">
                 <li>Solve 2-3 problems daily leading up to your interview</li>
                 <li>Time yourself to simulate interview pressure</li>
                 <li>Review and understand solutions even for problems you solve correctly</li>
                 <li>Keep a log of patterns you encounter frequently</li>
               </ul>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">3. Communicate Your Thought Process</h2>
-              <p class="mb-6">During the interview, think out loud. Interviewers are as interested in your problem-solving approach as they are in the final solution. This also helps them guide you if you're going off track.</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">3. Communicate Your Thought Process</h2>
+              <p class="mb-8 text-lg leading-relaxed">During the interview, think out loud. Interviewers are as interested in your problem-solving approach as they are in the final solution. This also helps them guide you if you're going off track.</p>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">4. Ask the Right Questions</h2>
-              <p class="mb-6">Don't rush into coding. Take time to understand the problem completely by asking clarifying questions:</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">4. Ask the Right Questions</h2>
+              <p class="mb-8 text-lg leading-relaxed">Don't rush into coding. Take time to understand the problem completely by asking clarifying questions:</p>
               
-              <ul class="list-disc pl-6 mb-6 space-y-2">
+              <ul class="list-disc pl-8 mb-8 space-y-4 text-lg">
                 <li>What are the input constraints?</li>
                 <li>Should I handle edge cases like empty inputs?</li>
                 <li>Are there any performance requirements?</li>
                 <li>Can I use additional data structures?</li>
               </ul>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">5. Master Time and Space Complexity</h2>
-              <p class="mb-6">Being able to analyze and optimize your solutions is crucial. Practice identifying the time and space complexity of your algorithms and discussing potential optimizations. This shows technical depth and understanding.</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">5. Master Time and Space Complexity</h2>
+              <p class="mb-8 text-lg leading-relaxed">Being able to analyze and optimize your solutions is crucial. Practice identifying the time and space complexity of your algorithms and discussing potential optimizations. This shows technical depth and understanding.</p>
               
-              <div class="bg-green-50 border-l-4 border-green-500 p-6 my-8">
-                <p class="text-green-800 font-medium">🎯 Remember: It's often better to start with a brute force solution and then optimize, rather than jumping straight to the optimal solution.</p>
+              <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-8 border-green-500 p-8 my-12 rounded-r-2xl shadow-lg">
+                <p class="text-green-900 font-semibold text-lg">🎯 Remember: It's often better to start with a brute force solution and then optimize, rather than jumping straight to the optimal solution.</p>
               </div>
               
-              <h2 class="text-3xl font-bold mt-12 mb-6 text-gray-900">Conclusion</h2>
-              <p class="mb-6">Technical interviews are challenging, but they're also an opportunity to showcase your skills and passion for technology. With consistent preparation, clear communication, and the right mindset, you'll be well-equipped to succeed and land your dream job.</p>
+              <h2 class="text-4xl font-bold mt-16 mb-8 text-gray-900">Conclusion</h2>
+              <p class="mb-8 text-lg leading-relaxed">Technical interviews are challenging, but they're also an opportunity to showcase your skills and passion for technology. With consistent preparation, clear communication, and the right mindset, you'll be well-equipped to succeed and land your dream job.</p>
               </div>`,
     excerpt: "Prepare for your next technical interview with these proven strategies and approaches that will help you stand out from the competition.",
     author: "Vikram Singh",
@@ -158,10 +159,6 @@ const relatedBlogs = [
   }
 ];
 
-// All categories from blogs
-const allCategories = Array.from(new Set(blogData.map(blog => blog.category)));
-
-// Get trending blogs (just using the first 3 for demo purposes)
 const trendingBlogs = blogData.slice(1, 4);
 
 const BlogDetail = () => {
@@ -169,6 +166,7 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     // In a real app, this would be an API call
@@ -186,15 +184,15 @@ const BlogDetail = () => {
     return (
       <Layout>
         <div className="container-custom py-16">
-          <div className="flex justify-center items-center h-[60vh]">
-            <div className="animate-pulse space-y-4 w-full max-w-4xl">
-              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div className="h-64 bg-gray-200 rounded"></div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+          <div className="flex justify-center items-center h-[70vh]">
+            <div className="animate-pulse space-y-6 w-full max-w-4xl">
+              <div className="h-12 bg-gray-200 rounded-2xl w-3/4"></div>
+              <div className="h-6 bg-gray-200 rounded-xl w-1/2"></div>
+              <div className="h-80 bg-gray-200 rounded-3xl"></div>
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-200 rounded-xl"></div>
+                <div className="h-6 bg-gray-200 rounded-xl w-5/6"></div>
+                <div className="h-6 bg-gray-200 rounded-xl w-4/6"></div>
               </div>
             </div>
           </div>
@@ -206,13 +204,13 @@ const BlogDetail = () => {
   if (!blog) {
     return (
       <Layout>
-        <div className="container-custom py-16">
+        <div className="container-custom py-24">
           <div className="text-center animate-fade-in">
-            <div className="bg-white rounded-2xl p-12 shadow-lg max-w-md mx-auto">
-              <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold mb-4">Article Not Found</h1>
-              <p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p>
-              <Button asChild className="bg-brand-red hover:bg-red-700">
+            <div className="bg-white rounded-3xl p-16 shadow-2xl max-w-lg mx-auto">
+              <BookOpen className="h-20 w-20 text-gray-400 mx-auto mb-6" />
+              <h1 className="text-4xl font-bold mb-6 text-gray-900">Article Not Found</h1>
+              <p className="text-gray-600 mb-8 text-lg">The article you're looking for doesn't exist or has been removed.</p>
+              <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-lg">
                 <Link to="/blog">Back to All Articles</Link>
               </Button>
             </div>
@@ -224,56 +222,66 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      {/* Breadcrumb Navigation */}
-      <div className="bg-gray-50 py-4 border-b animate-fade-in">
+      {/* Enhanced Breadcrumb Navigation */}
+      <div className="bg-gradient-to-r from-gray-50 to-white py-6 border-b-2 border-gray-100 animate-fade-in">
         <div className="container-custom">
-          <Link to="/blog" className="flex items-center text-brand-red hover:text-red-700 transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to all articles
-          </Link>
+          <nav className="flex items-center text-sm font-medium space-x-3">
+            <Link to="/blog" className="flex items-center text-brand-red hover:text-red-700 transition-colors group">
+              <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
+              All Articles
+            </Link>
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <span className="text-gray-600">{blog.category}</span>
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <span className="text-gray-400 truncate max-w-xs">{blog.title}</span>
+          </nav>
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-brand-dark to-gray-900 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+      {/* Enhanced Hero Section */}
+      <section className="relative bg-gradient-to-br from-gray-900 via-brand-dark to-gray-800 text-white py-24 overflow-hidden">
+        <div className="absolute inset-0 opacity-30">
           <img 
             src={blog.image} 
             alt={blog.title} 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/50"></div>
         
         <div className="container-custom relative z-10">
-          <div className="max-w-4xl mx-auto text-center animate-slide-up">
-            <Badge className="mb-6 bg-brand-red/90 text-white text-sm px-4 py-2">
-              {blog.category}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <div className="max-w-5xl mx-auto text-center">
+            <div className="animate-fade-in">
+              <Badge className="mb-8 bg-brand-red/90 text-white text-lg px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
+                {blog.category}
+              </Badge>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight animate-slide-up">
               {blog.title}
             </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            
+            <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in delay-300">
               {blog.excerpt}
             </p>
             
-            {/* Author and Meta Info */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-300 animate-fade-in delay-300">
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                <span className="font-medium">{blog.author}</span>
+            {/* Enhanced Author and Meta Info */}
+            <div className="flex flex-wrap items-center justify-center gap-8 text-gray-200 animate-fade-in delay-500">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <User className="h-6 w-6 text-brand-red" />
+                <span className="font-semibold text-lg">{blog.author}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <span>{blog.date}</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <Calendar className="h-6 w-6 text-blue-400" />
+                <span className="text-lg">{blog.date}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                <span>{blog.readTime}</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <Clock className="h-6 w-6 text-green-400" />
+                <span className="text-lg">{blog.readTime}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
-                <span>{blog.views} views</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <Eye className="h-6 w-6 text-purple-400" />
+                <span className="text-lg">{blog.views} views</span>
               </div>
             </div>
           </div>
@@ -281,79 +289,114 @@ const BlogDetail = () => {
       </section>
 
       {/* Main Content */}
-      <div className="container-custom py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+      <div className="container-custom py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
           {/* Article Content */}
           <div className="lg:col-span-3">
-            <article className="bg-white rounded-2xl shadow-lg p-8 lg:p-12 animate-fade-in">
-              {/* Article Actions */}
-              <div className="flex items-center justify-between mb-8 pb-6 border-b">
+            <article className="bg-white rounded-3xl shadow-2xl p-8 lg:p-16 animate-fade-in">
+              {/* Enhanced Article Actions */}
+              <div className="flex items-center justify-between mb-12 pb-8 border-b-2 border-gray-100">
                 <div className="flex items-center gap-4">
                   <Button
                     variant={liked ? "default" : "outline"}
-                    size="sm"
+                    size="lg"
                     onClick={() => setLiked(!liked)}
-                    className={`transition-all duration-300 ${liked ? 'bg-red-500 hover:bg-red-600 text-white' : 'hover:bg-red-50 hover:text-red-600'}`}
+                    className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl ${
+                      liked ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg' : 'hover:bg-red-50 hover:text-red-600 border-2'
+                    }`}
                   >
-                    <Heart className={`h-4 w-4 mr-2 ${liked ? 'fill-current' : ''}`} />
+                    <Heart className={`h-5 w-5 mr-3 ${liked ? 'fill-current animate-pulse' : ''}`} />
                     {liked ? parseInt(blog.likes) + 1 : blog.likes}
                   </Button>
-                  <Button variant="outline" size="sm" className="hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                    <Share2 className="h-4 w-4 mr-2" />
+                  
+                  <Button variant="outline" size="lg" className="hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl border-2">
+                    <Share2 className="h-5 w-5 mr-3" />
                     Share
                   </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    onClick={() => setBookmarked(!bookmarked)}
+                    className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl border-2 ${
+                      bookmarked ? 'bg-yellow-50 text-yellow-600 border-yellow-300' : 'hover:bg-yellow-50 hover:text-yellow-600'
+                    }`}
+                  >
+                    <BookOpen className="h-5 w-5 mr-3" />
+                    {bookmarked ? 'Saved' : 'Save'}
+                  </Button>
                 </div>
-                <Button asChild className="bg-brand-red hover:bg-red-700">
+                
+                <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                   <Link to="/book">Book a Career Session</Link>
                 </Button>
               </div>
 
-              {/* Article Body */}
+              {/* Enhanced Article Body */}
               <div 
-                className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700"
+                className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-img:rounded-2xl prose-img:shadow-lg"
                 dangerouslySetInnerHTML={{ __html: blog.content }}
               />
               
-              {/* Tags */}
-              <div className="mt-12 pt-8 border-t">
-                <div className="flex flex-wrap gap-3 mb-8">
-                  <span className="font-semibold text-gray-900">Tags:</span>
+              {/* Enhanced Tags */}
+              <div className="mt-16 pt-12 border-t-2 border-gray-100">
+                <div className="flex flex-wrap items-center gap-4 mb-8">
+                  <span className="font-bold text-xl text-gray-900">Tags:</span>
                   {blog.tags.map((tag: string) => (
-                    <Badge key={tag} variant="outline" className="bg-gray-50 hover:bg-brand-red hover:text-white transition-colors cursor-pointer">
-                      {tag}
+                    <Badge 
+                      key={tag} 
+                      variant="outline" 
+                      className="bg-gray-50 hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer transform hover:scale-105 px-4 py-2 rounded-full text-sm font-semibold border-2"
+                    >
+                      #{tag}
                     </Badge>
                   ))}
+                </div>
+                
+                {/* Engagement Section */}
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl p-8 mt-12">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Join the Discussion</h3>
+                  <div className="flex flex-wrap gap-4">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl">
+                      <MessageCircle className="h-5 w-5 mr-2" />
+                      Add Comment
+                    </Button>
+                    <Button variant="outline" className="border-2 px-6 py-3 rounded-2xl">
+                      <ThumbsUp className="h-5 w-5 mr-2" />
+                      Rate Article
+                    </Button>
+                  </div>
                 </div>
               </div>
             </article>
           </div>
           
-          {/* Sidebar */}
+          {/* Enhanced Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-8">
+            <div className="sticky top-32 space-y-8">
               {/* Related Posts */}
-              <div className="bg-white p-6 rounded-2xl shadow-lg animate-fade-in delay-300">
-                <div className="flex items-center gap-2 mb-6">
-                  <TrendingUp className="h-5 w-5 text-brand-red" />
-                  <h3 className="font-bold text-xl">Related Articles</h3>
+              <div className="bg-white p-8 rounded-3xl shadow-xl animate-fade-in delay-300">
+                <div className="flex items-center gap-3 mb-8">
+                  <TrendingUp className="h-6 w-6 text-brand-red" />
+                  <h3 className="font-bold text-2xl text-gray-900">Related Articles</h3>
                 </div>
-                <div className="space-y-6">
-                  {relatedBlogs.map(relatedBlog => (
-                    <div key={relatedBlog.id} className="group">
+                <div className="space-y-8">
+                  {relatedBlogs.map((relatedBlog, index) => (
+                    <div key={relatedBlog.id} className="group animate-fade-in" style={{ animationDelay: `${(index + 1) * 200}ms` }}>
                       <Link to={`/blog/${relatedBlog.id}`} className="block">
-                        <div className="overflow-hidden rounded-lg mb-3 h-24">
+                        <div className="overflow-hidden rounded-2xl mb-4 h-32 shadow-lg">
                           <img 
                             src={relatedBlog.image} 
                             alt={relatedBlog.title} 
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         </div>
-                        <h4 className="font-semibold text-sm line-clamp-2 group-hover:text-brand-red transition-colors mb-2">
+                        <h4 className="font-bold text-lg line-clamp-2 group-hover:text-brand-red transition-colors mb-3 leading-tight">
                           {relatedBlog.title}
                         </h4>
-                        <div className="flex items-center justify-between text-xs text-gray-500">
-                          <span>{relatedBlog.author}</span>
-                          <span>{relatedBlog.readTime}</span>
+                        <div className="flex items-center justify-between text-sm text-gray-500">
+                          <span className="font-medium">{relatedBlog.author}</span>
+                          <span className="bg-gray-100 px-3 py-1 rounded-full">{relatedBlog.readTime}</span>
                         </div>
                       </Link>
                     </div>
@@ -361,18 +404,75 @@ const BlogDetail = () => {
                 </div>
               </div>
 
-              {/* Newsletter Signup */}
-              <div className="bg-gradient-to-br from-brand-red to-red-600 p-6 rounded-2xl text-white animate-fade-in delay-500">
-                <h3 className="font-bold text-lg mb-3">Stay Updated</h3>
-                <p className="text-red-100 text-sm mb-4">Get the latest career insights delivered to your inbox.</p>
-                <Button className="w-full bg-white text-brand-red hover:bg-gray-100 transition-colors">
-                  Subscribe Now
-                </Button>
+              {/* Enhanced Newsletter Signup */}
+              <div className="bg-gradient-to-br from-brand-red to-red-600 p-8 rounded-3xl text-white shadow-xl animate-fade-in delay-500">
+                <div className="text-center">
+                  <h3 className="font-bold text-2xl mb-4">Stay Updated</h3>
+                  <p className="text-red-100 mb-6 leading-relaxed">Get the latest career insights and tech stories delivered to your inbox.</p>
+                  <div className="space-y-4">
+                    <input 
+                      type="email" 
+                      placeholder="Enter your email"
+                      className="w-full px-4 py-3 rounded-2xl text-gray-900 border-0 focus:ring-4 focus:ring-red-300 transition-all duration-300"
+                    />
+                    <Button className="w-full bg-white text-brand-red hover:bg-gray-100 transition-all duration-300 py-3 rounded-2xl font-bold text-lg">
+                      Subscribe Now
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Share */}
+              <div className="bg-gray-50 p-8 rounded-3xl shadow-lg animate-fade-in delay-700">
+                <h3 className="font-bold text-xl text-gray-900 mb-6">Share This Article</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-blue-50">Twitter</Button>
+                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-blue-50">LinkedIn</Button>
+                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-green-50">WhatsApp</Button>
+                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-gray-100">Copy Link</Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* More Articles Section */}
+      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container-custom">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">More Articles You'll Love</h2>
+            <p className="text-xl text-gray-600">Continue your learning journey with these handpicked articles</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {trendingBlogs.map((post, index) => (
+              <div
+                key={post.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 200}ms` }}
+              >
+                <BlogCard 
+                  id={post.id}
+                  title={post.title}
+                  excerpt={post.excerpt}
+                  author={post.author}
+                  date={post.date}
+                  category={post.category}
+                  image={post.image}
+                  readTime={post.readTime}
+                />
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-16 animate-fade-in delay-1000">
+            <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <Link to="/blog">View All Articles</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };
