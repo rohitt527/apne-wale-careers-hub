@@ -1,29 +1,11 @@
 
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import Layout from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Search, 
-  Filter, 
-  Download, 
-  Star, 
-  Clock, 
-  User, 
-  Eye,
-  BookOpen,
-  TrendingUp,
-  Award,
-  Lock,
-  Crown,
-  Sparkles,
-  Zap,
-  Gift,
-  CheckCircle
-} from "lucide-react";
+import StudyMaterialHero from "@/components/study-material/StudyMaterialHero";
+import StudyMaterialFilters from "@/components/study-material/StudyMaterialFilters";
+import PremiumContentSection from "@/components/study-material/PremiumContentSection";
+import FreeContentSection from "@/components/study-material/FreeContentSection";
+import NoResultsDisplay from "@/components/study-material/NoResultsDisplay";
 
 const StudyMaterial = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -179,325 +161,36 @@ const StudyMaterial = () => {
   const freeMaterials = filteredMaterials.filter(material => !material.isPremium);
   const premiumMaterials = filteredMaterials.filter(material => material.isPremium);
 
+  const clearFilters = () => {
+    setSearchTerm("");
+    setCategoryFilter("All");
+    setLevelFilter("All");
+  };
+
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-pattern-dots opacity-5" />
-        <div className="container-custom text-center relative z-10">
-          <div className="animate-fade-in">
-            <Badge className="mb-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-              <Sparkles className="w-4 h-4 mr-1" />
-              Premium Study Materials
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Unlock Your <span className="text-gradient">Potential</span>
-            </h1>
-            <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
-              Access a wide range of free and premium study materials to enhance your skills and advance your career.
-            </p>
-            <div className="flex justify-center gap-4">
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3">
-                <BookOpen className="w-5 h-5 mr-2" />
-                Explore Materials
-              </Button>
-              <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                View Premium
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StudyMaterialHero />
 
       <section className="section-padding bg-gradient-to-b from-white to-gray-50">
         <div className="container-custom">
-          {/* Search and Filter Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-12 animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search study materials..."
-                    className="pl-12 h-12 border-gray-200 focus:border-purple-400 focus:ring-purple-400"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                  />
-                  <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <select
-                  className="flex-1 rounded-lg border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-                  value={categoryFilter}
-                  onChange={handleCategoryChange}
-                >
-                  <option value="All">All Categories</option>
-                  <option value="Technology">Technology</option>
-                  <option value="Business">Business</option>
-                  <option value="Design">Design</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Personal Development">Personal Development</option>
-                  <option value="Premium">Premium</option>
-                </select>
-                <select
-                  className="flex-1 rounded-lg border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-                  value={levelFilter}
-                  onChange={handleLevelChange}
-                >
-                  <option value="All">All Levels</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Expert">Expert</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <StudyMaterialFilters
+            searchTerm={searchTerm}
+            categoryFilter={categoryFilter}
+            levelFilter={levelFilter}
+            onSearchChange={handleSearchChange}
+            onCategoryChange={handleCategoryChange}
+            onLevelChange={handleLevelChange}
+          />
 
-          {/* Premium Content Section */}
-          {premiumMaterials.length > 0 && (
-            <div className="mb-16 animate-fade-in" style={{ animationDelay: "200ms" }}>
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    <Crown className="inline w-8 h-8 mr-2 text-yellow-500" />
-                    Premium Content
-                  </h2>
-                  <p className="text-gray-600">Unlock advanced materials for accelerated learning</p>
-                </div>
-                <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2">
-                  <Zap className="w-4 h-4 mr-1" />
-                  Limited Time Offer
-                </Badge>
-              </div>
+          <PremiumContentSection materials={premiumMaterials} />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {premiumMaterials.map((material, index) => (
-                  <Card
-                    key={material.id}
-                    className="group relative overflow-hidden bg-gradient-to-br from-white to-purple-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-fade-in"
-                    style={{ animationDelay: `${index * 150}ms` }}
-                  >
-                    {/* Premium Badge */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                        <Crown className="w-3 h-3 mr-1" />
-                        Premium
-                      </Badge>
-                    </div>
+          <FreeContentSection 
+            materials={freeMaterials} 
+            getCategoryColor={getCategoryColor}
+          />
 
-                    {/* Featured Badge */}
-                    {material.featured && (
-                      <div className="absolute top-4 left-4 z-10">
-                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black animate-pulse">
-                          <Star className="w-3 h-3 mr-1" />
-                          Featured
-                        </Badge>
-                      </div>
-                    )}
-
-                    {/* Thumbnail */}
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={material.thumbnail}
-                        alt={material.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="flex items-center gap-2 text-white text-sm">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span>{material.rating}</span>
-                          <span>•</span>
-                          <span>{material.downloadCount.toLocaleString()} students</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-                            {material.title}
-                          </h3>
-                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-                            {material.description}
-                          </p>
-                        </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {material.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs border-purple-200 text-purple-600">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* Pricing */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-purple-600">
-                              ${material.price}
-                            </span>
-                            {material.originalPrice && (
-                              <span className="text-lg text-gray-500 line-through">
-                                ${material.originalPrice}
-                              </span>
-                            )}
-                          </div>
-                          <Badge className="bg-red-100 text-red-700 border-red-200">
-                            {Math.round((1 - material.price / material.originalPrice!) * 100)}% OFF
-                          </Badge>
-                        </div>
-
-                        {/* Action Button */}
-                        <Button
-                          asChild
-                          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 group-hover:shadow-lg transition-all duration-300"
-                        >
-                          <Link to={`/premium-content?id=${material.id}`}>
-                            <Lock className="w-4 h-4 mr-2" />
-                            Unlock Premium Content
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Free Content Section */}
-          {freeMaterials.length > 0 && (
-            <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    <Gift className="inline w-8 h-8 mr-2 text-green-500" />
-                    Free Content
-                  </h2>
-                  <p className="text-gray-600">High-quality materials available at no cost</p>
-                </div>
-                <Badge className="bg-green-100 text-green-700 border-green-200 px-4 py-2">
-                  <CheckCircle className="w-4 h-4 mr-1" />
-                  Always Free
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {freeMaterials.map((material, index) => (
-                  <Card
-                    key={material.id}
-                    className="group bg-white hover:bg-gray-50 border border-gray-200 hover:border-green-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in overflow-hidden"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative h-40 overflow-hidden">
-                      <img
-                        src={material.thumbnail}
-                        alt={material.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-green-600 text-white">
-                          Free
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge 
-                            variant="secondary" 
-                            className={`${getCategoryColor(material.category)} text-xs`}
-                          >
-                            {material.category}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {material.level}
-                          </Badge>
-                        </div>
-
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-2">
-                          {material.title}
-                        </h3>
-
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                          {material.description}
-                        </p>
-
-                        {/* Stats */}
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <Download className="w-4 h-4" />
-                            <span>{material.downloadCount.toLocaleString()}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                            <span>{material.rating}</span>
-                          </div>
-                        </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-1">
-                          {material.tags.slice(0, 2).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex gap-2 pt-2">
-                          <Button
-                            asChild
-                            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                          >
-                            <Link to={`/study-material/${material.id}`}>
-                              <Download className="w-4 h-4 mr-2" />
-                              Download
-                            </Link>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            asChild
-                            className="border-green-200 hover:bg-green-50"
-                          >
-                            <Link to={`/study-material/${material.id}`}>
-                              <Eye className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* No Results */}
           {filteredMaterials.length === 0 && (
-            <div className="text-center py-16 animate-fade-in">
-              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No materials found</h3>
-              <p className="text-gray-600 mb-6">Try adjusting your search criteria or browse all categories.</p>
-              <Button
-                onClick={() => {
-                  setSearchTerm("");
-                  setCategoryFilter("All");
-                  setLevelFilter("All");
-                }}
-                variant="outline"
-              >
-                Clear Filters
-              </Button>
-            </div>
+            <NoResultsDisplay onClearFilters={clearFilters} />
           )}
         </div>
       </section>
