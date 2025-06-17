@@ -1,310 +1,408 @@
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Folder, Download, Star, Clock, FileText, Filter, BookOpen, Users, Trophy } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Search, 
+  Filter, 
+  Download, 
+  Star, 
+  Clock, 
+  User, 
+  Eye,
+  BookOpen,
+  TrendingUp,
+  Award,
+  Lock,
+  Crown
+} from "lucide-react";
 
-const categories = [
-  { id: "all", name: "All Materials", icon: BookOpen },
-  { id: "system-design", name: "System Design", icon: FileText },
-  { id: "behavioral", name: "Behavioral", icon: Users },
-  { id: "technical", name: "Technical", icon: Trophy },
-  { id: "assessment", name: "Assessment", icon: Clock },
-];
+const StudyMaterial = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [levelFilter, setLevelFilter] = useState("All");
 
-const studyMaterials = [
-  {
-    id: 1,
-    title: "System Design Interview Guide",
-    date: "May 1, 2024",
-    format: "PDF",
-    size: "6.1 MB",
-    type: "Premium",
-    category: "system-design",
-    downloads: 2547,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=80",
-    desc: "Master system design with comprehensive examples, scalability patterns, and real-world case studies from top tech companies.",
-  },
-  {
-    id: 2,
-    title: "Behavioral Interview Questions",
-    date: "April 28, 2024",
-    format: "PDF",
-    size: "2.5 MB",
-    type: "Free",
-    category: "behavioral",
-    downloads: 5432,
-    rating: 4.6,
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=80",
-    desc: "Complete collection of behavioral questions with STAR method examples and proven strategies for success.",
-  },
-  {
-    id: 3,
-    title: "Technical Interview Preparation",
-    date: "May 5, 2024",
-    format: "PDF",
-    size: "4.8 MB",
-    type: "Premium",
-    category: "technical",
-    downloads: 3210,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80",
-    desc: "Essential algorithms, data structures, and coding patterns with detailed explanations and practice problems.",
-  },
-  {
-    id: 4,
-    title: "Assessment Test Strategies",
-    date: "April 20, 2024",
-    format: "PDF",
-    size: "3.2 MB",
-    type: "Free",
-    category: "assessment",
-    downloads: 1876,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=500&q=80",
-    desc: "Proven techniques for online assessments, aptitude tests, and coding challenges with time management tips.",
-  },
-  {
-    id: 5,
-    title: "Advanced System Architecture",
-    date: "May 10, 2024",
-    format: "PDF",
-    size: "8.3 MB",
-    type: "Premium",
-    category: "system-design",
-    downloads: 987,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=500&q=80",
-    desc: "Deep dive into microservices, distributed systems, and cloud architecture patterns for senior roles.",
-  },
-  {
-    id: 6,
-    title: "Communication Skills for Interviews",
-    date: "April 15, 2024",
-    format: "PDF",
-    size: "1.9 MB",
-    type: "Free",
-    category: "behavioral",
-    downloads: 3456,
-    rating: 4.4,
-    image: "https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=500&q=80",
-    desc: "Master verbal and non-verbal communication techniques to excel in any interview scenario.",
-  },
-];
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
-const stats = [
-  { number: "10K+", label: "Downloads", icon: Download },
-  { number: "500+", label: "Study Materials", icon: FileText },
-  { number: "4.8", label: "Average Rating", icon: Star },
-  { number: "50+", label: "Categories", icon: Folder },
-];
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoryFilter(e.target.value);
+  };
 
-function MaterialCard({ material, index }: { material: typeof studyMaterials[0]; index: number }) {
-  return (
-    <Card className="group overflow-hidden shadow-lg border-0 bg-white dark:bg-gray-900 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-fade-in" 
-          style={{ animationDelay: `${index * 150}ms` }}>
-      <div className="relative h-48 overflow-hidden">
-        <img
-          src={material.image}
-          alt={material.title}
-          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        {material.type === "Premium" && (
-          <Badge className="absolute top-3 right-3 z-10 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-3 py-1 text-xs font-semibold shadow-lg">
-            <Star className="w-3 h-3 mr-1" />
-            Premium
-          </Badge>
-        )}
-        {material.type === "Free" && (
-          <Badge className="absolute top-3 right-3 z-10 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 text-xs font-semibold shadow-lg">
-            Free
-          </Badge>
-        )}
-        <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex items-center gap-1 text-xs bg-black/30 rounded-full px-2 py-1">
-            <Download className="w-3 h-3" />
-            {material.downloads.toLocaleString()}
-          </div>
-          <div className="flex items-center gap-1 text-xs bg-black/30 rounded-full px-2 py-1">
-            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-            {material.rating}
-          </div>
-        </div>
-      </div>
-      
-      <CardContent className="p-6">
-        <CardTitle className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-brand-red transition-colors">
-          {material.title}
-        </CardTitle>
-        
-        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 mb-3">
-          <Clock className="w-3 h-3" />
-          {material.date}
-          <span>•</span>
-          {material.format}
-          <span>•</span>
-          {material.size}
-        </div>
-        
-        <CardDescription className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 mb-4">
-          {material.desc}
-        </CardDescription>
-        
-        <div className="flex gap-2">
-          {material.type === "Free" ? (
-            <Button variant="default" size="sm" className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0">
-              <Download className="w-4 h-4 mr-1" />
-              Download
-            </Button>
-          ) : (
-            <Button variant="default" size="sm" className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black border-0">
-              <Star className="w-4 h-4 mr-1" />
-              Unlock Premium
-            </Button>
-          )}
-          <Button variant="outline" size="sm" asChild>
-            <Link to={`/study-material/${material.id}`}>
-              <FileText className="w-4 h-4" />
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+  const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLevelFilter(e.target.value);
+  };
 
-const StudyMaterial: React.FC = () => {
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [showFilters, setShowFilters] = useState(false);
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "Technology":
+        return "bg-blue-100 text-blue-700";
+      case "Business":
+        return "bg-green-100 text-green-700";
+      case "Design":
+        return "bg-purple-100 text-purple-700";
+      case "Marketing":
+        return "bg-orange-100 text-orange-700";
+      case "Personal Development":
+        return "bg-yellow-100 text-yellow-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
 
-  const filtered = studyMaterials.filter((mat) => {
-    const matchesSearch = mat.title.toLowerCase().includes(search.toLowerCase()) ||
-                         mat.desc.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || mat.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  // Add premium content to mock data
+  const allMaterials = [
+    {
+      id: 1,
+      title: "The Ultimate Guide to React",
+      description: "A comprehensive guide for React developers, covering everything from the basics to advanced topics.",
+      category: "Technology",
+      level: "Intermediate",
+      downloadCount: 12000,
+      rating: 4.7,
+      isPremium: false,
+      price: 0,
+      tags: ["React", "JavaScript", "Frontend"],
+      author: "John Doe",
+      publishDate: "2023-03-15",
+      estimatedTime: "6-8 hours"
+    },
+    {
+      id: 2,
+      title: "Mastering JavaScript Algorithms",
+      description: "Learn essential algorithms and data structures in JavaScript to improve your problem-solving skills.",
+      category: "Technology",
+      level: "Advanced",
+      downloadCount: 8500,
+      rating: 4.6,
+      isPremium: false,
+      price: 0,
+      tags: ["JavaScript", "Algorithms", "Data Structures"],
+      author: "Jane Smith",
+      publishDate: "2023-05-20",
+      estimatedTime: "10-12 hours"
+    },
+    {
+      id: 3,
+      title: "Business Strategy Essentials",
+      description: "An essential guide for business professionals, covering key concepts and frameworks for strategic decision-making.",
+      category: "Business",
+      level: "Intermediate",
+      downloadCount: 9800,
+      rating: 4.5,
+      isPremium: false,
+      price: 0,
+      tags: ["Business", "Strategy", "Management"],
+      author: "David Johnson",
+      publishDate: "2023-07-01",
+      estimatedTime: "5-7 hours"
+    },
+    {
+      id: 4,
+      title: "The Art of UI/UX Design",
+      description: "Explore the principles of UI/UX design and learn how to create intuitive and visually appealing user interfaces.",
+      category: "Design",
+      level: "Beginner",
+      downloadCount: 11200,
+      rating: 4.8,
+      isPremium: false,
+      price: 0,
+      tags: ["UI", "UX", "Design"],
+      author: "Emily White",
+      publishDate: "2023-09-10",
+      estimatedTime: "4-6 hours"
+    },
+    {
+      id: 5,
+      title: "Digital Marketing Strategies",
+      description: "Discover effective digital marketing strategies to grow your online presence and reach your target audience.",
+      category: "Marketing",
+      level: "Intermediate",
+      downloadCount: 7600,
+      rating: 4.4,
+      isPremium: false,
+      price: 0,
+      tags: ["Digital Marketing", "SEO", "Social Media"],
+      author: "Michael Brown",
+      publishDate: "2023-11-05",
+      estimatedTime: "7-9 hours"
+    },
+    {
+      id: 6,
+      title: "Personal Development for Success",
+      description: "Learn essential personal development skills to enhance your career and achieve your goals.",
+      category: "Personal Development",
+      level: "Beginner",
+      downloadCount: 10500,
+      rating: 4.6,
+      isPremium: false,
+      price: 0,
+      tags: ["Personal Development", "Career", "Success"],
+      author: "Sarah Green",
+      publishDate: "2024-01-01",
+      estimatedTime: "3-5 hours"
+    },
+    {
+      id: 7,
+      title: "Advanced Guide to Data Science",
+      description: "A comprehensive guide for data scientists, covering advanced techniques and tools for data analysis and machine learning.",
+      category: "Technology",
+      level: "Advanced",
+      downloadCount: 6800,
+      rating: 4.7,
+      isPremium: false,
+      price: 0,
+      tags: ["Data Science", "Machine Learning", "Python"],
+      author: "Alex Johnson",
+      publishDate: "2024-02-15",
+      estimatedTime: "12-15 hours"
+    },
+    {
+      id: 8,
+      title: "Advanced Interview Mastery Guide",
+      description: "Comprehensive guide covering advanced interview techniques, salary negotiation, and career advancement strategies.",
+      category: "Premium",
+      level: "Advanced",
+      downloadCount: 5000,
+      rating: 4.9,
+      isPremium: true,
+      price: 49.99,
+      tags: ["Interview", "Salary Negotiation", "Career Growth"],
+      author: "Career Experts",
+      publishDate: "2024-01-15",
+      estimatedTime: "8-10 hours"
+    },
+    {
+      id: 9,
+      title: "Executive Leadership Development",
+      description: "Premium content designed for senior professionals transitioning to executive roles.",
+      category: "Premium",
+      level: "Expert",
+      downloadCount: 2500,
+      rating: 4.8,
+      isPremium: true,
+      price: 79.99,
+      tags: ["Leadership", "Executive", "Management"],
+      author: "Industry Leaders",
+      publishDate: "2024-02-01",
+      estimatedTime: "12-15 hours"
+    }
+  ];
+
+  const filteredMaterials = allMaterials.filter((material) => {
+    const searchTermMatch = material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      material.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      material.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const categoryMatch = categoryFilter === "All" || material.category === categoryFilter;
+    const levelMatch = levelFilter === "All" || material.level === levelFilter;
+
+    return searchTermMatch && categoryMatch && levelMatch;
   });
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        {/* Hero Section */}
-        <section className="relative py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10" />
-          <div className="container-custom relative">
-            <div className="text-center max-w-4xl mx-auto">
-              <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6 animate-fade-in">
-                Study Materials
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
-                Access our curated collection of premium resources to ace your interviews and advance your career
-              </p>
-              
-              {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 animate-fade-in" style={{ animationDelay: "400ms" }}>
-                {stats.map((stat, index) => (
-                  <div key={stat.label} className="text-center">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-2">
-                      <stat.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.number}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-300">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="container-custom pb-16">
-          {/* Search and Filters */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 animate-fade-in" style={{ animationDelay: "600ms" }}>
-            <div className="flex flex-col lg:flex-row gap-4 items-center">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search for study materials..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-red transition-all"
-                />
-              </div>
-              
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-6 py-3"
-              >
-                <Filter className="w-4 h-4" />
-                Filters
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-20">
+        <div className="container-custom text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
+            Unlock Your Potential with Expert Study Materials
+          </h1>
+          <p className="text-lg text-gray-600 leading-relaxed mb-8 animate-fade-in">
+            Access a wide range of study materials to enhance your skills and advance your career.
+          </p>
+          <div className="flex justify-center gap-4 animate-fade-in">
+            <Link to="/about">
+              <Button className="bg-brand-red hover:bg-red-700 text-white">
+                Learn More
               </Button>
-            </div>
-            
-            {/* Categories */}
-            <div className={`mt-6 transition-all duration-300 ${showFilters ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <Button
-                    key={category.id}
-                    variant={selectedCategory === category.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`flex items-center gap-2 ${
-                      selectedCategory === category.id 
-                        ? "bg-brand-red text-white" 
-                        : "hover:bg-brand-red hover:text-white"
-                    }`}
-                  >
-                    <category.icon className="w-4 h-4" />
-                    {category.name}
-                  </Button>
-                ))}
+            </Link>
+            <Link to="/services">
+              <Button variant="outline">Explore Services</Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding">
+        <div className="container-custom">
+          {/* Search and Filter Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="md:col-span-2">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search study materials..."
+                  className="pl-12"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                <Search className="absolute left-4 top-3 h-5 w-5 text-gray-500" />
               </div>
             </div>
-          </div>
-
-          {/* Results header */}
-          <div className="flex items-center justify-between mb-6 animate-fade-in" style={{ animationDelay: "800ms" }}>
-            <div className="text-gray-700 dark:text-gray-300">
-              Showing <span className="font-semibold text-brand-red">{filtered.length}</span> study materials
-              {selectedCategory !== "all" && (
-                <span className="ml-2 text-sm text-gray-500">
-                  in {categories.find(c => c.id === selectedCategory)?.name}
-                </span>
-              )}
+            <div className="md:col-span-1 flex gap-4">
+              <select
+                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={categoryFilter}
+                onChange={handleCategoryChange}
+              >
+                <option value="All">All Categories</option>
+                <option value="Technology">Technology</option>
+                <option value="Business">Business</option>
+                <option value="Design">Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Personal Development">Personal Development</option>
+              </select>
+              <select
+                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={levelFilter}
+                onChange={handleLevelChange}
+              >
+                <option value="All">All Levels</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Expert">Expert</option>
+              </select>
             </div>
           </div>
 
           {/* Materials Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((material, index) => (
-              <MaterialCard key={material.id} material={material} index={index} />
+            {filteredMaterials.map((material, index) => (
+              <div
+                key={material.id}
+                className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-300 animate-fade-in overflow-hidden"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Premium Badge */}
+                {material.isPremium && (
+                  <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 text-sm font-semibold">
+                    <Crown className="inline w-4 h-4 mr-1" />
+                    Premium Content
+                  </div>
+                )}
+                
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge 
+                          variant="secondary" 
+                          className={`${getCategoryColor(material.category)} text-white text-xs`}
+                        >
+                          {material.category}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {material.level}
+                        </Badge>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        {material.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                        {material.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <Download className="w-4 h-4" />
+                      <span>{material.downloadCount} Downloads</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <Star className="w-4 h-4 text-yellow-500" />
+                      <span>{material.rating} Rating</span>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {material.tags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  {/* Author Info */}
+                  <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
+                    <User className="w-4 h-4" />
+                    <span>By {material.author}</span>
+                    <Clock className="w-4 h-4 ml-4" />
+                    <span>Estimated Time: {material.estimatedTime}</span>
+                  </div>
+
+                  {/* Publish Date */}
+                  <div className="text-gray-500 text-sm mb-4">
+                    Published: {material.publishDate}
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="flex gap-2">
+                    {material.isPremium ? (
+                      <>
+                        <Button
+                          asChild
+                          className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                        >
+                          <Link to={`/premium-content?id=${material.id}`}>
+                            <Lock className="w-4 h-4 mr-2" />
+                            Unlock ${material.price}
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          asChild
+                        >
+                          <Link to={`/premium-content?id=${material.id}`}>
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button asChild className="flex-1 bg-brand-red hover:bg-red-700 text-white">
+                          <Link to={`/study-material/${material.id}`}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download Free
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          asChild
+                        >
+                          <Link to={`/study-material/${material.id}`}>
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
 
-          {/* Empty State */}
-          {filtered.length === 0 && (
-            <div className="text-center py-16 animate-fade-in">
-              <BookOpen className="w-24 h-24 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
-                No materials found
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-6">
-                Try adjusting your search terms or filters
-              </p>
-              <Button onClick={() => { setSearch(""); setSelectedCategory("all"); }}>
-                Clear Filters
-              </Button>
-            </div>
-          )}
+          {/* Pagination */}
+          <div className="flex justify-center mt-8">
+            <Button variant="outline" disabled>
+              Previous
+            </Button>
+            <Button variant="outline" disabled>
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
     </Layout>
   );
 };

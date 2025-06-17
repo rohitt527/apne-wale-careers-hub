@@ -22,6 +22,7 @@ import CreateJobPost from "@/pages/CreateJobPost";
 import CreateBlogPost from "@/pages/CreateBlogPost";
 import StudyMaterial from "@/pages/StudyMaterial";
 import StudyMaterialDetail from "@/pages/StudyMaterialDetail";
+import PremiumContent from "@/pages/PremiumContent";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/study-material" element={<StudyMaterial />} />
               <Route path="/study-material/:id" element={<StudyMaterialDetail />} />
+              <Route path="/premium-content" element={<PremiumContent />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
