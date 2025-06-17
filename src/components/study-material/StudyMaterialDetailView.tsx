@@ -1,28 +1,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowLeft, 
-  Download, 
-  Star, 
-  Clock, 
-  FileText, 
-  Eye, 
-  Save,
-  Share,
-  Bookmark,
-  Users,
-  Play,
-  CheckCircle,
-  Award,
-  Crown,
-  Lock,
-  CreditCard
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import StudyMaterialHeader from "./detail/StudyMaterialHeader";
+import StudyMaterialActions from "./detail/StudyMaterialActions";
+import StudyMaterialContent from "./detail/StudyMaterialContent";
+import StudyMaterialSidebar from "./detail/StudyMaterialSidebar";
 
 const StudyMaterialDetailView: React.FC = () => {
   const { id } = useParams();
@@ -197,261 +182,34 @@ const StudyMaterialDetailView: React.FC = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Header */}
             <Card className="overflow-hidden shadow-xl animate-fade-in">
-              <div className="relative h-64 md:h-80">
-                <img
-                  src={studyMaterial.thumbnail}
-                  alt={studyMaterial.title}
-                  className="object-cover w-full h-full"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="flex items-center gap-2 mb-2">
-                    {studyMaterial.isPremium ? (
-                      <Badge className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-                        <Crown className="w-3 h-3 mr-1" />
-                        Premium
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-green-600">Free</Badge>
-                    )}
-                    <span className="text-sm opacity-90">{studyMaterial.category}</span>
-                  </div>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-2">{studyMaterial.title}</h1>
-                  <div className="flex items-center gap-4 text-sm opacity-90">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {(studyMaterial.downloadCount * 3).toLocaleString()} views
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Download className="w-4 h-4" />
-                      {studyMaterial.downloadCount.toLocaleString()} downloads
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      {studyMaterial.rating} rating
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <StudyMaterialHeader studyMaterial={studyMaterial} />
             </Card>
 
             {/* Actions */}
             <Card className="p-6 animate-fade-in" style={{ animationDelay: "200ms" }}>
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSave}
-                    className={isSaved ? "text-purple-600 border-purple-500" : ""}
-                  >
-                    <Save className={`w-4 h-4 mr-1 ${isSaved ? "fill-current" : ""}`} />
-                    {isSaved ? "Saved" : "Save"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleBookmark}
-                    className={isBookmarked ? "text-blue-500 border-blue-500" : ""}
-                  >
-                    <Bookmark className={`w-4 h-4 mr-1 ${isBookmarked ? "fill-current" : ""}`} />
-                    {isBookmarked ? "Bookmarked" : "Bookmark"}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleShare}>
-                    <Share className="w-4 h-4 mr-1" />
-                    Share
-                  </Button>
-                </div>
-                
-                <div className="flex gap-2">
-                  {!studyMaterial.isPremium || isPurchased ? (
-                    <Button 
-                      onClick={handleDownload}
-                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download PDF
-                    </Button>
-                  ) : (
-                    <>
-                      <Button variant="outline">
-                        <Play className="w-4 h-4 mr-2" />
-                        Preview
-                      </Button>
-                      <Button 
-                        onClick={handlePurchase}
-                        disabled={isProcessing}
-                        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                      >
-                        {isProcessing ? (
-                          "Processing..."
-                        ) : (
-                          <>
-                            <CreditCard className="w-4 h-4 mr-2" />
-                            Purchase - ${studyMaterial.price}
-                          </>
-                        )}
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
+              <StudyMaterialActions
+                studyMaterial={studyMaterial}
+                isSaved={isSaved}
+                isBookmarked={isBookmarked}
+                isPurchased={isPurchased}
+                isProcessing={isProcessing}
+                onSave={handleSave}
+                onBookmark={handleBookmark}
+                onShare={handleShare}
+                onDownload={handleDownload}
+                onPurchase={handlePurchase}
+              />
             </Card>
 
-            {/* Content Overview */}
-            <Card className="p-6 animate-fade-in" style={{ animationDelay: "400ms" }}>
-              <CardHeader className="px-0 pt-0">
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-purple-600" />
-                  About This Material
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  {studyMaterial.content.overview}
-                </p>
-                
-                {(!studyMaterial.isPremium || isPurchased) && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-green-700 font-medium mb-2">
-                      <CheckCircle className="w-5 h-5" />
-                      Full Content Available
-                    </div>
-                    <p className="text-green-600 text-sm">
-                      You have full access to this content. Download the PDF to get started!
-                    </p>
-                  </div>
-                )}
-                
-                {studyMaterial.isPremium && !isPurchased && (
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-purple-700 font-medium mb-2">
-                      <Lock className="w-5 h-5" />
-                      Premium Content
-                    </div>
-                    <p className="text-purple-600 text-sm">
-                      Purchase this premium content to unlock the full material and download the PDF.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Content Chapters */}
-            <Card className="p-6 animate-fade-in" style={{ animationDelay: "600ms" }}>
-              <CardHeader className="px-0 pt-0">
-                <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                  What's Included
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {studyMaterial.content.chapters.map((chapter, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700">{chapter}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Features */}
-            <Card className="p-6 animate-fade-in" style={{ animationDelay: "800ms" }}>
-              <CardHeader className="px-0 pt-0">
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-blue-500" />
-                  Key Features
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <div className="space-y-3">
-                  {studyMaterial.content.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Content */}
+            <StudyMaterialContent
+              studyMaterial={studyMaterial}
+              isPurchased={isPurchased}
+            />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Material Info */}
-            <Card className="p-6 animate-fade-in" style={{ animationDelay: "300ms" }}>
-              <CardHeader className="px-0 pt-0">
-                <CardTitle>Material Details</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0 space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Format:</span>
-                  <span className="font-medium">PDF</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Level:</span>
-                  <span className="font-medium">{studyMaterial.level}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Author:</span>
-                  <span className="font-medium">{studyMaterial.author}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Updated:</span>
-                  <span className="font-medium">{studyMaterial.publishDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Est. Time:</span>
-                  <span className="font-medium">{studyMaterial.estimatedTime}</span>
-                </div>
-                {studyMaterial.isPremium && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Price:</span>
-                    <div className="text-right">
-                      <span className="font-bold text-purple-600">${studyMaterial.price}</span>
-                      {studyMaterial.originalPrice && (
-                        <div className="text-sm text-gray-500 line-through">
-                          ${studyMaterial.originalPrice}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Stats Card */}
-            <Card className="p-6 animate-fade-in" style={{ animationDelay: "500ms" }}>
-              <CardHeader className="px-0 pt-0">
-                <CardTitle>Statistics</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    Students
-                  </span>
-                  <span className="font-medium">{studyMaterial.downloadCount.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 flex items-center gap-2">
-                    <Star className="w-4 h-4" />
-                    Rating
-                  </span>
-                  <span className="font-medium">{studyMaterial.rating}/5.0</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600 flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Duration
-                  </span>
-                  <span className="font-medium">{studyMaterial.estimatedTime}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <StudyMaterialSidebar studyMaterial={studyMaterial} />
         </div>
       </div>
     </div>
