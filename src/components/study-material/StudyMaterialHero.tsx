@@ -1,5 +1,6 @@
 
-import { Badge, Button } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Sparkles, BookOpen } from "lucide-react";
 
 const StudyMaterialHero = () => {
