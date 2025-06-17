@@ -1,9 +1,11 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, Star, Eye, Gift, CheckCircle } from "lucide-react";
+import { Download, Star, Eye, Gift, CheckCircle, Save, Share } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Material {
   id: number;
@@ -24,7 +26,46 @@ interface FreeContentSectionProps {
 }
 
 const FreeContentSection = ({ materials, getCategoryColor }: FreeContentSectionProps) => {
+  const [savedItems, setSavedItems] = useState<Set<number>>(new Set());
+  const { toast } = useToast();
+
   if (materials.length === 0) return null;
+
+  const handleSave = (materialId: number, materialTitle: string) => {
+    const newSavedItems = new Set(savedItems);
+    if (savedItems.has(materialId)) {
+      newSavedItems.delete(materialId);
+      toast({
+        title: "Removed from saved",
+        description: `"${materialTitle}" has been removed from your saved items.`,
+      });
+    } else {
+      newSavedItems.add(materialId);
+      toast({
+        title: "Saved successfully",
+        description: `"${materialTitle}" has been added to your saved items.`,
+      });
+    }
+    setSavedItems(newSavedItems);
+  };
+
+  const handleShare = (material: Material) => {
+    const shareUrl = `${window.location.origin}/study-material/${material.id}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: material.title,
+        text: material.description,
+        url: shareUrl,
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link copied",
+        description: "Study material link has been copied to your clipboard.",
+      });
+    }
+  };
 
   return (
     <div className="animate-fade-in" style={{ animationDelay: "400ms" }}>
@@ -107,26 +148,39 @@ const FreeContentSection = ({ materials, getCategoryColor }: FreeContentSectionP
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 pt-2">
-                  <Button
-                    asChild
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    <Link to={`/study-material/${material.id}`}>
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    asChild
-                    className="border-green-200 hover:bg-green-50"
-                  >
-                    <Link to={`/study-material/${material.id}`}>
-                      <Eye className="w-4 h-4" />
-                    </Link>
-                  </Button>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Button
+                      asChild
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <Link to={`/study-material/${material.id}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Details
+                      </Link>
+                    </Button>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-green-200 hover:bg-green-50"
+                      onClick={() => handleSave(material.id, material.title)}
+                    >
+                      <Save className={`w-4 h-4 mr-1 ${savedItems.has(material.id) ? 'fill-current text-green-600' : ''}`} />
+                      {savedItems.has(material.id) ? 'Saved' : 'Save'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-green-200 hover:bg-green-50"
+                      onClick={() => handleShare(material)}
+                    >
+                      <Share className="w-4 h-4 mr-1" />
+                      Share
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>

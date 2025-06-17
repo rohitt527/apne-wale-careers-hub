@@ -1,9 +1,11 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Crown, Star, Lock, Zap } from "lucide-react";
+import { Crown, Star, Lock, Zap, Save, Share } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Material {
   id: number;
@@ -29,7 +31,46 @@ interface PremiumContentSectionProps {
 }
 
 const PremiumContentSection = ({ materials }: PremiumContentSectionProps) => {
+  const [savedItems, setSavedItems] = useState<Set<number>>(new Set());
+  const { toast } = useToast();
+
   if (materials.length === 0) return null;
+
+  const handleSave = (materialId: number, materialTitle: string) => {
+    const newSavedItems = new Set(savedItems);
+    if (savedItems.has(materialId)) {
+      newSavedItems.delete(materialId);
+      toast({
+        title: "Removed from saved",
+        description: `"${materialTitle}" has been removed from your saved items.`,
+      });
+    } else {
+      newSavedItems.add(materialId);
+      toast({
+        title: "Saved successfully",
+        description: `"${materialTitle}" has been added to your saved items.`,
+      });
+    }
+    setSavedItems(newSavedItems);
+  };
+
+  const handleShare = (material: Material) => {
+    const shareUrl = `${window.location.origin}/study-material/${material.id}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: material.title,
+        text: material.description,
+        url: shareUrl,
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link copied",
+        description: "Study material link has been copied to your clipboard.",
+      });
+    }
+  };
 
   return (
     <div className="mb-16 animate-fade-in" style={{ animationDelay: "200ms" }}>
@@ -127,16 +168,39 @@ const PremiumContentSection = ({ materials }: PremiumContentSectionProps) => {
                   </Badge>
                 </div>
 
-                {/* Action Button */}
-                <Button
-                  asChild
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 group-hover:shadow-lg transition-all duration-300"
-                >
-                  <Link to={`/premium-content?id=${material.id}`}>
-                    <Lock className="w-4 h-4 mr-2" />
-                    Unlock Premium Content
-                  </Link>
-                </Button>
+                {/* Action Buttons */}
+                <div className="space-y-2">
+                  <Button
+                    asChild
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 group-hover:shadow-lg transition-all duration-300"
+                  >
+                    <Link to={`/study-material/${material.id}`}>
+                      <Lock className="w-4 h-4 mr-2" />
+                      View & Purchase
+                    </Link>
+                  </Button>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-purple-200 hover:bg-purple-50"
+                      onClick={() => handleSave(material.id, material.title)}
+                    >
+                      <Save className={`w-4 h-4 mr-1 ${savedItems.has(material.id) ? 'fill-current text-purple-600' : ''}`} />
+                      {savedItems.has(material.id) ? 'Saved' : 'Save'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-purple-200 hover:bg-purple-50"
+                      onClick={() => handleShare(material)}
+                    >
+                      <Share className="w-4 h-4 mr-1" />
+                      Share
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
