@@ -8,7 +8,7 @@ import BlogCard from "@/components/common/BlogCard";
 import StudyMaterialCard from "@/components/common/StudyMaterialCard";
 import Counter from "@/components/common/Counter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Star, Users, BookOpen, Award } from "lucide-react";
+import { ArrowRight, CheckCircle, Star, Users, BookOpen, Award, Code, BrainCircuit, Rocket } from "lucide-react";
 
 // Featured blogs data
 const featuredBlogs = [
@@ -369,7 +369,7 @@ const Index = () => {
           <SectionHeading 
             title="What Our Clients Say" 
             subtitle="Real success stories from professionals who transformed their careers"
-            isDark
+            className="text-white"
           />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
