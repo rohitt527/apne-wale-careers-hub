@@ -1,14 +1,15 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/common/SectionHeading";
 import ServiceCard from "@/components/common/ServiceCard";
-import TestimonialCard from "@/components/common/TestimonialCard";
 import BlogCard from "@/components/common/BlogCard";
 import StudyMaterialCard from "@/components/common/StudyMaterialCard";
+import JobCard from "@/components/common/JobCard";
 import Counter from "@/components/common/Counter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Star, Users, BookOpen, Award, Code, BrainCircuit, Rocket } from "lucide-react";
+import { ArrowRight, CheckCircle, Star, Users, BookOpen, Award, Code, BrainCircuit, Rocket, Briefcase, TrendingUp, Target } from "lucide-react";
 
 // Featured blogs data
 const featuredBlogs = [
@@ -98,19 +99,53 @@ const featuredStudyMaterials = [
   }
 ];
 
+// Featured jobs data
+const featuredJobs = [
+  {
+    id: 1,
+    title: "Senior Software Engineer",
+    company: "Google",
+    location: "Bangalore, India",
+    type: "Full-time",
+    experience: "3+ years",
+    logo: "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?auto=format&fit=crop&w=100&q=80",
+    tags: ["React", "Node.js", "Python"],
+    postedDate: "2 days ago"
+  },
+  {
+    id: 2,
+    title: "Frontend Developer",
+    company: "Microsoft",
+    location: "Hyderabad, India",
+    type: "Full-time",
+    experience: "2+ years",
+    logo: "https://images.unsplash.com/photo-1633409361618-c73427e4e206?auto=format&fit=crop&w=100&q=80",
+    tags: ["React", "TypeScript", "Azure"],
+    postedDate: "1 week ago"
+  },
+  {
+    id: 3,
+    title: "Data Scientist",
+    company: "Amazon",
+    location: "Chennai, India",
+    type: "Full-time",
+    experience: "4+ years",
+    logo: "https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&w=100&q=80",
+    tags: ["Python", "Machine Learning", "AWS"],
+    postedDate: "3 days ago"
+  }
+];
+
 const Index = () => {
   const [services, setServices] = useState([]);
-  const [testimonials, setTestimonials] = useState([]);
-  const [blogPosts, setBlogPosts] = useState([]);
 
   useEffect(() => {
-    // Fetch services, testimonials, and blog posts from an API or other data source
     setServices([
       {
         id: 1,
         title: "Assessment Support",
         description: "Get expert help with your technical assessments and coding challenges to ace your interviews.",
-        icon: <Code className="h-10 w-10" />,
+        icon: <Code className="h-8 w-8" />,
         link: "/services#assessment",
         features: [
           "Technical Assessment Reviews",
@@ -124,7 +159,7 @@ const Index = () => {
         id: 2,
         title: "Mock Interviews",
         description: "Practice with industry experts who provide real-time feedback to improve your interview skills.",
-        icon: <BrainCircuit className="h-10 w-10" />,
+        icon: <BrainCircuit className="h-8 w-8" />,
         link: "/services#interviews",
         features: [
           "Role-Specific Interviews",
@@ -138,7 +173,7 @@ const Index = () => {
         id: 3,
         title: "Career Guidance",
         description: "Personalized advice on career paths, skill development, and job hunting strategies.",
-        icon: <Rocket className="h-10 w-10" />,
+        icon: <Rocket className="h-8 w-8" />,
         link: "/services#career",
         features: [
           "Resume & LinkedIn Reviews",
@@ -149,122 +184,73 @@ const Index = () => {
         image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
       }
     ]);
-
-    setTestimonials([
-      {
-        id: 1,
-        name: "Priya Sharma",
-        role: "Software Engineer",
-        company: "Google",
-        testimonial: "The mock interviews and assessment support from Apne Wale Coders were instrumental in my journey to landing a job at Google. Their feedback was specific and actionable.",
-        image: "https://randomuser.me/api/portraits/women/44.jpg"
-      },
-      {
-        id: 2,
-        name: "Raj Kumar",
-        role: "Frontend Developer",
-        company: "Microsoft",
-        testimonial: "I was struggling with system design interviews until I joined their interview preparation program. The mentors provided incredible insights that helped me ace my interviews.",
-        image: "https://randomuser.me/api/portraits/men/32.jpg"
-      },
-      {
-        id: 3,
-        name: "Neha Patel",
-        role: "Data Scientist",
-        company: "Amazon",
-        testimonial: "The career guidance I received was personalized and practical. They helped me pivot from a traditional IT role to becoming a data scientist at Amazon.",
-        image: "https://randomuser.me/api/portraits/women/68.jpg"
-      }
-    ]);
-
-    setBlogPosts([
-      {
-        id: 1,
-        title: "10 Essential Tips for Technical Interviews",
-        excerpt: "Master technical interviews with these proven strategies that help you stand out from the competition and land your dream job.",
-        author: "Vikram Singh",
-        date: "Dec 15, 2024",
-        category: "Interview Tips",
-        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        readTime: "8 min read"
-      },
-      {
-        id: 2,
-        title: "System Design Mastery: Complete Guide",
-        excerpt: "Learn system design fundamentals and advanced concepts that will help you excel in senior engineering interviews.",
-        author: "Ananya Mehta",
-        date: "Dec 10, 2024",
-        category: "Tech Concepts",
-        image: "https://images.unsplash.com/photo-1506399558188-acca6f8cbf41?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        readTime: "12 min read"
-      },
-      {
-        id: 3,
-        title: "From Rejection to Google: My Journey",
-        excerpt: "A personal story of persistence, learning, and growth that led to landing a software engineer role at Google.",
-        author: "Priya Sharma",
-        date: "Dec 5, 2024",
-        category: "Success Story",
-        image: "https://images.unsplash.com/photo-1579389083395-4507e98b5e67?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-        readTime: "6 min read"
-      }
-    ]);
   }, []);
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-dark via-gray-900 to-brand-dark text-white py-20 lg:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-blue-900/20"></div>
+      <section className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-24 lg:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="container-custom relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in">
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6">
-                Transform Your Career with 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-600"> Expert Guidance</span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Get personalized career coaching, interview preparation, and access to premium study materials to accelerate your professional growth.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-brand-red hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Link to="/services" className="flex items-center gap-2">
-                    Get Started Today
-                    <ArrowRight className="w-5 h-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
-                  <Link to="/about">Learn More</Link>
-                </Button>
-              </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl lg:text-7xl font-bold mb-8 animate-fade-in">
+              Accelerate Your
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 block mt-2">
+                Career Journey
+              </span>
+            </h1>
+            <p className="text-xl lg:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "300ms" }}>
+              Transform your professional future with expert guidance, premium resources, and opportunities that matter.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in" style={{ animationDelay: "600ms" }}>
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg shadow-xl">
+                <Link to="/services" className="flex items-center gap-2">
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg">
+                <Link to="/jobs">Explore Opportunities</Link>
+              </Button>
             </div>
-            
-            <div className="grid grid-cols-2 gap-6 animate-fade-in" style={{ animationDelay: "300ms" }}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <Users className="w-12 h-12 text-blue-400 mb-4" />
-                <div className="text-3xl font-bold text-white mb-2">
+          </div>
+        </div>
+        
+        {/* Stats Section */}
+        <div className="container-custom mt-20">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center animate-fade-in" style={{ animationDelay: "800ms" }}>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <Users className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-2">
                   <Counter end={5000} duration={2000} />+
                 </div>
-                <div className="text-gray-300">Happy Clients</div>
+                <div className="text-gray-300 text-sm">Happy Clients</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <Star className="w-12 h-12 text-yellow-400 mb-4" />
-                <div className="text-3xl font-bold text-white mb-2">4.9</div>
-                <div className="text-gray-300">Average Rating</div>
+            </div>
+            <div className="text-center animate-fade-in" style={{ animationDelay: "900ms" }}>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <Star className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-2">4.9</div>
+                <div className="text-gray-300 text-sm">Average Rating</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <BookOpen className="w-12 h-12 text-green-400 mb-4" />
-                <div className="text-3xl font-bold text-white mb-2">
+            </div>
+            <div className="text-center animate-fade-in" style={{ animationDelay: "1000ms" }}>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <BookOpen className="w-8 h-8 text-green-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-2">
                   <Counter end={500} duration={2000} />+
                 </div>
-                <div className="text-gray-300">Study Materials</div>
+                <div className="text-gray-300 text-sm">Study Materials</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <Award className="w-12 h-12 text-red-400 mb-4" />
-                <div className="text-3xl font-bold text-white mb-2">
+            </div>
+            <div className="text-center animate-fade-in" style={{ animationDelay: "1100ms" }}>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold mb-2">
                   <Counter end={95} duration={2000} />%
                 </div>
-                <div className="text-gray-300">Success Rate</div>
+                <div className="text-gray-300 text-sm">Success Rate</div>
               </div>
             </div>
           </div>
@@ -272,23 +258,31 @@ const Index = () => {
       </section>
 
       {/* Services Section */}
-      <section className="section-padding bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container-custom">
-          <SectionHeading 
-            title="Our Services" 
-            subtitle="Comprehensive career development solutions tailored for your success"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <Target className="w-4 h-4" />
+              Our Services
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Comprehensive Career Solutions
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Expert guidance and resources tailored to accelerate your professional growth
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div key={service.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <ServiceCard {...service} />
               </div>
             ))}
           </div>
-          <div className="text-center mt-12 animate-fade-in" style={{ animationDelay: "600ms" }}>
-            <Button size="lg" className="bg-brand-red hover:bg-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="text-center mt-12">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3">
               <Link to="/services" className="flex items-center gap-2">
-                View All Services
+                Explore All Services
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
@@ -297,21 +291,29 @@ const Index = () => {
       </section>
 
       {/* Study Materials Section */}
-      <section className="section-padding">
+      <section className="py-20 bg-gray-50">
         <div className="container-custom">
-          <SectionHeading 
-            title="Featured Study Materials" 
-            subtitle="Access premium educational content to boost your skills and knowledge"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-green-50 text-green-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <BookOpen className="w-4 h-4" />
+              Study Materials
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Premium Learning Resources
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Access comprehensive study materials to boost your skills and knowledge
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-8">
             {featuredStudyMaterials.map((material, index) => (
               <div key={material.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <StudyMaterialCard {...material} />
               </div>
             ))}
           </div>
-          <div className="text-center mt-12 animate-fade-in" style={{ animationDelay: "400ms" }}>
-            <Button size="lg" variant="outline" className="border-brand-red text-brand-red hover:bg-brand-red hover:text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="text-center mt-12">
+            <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-3">
               <Link to="/study-material" className="flex items-center gap-2">
                 Browse All Materials
                 <ArrowRight className="w-5 h-5" />
@@ -321,82 +323,63 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="section-padding bg-gradient-to-br from-gray-50 to-white">
+      {/* Job Postings Section */}
+      <section className="py-20 bg-white">
         <div className="container-custom">
-          <SectionHeading 
-            title="Why Choose Apne Wale Careers" 
-            subtitle="We're committed to your success with proven strategies and personalized support"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: CheckCircle,
-                title: "Proven Track Record",
-                description: "95% success rate in interview preparation and career advancement"
-              },
-              {
-                icon: Users,
-                title: "Expert Mentors",
-                description: "Learn from industry professionals with years of experience"
-              },
-              {
-                icon: BookOpen,
-                title: "Premium Content",
-                description: "Access exclusive study materials and resources"
-              },
-              {
-                icon: Award,
-                title: "Personalized Approach",
-                description: "Customized coaching plans tailored to your career goals"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="text-center animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-brand-red to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                  <feature.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-purple-50 text-purple-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <Briefcase className="w-4 h-4" />
+              Job Opportunities
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Latest Career Opportunities
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover exciting job openings from top companies and startups
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {featuredJobs.map((job, index) => (
+              <div key={job.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <JobCard {...job} />
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="section-padding bg-brand-dark text-white">
-        <div className="container-custom">
-          <SectionHeading 
-            title="What Our Clients Say" 
-            subtitle="Real success stories from professionals who transformed their careers"
-            className="text-white"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div key={testimonial.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <TestimonialCard {...testimonial} />
-              </div>
-            ))}
+          <div className="text-center mt-12">
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3">
+              <Link to="/jobs" className="flex items-center gap-2">
+                View All Jobs
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Blog Section */}
-      <section className="section-padding bg-gray-50">
+      <section className="py-20 bg-gray-50">
         <div className="container-custom">
-          <SectionHeading 
-            title="Latest Career Insights" 
-            subtitle="Stay updated with industry trends and career advice from our experts"
-          />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <BookOpen className="w-4 h-4" />
+              Career Insights
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Latest Career Insights
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stay updated with industry trends and expert career advice
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {featuredBlogs.map((post, index) => (
               <div key={post.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <BlogCard {...post} />
               </div>
             ))}
           </div>
-          <div className="text-center mt-12 animate-fade-in" style={{ animationDelay: "400ms" }}>
-            <Button size="lg" variant="outline" className="border-brand-red text-brand-red hover:bg-brand-red hover:text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="text-center mt-12">
+            <Button size="lg" variant="outline" className="border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white px-8 py-3">
               <Link to="/blog" className="flex items-center gap-2">
                 Read More Articles
                 <ArrowRight className="w-5 h-5" />
@@ -407,24 +390,24 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-gradient-to-r from-brand-red to-red-600 text-white">
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white">
         <div className="container-custom text-center">
-          <div className="max-w-3xl mx-auto animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-8">
               Ready to Transform Your Career?
             </h2>
-            <p className="text-xl mb-8 text-red-100">
+            <p className="text-xl mb-12 text-blue-100 max-w-2xl mx-auto">
               Join thousands of professionals who have accelerated their careers with our expert guidance and premium resources.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-brand-red hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
                 <Link to="/services" className="flex items-center gap-2">
                   Start Your Journey
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-brand-red">
-                <Link to="/study-material">Explore Study Materials</Link>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg">
+                <Link to="/study-material">Explore Resources</Link>
               </Button>
             </div>
           </div>
