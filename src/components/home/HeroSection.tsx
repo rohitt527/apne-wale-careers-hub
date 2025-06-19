@@ -17,16 +17,16 @@ const HeroSection = () => {
       </div>
       
       <div className="container-custom relative z-10 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-8 animate-fade-in">
+            <div className="lg:col-span-6 space-y-8 animate-fade-in">
               <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
                 <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
                 <span className="text-sm font-semibold">Transform Your Career Journey</span>
               </div>
               
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
                   Accelerate Your
                 </span>
@@ -35,11 +35,11 @@ const HeroSection = () => {
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-2xl">
+              <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-xl">
                 Expert guidance, premium resources, and opportunities that matter. Join thousands of professionals advancing their careers.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-6 animate-fade-in" style={{ animationDelay: "600ms" }}>
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "600ms" }}>
                 <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 rounded-2xl">
                   <Link to="/services" className="flex items-center gap-2">
                     <Zap className="w-5 h-5" />
@@ -51,85 +51,82 @@ const HeroSection = () => {
                   <Link to="/jobs">Explore Opportunities</Link>
                 </Button>
               </div>
+
+              {/* Stats Section moved here */}
+              <div className="grid grid-cols-2 gap-4 pt-8 animate-fade-in" style={{ animationDelay: "800ms" }}>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Users className="w-6 h-6 text-blue-400" />
+                    <div className="text-2xl font-bold">
+                      <Counter end={5000} duration={2000} />+
+                    </div>
+                  </div>
+                  <div className="text-gray-300 text-sm">Happy Clients</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Star className="w-6 h-6 text-yellow-400" />
+                    <div className="text-2xl font-bold">4.9</div>
+                  </div>
+                  <div className="text-gray-300 text-sm">Average Rating</div>
+                </div>
+              </div>
             </div>
 
             {/* Right Content - Floating Cards */}
-            <div className="relative animate-fade-in" style={{ animationDelay: "300ms" }}>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-6">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
-                      <BookOpen className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Study Materials</h3>
-                    <p className="text-gray-300 text-sm">Premium resources for skill development</p>
+            <div className="lg:col-span-6 relative animate-fade-in" style={{ animationDelay: "300ms" }}>
+              <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto lg:mx-0">
+                {/* Study Materials Card */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
+                    <BookOpen className="h-8 w-8 text-white" />
                   </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 ml-8">
-                    <div className="bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
-                      <TrendingUp className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Career Growth</h3>
-                    <p className="text-gray-300 text-sm">Expert guidance and mentorship</p>
+                  <h3 className="text-xl font-bold mb-2">Study Materials</h3>
+                  <p className="text-gray-300 text-sm mb-4">Premium resources for skill development</p>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-400">500+</div>
+                    <div className="text-xs text-gray-400">Resources</div>
                   </div>
                 </div>
-                <div className="space-y-6 mt-12">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
-                    <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
-                      <Users className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Job Opportunities</h3>
-                    <p className="text-gray-300 text-sm">Connect with top companies</p>
+
+                {/* Job Opportunities Card */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 mt-8">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
+                    <Users className="h-8 w-8 text-white" />
                   </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 mr-8">
-                    <div className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
-                      <Star className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">Success Stories</h3>
-                    <p className="text-gray-300 text-sm">Learn from industry leaders</p>
+                  <h3 className="text-xl font-bold mb-2">Job Opportunities</h3>
+                  <p className="text-gray-300 text-sm mb-4">Connect with top companies</p>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-orange-400">95%</div>
+                    <div className="text-xs text-gray-400">Success Rate</div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Enhanced Stats Section */}
-      <div className="absolute bottom-8 left-0 right-0">
-        <div className="container-custom">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center animate-fade-in" style={{ animationDelay: "800ms" }}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <Users className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-2">
-                  <Counter end={5000} duration={2000} />+
+
+                {/* Career Growth Card */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 -mt-4">
+                  <div className="bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
+                    <TrendingUp className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Career Growth</h3>
+                  <p className="text-gray-300 text-sm mb-4">Expert guidance and mentorship</p>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">4.9</div>
+                    <div className="text-xs text-gray-400">Rating</div>
+                  </div>
                 </div>
-                <div className="text-gray-300 text-sm">Happy Clients</div>
-              </div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: "900ms" }}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <Star className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-2">4.9</div>
-                <div className="text-gray-300 text-sm">Average Rating</div>
-              </div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: "1000ms" }}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <BookOpen className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-2">
-                  <Counter end={500} duration={2000} />+
+
+                {/* Success Stories Card */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 mt-4">
+                  <div className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl p-4 w-16 h-16 mb-4 flex items-center justify-center">
+                    <Star className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Success Stories</h3>
+                  <p className="text-gray-300 text-sm mb-4">Learn from industry leaders</p>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-pink-400">5000+</div>
+                    <div className="text-xs text-gray-400">Stories</div>
+                  </div>
                 </div>
-                <div className="text-gray-300 text-sm">Study Materials</div>
-              </div>
-            </div>
-            <div className="text-center animate-fade-in" style={{ animationDelay: "1100ms" }}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold mb-2">
-                  <Counter end={95} duration={2000} />%
-                </div>
-                <div className="text-gray-300 text-sm">Success Rate</div>
               </div>
             </div>
           </div>
