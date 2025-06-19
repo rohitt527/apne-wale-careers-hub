@@ -30,7 +30,7 @@ const StudyMaterialDetailView = () => {
     content: "This comprehensive guide covers React from fundamentals to advanced concepts...",
     tableOfContents: [
       "Introduction to React",
-      "Component Architecture",
+      "Component Architecture", 
       "State Management",
       "Hooks Deep Dive",
       "Performance Optimization",
@@ -53,94 +53,128 @@ const StudyMaterialDetailView = () => {
     }
   };
 
+  const handleDownload = () => {
+    console.log("Downloading material:", material.title);
+    // Add download functionality here
+  };
+
+  const handleBookmark = () => {
+    console.log("Bookmarking material:", material.title);
+    // Add bookmark functionality here
+  };
+
+  const handleShare = () => {
+    console.log("Sharing material:", material.title);
+    // Add share functionality here
+  };
+
+  const handleLike = () => {
+    console.log("Liking material:", material.title);
+    // Add like functionality here
+  };
+
+  const handleRating = () => {
+    console.log("Rating material:", material.title);
+    // Add rating functionality here
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Modern Hero Section */}
-      <section className="relative bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 text-white py-20 overflow-hidden">
-        {/* Background Pattern */}
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 text-white py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         </div>
 
-        <div className="container-custom relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-6">
-                <Badge className={`${getCategoryColor(material.category)} shadow-lg`}>
-                  {material.category}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Badge className={`${getCategoryColor(material.category)} shadow-lg`}>
+                {material.category}
+              </Badge>
+              {material.isPremium && (
+                <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-lg">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Premium
                 </Badge>
-                {material.isPremium && (
-                  <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black shadow-lg">
-                    <Crown className="w-3 h-3 mr-1" />
-                    Premium
-                  </Badge>
-                )}
-                <Badge className="bg-white/20 text-white border-white/30">
-                  <BookOpen className="w-3 h-3 mr-1" />
-                  {material.level}
-                </Badge>
+              )}
+              <Badge className="bg-white/20 text-white border-white/30">
+                <BookOpen className="w-3 h-3 mr-1" />
+                {material.level}
+              </Badge>
+            </div>
+            
+            <h1 className="text-4xl lg:text-5xl font-black mb-6 leading-tight">
+              {material.title}
+            </h1>
+            
+            <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-3xl mx-auto">
+              {material.description}
+            </p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-blue-100 mb-8">
+              <div className="flex items-center justify-center gap-2">
+                <User className="w-4 h-4" />
+                <span className="text-sm">By {material.author}</span>
               </div>
-              
-              <h1 className="text-4xl lg:text-6xl font-black mb-6 leading-tight">
-                {material.title}
-              </h1>
-              
-              <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-                {material.description}
-              </p>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-blue-100">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  <span className="text-sm">By {material.author}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span className="text-sm">{new Date(material.publishDate).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span className="text-sm">{material.estimatedTime}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm">{material.rating} ({material.ratingCount})</span>
-                </div>
+              <div className="flex items-center justify-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span className="text-sm">{new Date(material.publishDate).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span className="text-sm">{material.estimatedTime}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <span className="text-sm">{material.rating} ({material.ratingCount})</span>
               </div>
             </div>
 
-            {/* Thumbnail */}
-            <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src={material.thumbnail}
-                  alt={material.title}
-                  className="w-full h-80 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <Button size="lg" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30">
-                        <Play className="w-5 h-5 mr-2" />
-                        Preview
-                      </Button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                        <Heart className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                        <Bookmark className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
-                        <Share className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+            {/* Action Buttons */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={handleDownload}
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download Now
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-2 border-white/30 text-white hover:bg-white hover:text-gray-900 px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <BookOpen className="w-5 h-5 mr-2" />
+                Read Online
+              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="text-white hover:bg-white/20"
+                  onClick={handleLike}
+                >
+                  <Heart className="w-4 h-4" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="text-white hover:bg-white/20"
+                  onClick={handleBookmark}
+                >
+                  <Bookmark className="w-4 h-4" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="text-white hover:bg-white/20"
+                  onClick={handleShare}
+                >
+                  <Share className="w-4 h-4" />
+                </Button>
               </div>
             </div>
           </div>
@@ -149,23 +183,27 @@ const StudyMaterialDetailView = () => {
 
       {/* Main Content */}
       <section className="py-16">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-3 gap-12">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-4 gap-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Download className="w-5 h-5 mr-2" />
-                  Download Now
-                </Button>
-                <Button size="lg" variant="outline" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Read Online
-                </Button>
+            <div className="lg:col-span-3 space-y-12">
+              {/* Material Preview Image */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src={material.thumbnail}
+                  alt={material.title}
+                  className="w-full h-80 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <Button size="lg" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30">
+                    <Play className="w-5 h-5 mr-2" />
+                    Preview Content
+                  </Button>
+                </div>
               </div>
 
-              {/* Enhanced Statistics Cards */}
+              {/* Statistics Cards */}
               <div className="grid md:grid-cols-3 gap-6">
                 <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-2xl transition-all duration-300">
                   <CardContent className="p-8 text-center">
@@ -204,15 +242,12 @@ const StudyMaterialDetailView = () => {
                 </Card>
               </div>
 
-              {/* Related Materials Section */}
-              <RelatedMaterialsSection />
-
-              {/* Content Preview */}
+              {/* Table of Contents */}
               <Card className="border-0 shadow-xl bg-white">
                 <CardContent className="p-10">
                   <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
                     <Award className="w-8 h-8 text-blue-600" />
-                    What You'll Master
+                    What You'll Learn
                   </h2>
                   <div className="grid md:grid-cols-2 gap-6">
                     {material.tableOfContents.map((item, index) => (
@@ -243,7 +278,7 @@ const StudyMaterialDetailView = () => {
               </div>
             </div>
 
-            {/* Enhanced Sidebar */}
+            {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-8 space-y-8">
                 {/* Material Info Card */}
@@ -303,15 +338,27 @@ const StudyMaterialDetailView = () => {
                   <CardContent className="p-8">
                     <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                     <div className="space-y-4">
-                      <Button variant="outline" className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300"
+                        onClick={handleBookmark}
+                      >
                         <BookOpen className="w-5 h-5 mr-3" />
                         Add to Reading List
                       </Button>
-                      <Button variant="outline" className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300"
+                        onClick={handleRating}
+                      >
                         <Star className="w-5 h-5 mr-3" />
                         Rate This Material
                       </Button>
-                      <Button variant="outline" className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start h-12 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 transition-all duration-300"
+                        onClick={handleDownload}
+                      >
                         <Download className="w-5 h-5 mr-3" />
                         Download PDF
                       </Button>
@@ -323,6 +370,11 @@ const StudyMaterialDetailView = () => {
           </div>
         </div>
       </section>
+
+      {/* Related Materials Section - Now appears after main content */}
+      <div className="container mx-auto px-4">
+        <RelatedMaterialsSection />
+      </div>
     </div>
   );
 };
