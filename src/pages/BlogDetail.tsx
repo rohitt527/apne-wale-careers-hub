@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, User, Clock, Share2, BookOpen, TrendingUp, Eye, Heart, ChevronRight, MessageCircle, ThumbsUp } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Share2, BookOpen, TrendingUp, Eye, Heart, ChevronRight, MessageCircle, ThumbsUp, Bookmark, Twitter, Linkedin, Facebook } from "lucide-react";
 import { useState, useEffect } from "react";
 import BlogCard from "@/components/common/BlogCard";
 
@@ -167,6 +167,7 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [readingProgress, setReadingProgress] = useState(0);
 
   useEffect(() => {
     // In a real app, this would be an API call
@@ -177,22 +178,41 @@ const BlogDetail = () => {
     setTimeout(() => {
       setBlog(foundBlog);
       setLoading(false);
-    }, 300);
+    }, 500);
   }, [id]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      setReadingProgress(Math.min(100, Math.max(0, progress)));
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (loading) {
     return (
       <Layout>
-        <div className="container-custom py-16">
-          <div className="flex justify-center items-center h-[70vh]">
-            <div className="animate-pulse space-y-6 w-full max-w-4xl">
-              <div className="h-12 bg-gray-200 rounded-2xl w-3/4"></div>
-              <div className="h-6 bg-gray-200 rounded-xl w-1/2"></div>
-              <div className="h-80 bg-gray-200 rounded-3xl"></div>
-              <div className="space-y-4">
-                <div className="h-6 bg-gray-200 rounded-xl"></div>
-                <div className="h-6 bg-gray-200 rounded-xl w-5/6"></div>
-                <div className="h-6 bg-gray-200 rounded-xl w-4/6"></div>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+          {/* Loading Progress Bar */}
+          <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse"></div>
+          </div>
+          
+          <div className="container-custom py-16">
+            <div className="max-w-4xl mx-auto">
+              <div className="animate-pulse space-y-8">
+                <div className="h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-3xl"></div>
+                <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl w-2/3"></div>
+                <div className="h-80 bg-gradient-to-r from-gray-200 to-gray-300 rounded-3xl"></div>
+                <div className="space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-xl"></div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -204,14 +224,19 @@ const BlogDetail = () => {
   if (!blog) {
     return (
       <Layout>
-        <div className="container-custom py-24">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
           <div className="text-center animate-fade-in">
-            <div className="bg-white rounded-3xl p-16 shadow-2xl max-w-lg mx-auto">
-              <BookOpen className="h-20 w-20 text-gray-400 mx-auto mb-6" />
+            <div className="bg-white rounded-3xl p-16 shadow-2xl max-w-lg mx-auto border border-gray-100">
+              <div className="bg-gradient-to-r from-red-100 to-pink-100 rounded-full p-6 w-24 h-24 mx-auto mb-8 flex items-center justify-center">
+                <BookOpen className="h-12 w-12 text-red-500" />
+              </div>
               <h1 className="text-4xl font-bold mb-6 text-gray-900">Article Not Found</h1>
-              <p className="text-gray-600 mb-8 text-lg">The article you're looking for doesn't exist or has been removed.</p>
-              <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-lg">
-                <Link to="/blog">Back to All Articles</Link>
+              <p className="text-gray-600 mb-8 text-lg leading-relaxed">The article you're looking for doesn't exist or has been removed.</p>
+              <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Link to="/blog">
+                  <ArrowLeft className="h-5 w-5 mr-2" />
+                  Back to All Articles
+                </Link>
               </Button>
             </div>
           </div>
@@ -222,37 +247,45 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      {/* Enhanced Breadcrumb Navigation */}
-      <div className="bg-gradient-to-r from-gray-50 to-white py-6 border-b-2 border-gray-100 animate-fade-in">
+      {/* Reading Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+          style={{ width: `${readingProgress}%` }}
+        ></div>
+      </div>
+
+      {/* Breadcrumb Navigation */}
+      <div className="bg-gradient-to-r from-white to-gray-50 py-6 border-b border-gray-100 animate-fade-in">
         <div className="container-custom">
           <nav className="flex items-center text-sm font-medium space-x-3">
-            <Link to="/blog" className="flex items-center text-brand-red hover:text-red-700 transition-colors group">
+            <Link to="/blog" className="flex items-center text-blue-600 hover:text-blue-700 transition-colors group">
               <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
               All Articles
             </Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-600">{blog.category}</span>
+            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">{blog.category}</Badge>
             <ChevronRight className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-400 truncate max-w-xs">{blog.title}</span>
+            <span className="text-gray-500 truncate max-w-xs">{blog.title}</span>
           </nav>
         </div>
       </div>
 
-      {/* Enhanced Hero Section */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-brand-dark to-gray-800 text-white py-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
+      {/* Hero Section */}
+      <section className="relative py-20 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
           <img 
             src={blog.image} 
             alt={blog.title} 
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
         
         <div className="container-custom relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto text-center">
             <div className="animate-fade-in">
-              <Badge className="mb-8 bg-brand-red/90 text-white text-lg px-6 py-3 rounded-full backdrop-blur-sm shadow-xl">
+              <Badge className="mb-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg px-6 py-3 rounded-full shadow-xl">
                 {blog.category}
               </Badge>
             </div>
@@ -261,27 +294,27 @@ const BlogDetail = () => {
               {blog.title}
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in delay-300">
+            <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in delay-300">
               {blog.excerpt}
             </p>
             
-            {/* Enhanced Author and Meta Info */}
-            <div className="flex flex-wrap items-center justify-center gap-8 text-gray-200 animate-fade-in delay-500">
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-                <User className="h-6 w-6 text-brand-red" />
-                <span className="font-semibold text-lg">{blog.author}</span>
+            {/* Enhanced Meta Info */}
+            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-200 animate-fade-in delay-500">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                <User className="h-5 w-5 text-blue-400" />
+                <span className="font-semibold">{blog.author}</span>
               </div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-                <Calendar className="h-6 w-6 text-blue-400" />
-                <span className="text-lg">{blog.date}</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                <Calendar className="h-5 w-5 text-green-400" />
+                <span>{blog.date}</span>
               </div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-                <Clock className="h-6 w-6 text-green-400" />
-                <span className="text-lg">{blog.readTime}</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                <Clock className="h-5 w-5 text-yellow-400" />
+                <span>{blog.readTime}</span>
               </div>
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
-                <Eye className="h-6 w-6 text-purple-400" />
-                <span className="text-lg">{blog.views} views</span>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+                <Eye className="h-5 w-5 text-purple-400" />
+                <span>{blog.views} views</span>
               </div>
             </div>
           </div>
@@ -289,147 +322,133 @@ const BlogDetail = () => {
       </section>
 
       {/* Main Content */}
-      <div className="container-custom py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
-          {/* Article Content */}
-          <div className="lg:col-span-3">
-            <article className="bg-white rounded-3xl shadow-2xl p-8 lg:p-16 animate-fade-in">
-              {/* Enhanced Article Actions */}
-              <div className="flex items-center justify-between mb-12 pb-8 border-b-2 border-gray-100">
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant={liked ? "default" : "outline"}
-                    size="lg"
-                    onClick={() => setLiked(!liked)}
-                    className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl ${
-                      liked ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg' : 'hover:bg-red-50 hover:text-red-600 border-2'
-                    }`}
-                  >
-                    <Heart className={`h-5 w-5 mr-3 ${liked ? 'fill-current animate-pulse' : ''}`} />
-                    {liked ? parseInt(blog.likes) + 1 : blog.likes}
-                  </Button>
-                  
-                  <Button variant="outline" size="lg" className="hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl border-2">
-                    <Share2 className="h-5 w-5 mr-3" />
-                    Share
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    size="lg"
-                    onClick={() => setBookmarked(!bookmarked)}
-                    className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl border-2 ${
-                      bookmarked ? 'bg-yellow-50 text-yellow-600 border-yellow-300' : 'hover:bg-yellow-50 hover:text-yellow-600'
-                    }`}
-                  >
-                    <BookOpen className="h-5 w-5 mr-3" />
-                    {bookmarked ? 'Saved' : 'Save'}
-                  </Button>
-                </div>
-                
-                <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                  <Link to="/book">Book a Career Session</Link>
-                </Button>
-              </div>
-
-              {/* Enhanced Article Body */}
-              <div 
-                className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-img:rounded-2xl prose-img:shadow-lg"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-              />
-              
-              {/* Enhanced Tags */}
-              <div className="mt-16 pt-12 border-t-2 border-gray-100">
-                <div className="flex flex-wrap items-center gap-4 mb-8">
-                  <span className="font-bold text-xl text-gray-900">Tags:</span>
-                  {blog.tags.map((tag: string) => (
-                    <Badge 
-                      key={tag} 
-                      variant="outline" 
-                      className="bg-gray-50 hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer transform hover:scale-105 px-4 py-2 rounded-full text-sm font-semibold border-2"
-                    >
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-                
-                {/* Engagement Section */}
-                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl p-8 mt-12">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Join the Discussion</h3>
-                  <div className="flex flex-wrap gap-4">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl">
-                      <MessageCircle className="h-5 w-5 mr-2" />
-                      Add Comment
-                    </Button>
-                    <Button variant="outline" className="border-2 px-6 py-3 rounded-2xl">
-                      <ThumbsUp className="h-5 w-5 mr-2" />
-                      Rate Article
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-          
-          {/* Enhanced Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-32 space-y-8">
-              {/* Related Posts */}
-              <div className="bg-white p-8 rounded-3xl shadow-xl animate-fade-in delay-300">
-                <div className="flex items-center gap-3 mb-8">
-                  <TrendingUp className="h-6 w-6 text-brand-red" />
-                  <h3 className="font-bold text-2xl text-gray-900">Related Articles</h3>
-                </div>
-                <div className="space-y-8">
-                  {relatedBlogs.map((relatedBlog, index) => (
-                    <div key={relatedBlog.id} className="group animate-fade-in" style={{ animationDelay: `${(index + 1) * 200}ms` }}>
-                      <Link to={`/blog/${relatedBlog.id}`} className="block">
-                        <div className="overflow-hidden rounded-2xl mb-4 h-32 shadow-lg">
-                          <img 
-                            src={relatedBlog.image} 
-                            alt={relatedBlog.title} 
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        </div>
-                        <h4 className="font-bold text-lg line-clamp-2 group-hover:text-brand-red transition-colors mb-3 leading-tight">
-                          {relatedBlog.title}
-                        </h4>
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          <span className="font-medium">{relatedBlog.author}</span>
-                          <span className="bg-gray-100 px-3 py-1 rounded-full">{relatedBlog.readTime}</span>
-                        </div>
-                      </Link>
+      <div className="bg-gradient-to-b from-white to-gray-50 py-16">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-16">
+            {/* Article Content */}
+            <div className="lg:col-span-3">
+              <article className="bg-white rounded-3xl shadow-2xl border border-gray-100 animate-fade-in">
+                {/* Article Actions */}
+                <div className="p-8 border-b border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant={liked ? "default" : "outline"}
+                        size="lg"
+                        onClick={() => setLiked(!liked)}
+                        className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl ${
+                          liked ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg' : 'hover:bg-red-50 hover:text-red-600 border-2'
+                        }`}
+                      >
+                        <Heart className={`h-5 w-5 mr-3 ${liked ? 'fill-current animate-pulse' : ''}`} />
+                        {liked ? parseInt(blog.likes) + 1 : blog.likes}
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        onClick={() => setBookmarked(!bookmarked)}
+                        className={`transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-2xl border-2 ${
+                          bookmarked ? 'bg-yellow-50 text-yellow-600 border-yellow-300' : 'hover:bg-yellow-50 hover:text-yellow-600'
+                        }`}
+                      >
+                        <Bookmark className="h-5 w-5 mr-3" />
+                        {bookmarked ? 'Saved' : 'Save'}
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Enhanced Newsletter Signup */}
-              <div className="bg-gradient-to-br from-brand-red to-red-600 p-8 rounded-3xl text-white shadow-xl animate-fade-in delay-500">
-                <div className="text-center">
-                  <h3 className="font-bold text-2xl mb-4">Stay Updated</h3>
-                  <p className="text-red-100 mb-6 leading-relaxed">Get the latest career insights and tech stories delivered to your inbox.</p>
-                  <div className="space-y-4">
-                    <input 
-                      type="email" 
-                      placeholder="Enter your email"
-                      className="w-full px-4 py-3 rounded-2xl text-gray-900 border-0 focus:ring-4 focus:ring-red-300 transition-all duration-300"
-                    />
-                    <Button className="w-full bg-white text-brand-red hover:bg-gray-100 transition-all duration-300 py-3 rounded-2xl font-bold text-lg">
-                      Subscribe Now
-                    </Button>
+                    
+                    <div className="flex items-center gap-3">
+                      <Button variant="outline" size="sm" className="rounded-xl hover:bg-blue-50">
+                        <Twitter className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" className="rounded-xl hover:bg-blue-50">
+                        <Linkedin className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" className="rounded-xl hover:bg-blue-50">
+                        <Facebook className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Social Share */}
-              <div className="bg-gray-50 p-8 rounded-3xl shadow-lg animate-fade-in delay-700">
-                <h3 className="font-bold text-xl text-gray-900 mb-6">Share This Article</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-blue-50">Twitter</Button>
-                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-blue-50">LinkedIn</Button>
-                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-green-50">WhatsApp</Button>
-                  <Button variant="outline" className="rounded-2xl py-3 hover:bg-gray-100">Copy Link</Button>
+                {/* Article Body */}
+                <div className="p-8 lg:p-16">
+                  <div 
+                    className="prose prose-xl max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-img:rounded-2xl prose-img:shadow-lg prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                  />
+                  
+                  {/* Tags */}
+                  <div className="mt-16 pt-8 border-t border-gray-200">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <span className="font-bold text-xl text-gray-900">Tags:</span>
+                      {blog.tags.map((tag: string) => (
+                        <Badge 
+                          key={tag} 
+                          variant="outline" 
+                          className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 text-blue-600 border-blue-200 transition-all duration-300 cursor-pointer transform hover:scale-105 px-4 py-2 rounded-full text-sm font-semibold"
+                        >
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            
+            {/* Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8 space-y-8">
+                {/* Related Posts */}
+                <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 animate-fade-in delay-300">
+                  <div className="flex items-center gap-3 mb-8">
+                    <TrendingUp className="h-6 w-6 text-blue-500" />
+                    <h3 className="font-bold text-2xl text-gray-900">Related Articles</h3>
+                  </div>
+                  <div className="space-y-6">
+                    {relatedBlogs.map((relatedBlog, index) => (
+                      <div key={relatedBlog.id} className="group animate-fade-in" style={{ animationDelay: `${(index + 1) * 200}ms` }}>
+                        <Link to={`/blog/${relatedBlog.id}`} className="block">
+                          <div className="overflow-hidden rounded-2xl mb-4 h-32 shadow-lg">
+                            <img 
+                              src={relatedBlog.image} 
+                              alt={relatedBlog.title} 
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                          <h4 className="font-bold text-lg line-clamp-2 group-hover:text-blue-600 transition-colors mb-3 leading-tight">
+                            {relatedBlog.title}
+                          </h4>
+                          <div className="flex items-center justify-between text-sm text-gray-500">
+                            <span className="font-medium">{relatedBlog.author}</span>
+                            <Badge className="bg-gray-100 text-gray-600">{relatedBlog.readTime}</Badge>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Newsletter Signup */}
+                <div className="bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 p-8 rounded-3xl text-white shadow-xl animate-fade-in delay-500">
+                  <div className="text-center">
+                    <div className="bg-white/20 rounded-full p-4 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                      <BookOpen className="h-8 w-8" />
+                    </div>
+                    <h3 className="font-bold text-2xl mb-4">Stay Updated</h3>
+                    <p className="text-blue-100 mb-6 leading-relaxed">Get the latest insights delivered to your inbox.</p>
+                    <div className="space-y-4">
+                      <input 
+                        type="email" 
+                        placeholder="Enter your email"
+                        className="w-full px-4 py-3 rounded-2xl text-gray-900 border-0 focus:ring-4 focus:ring-white/30 transition-all duration-300"
+                      />
+                      <Button className="w-full bg-white text-blue-600 hover:bg-gray-100 transition-all duration-300 py-3 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                        Subscribe Now
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -441,15 +460,15 @@ const BlogDetail = () => {
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container-custom">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">More Articles You'll Love</h2>
-            <p className="text-xl text-gray-600">Continue your learning journey with these handpicked articles</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Continue Reading</h2>
+            <p className="text-xl text-gray-600">Discover more insights and stories</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {trendingBlogs.map((post, index) => (
               <div
                 key={post.id}
-                className="animate-fade-in"
+                className="animate-fade-in transform transition-all duration-500 hover:scale-105"
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <BlogCard 
@@ -467,8 +486,11 @@ const BlogDetail = () => {
           </div>
           
           <div className="text-center mt-16 animate-fade-in delay-1000">
-            <Button asChild className="bg-brand-red hover:bg-red-700 text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-              <Link to="/blog">View All Articles</Link>
+            <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <Link to="/blog">
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                View All Articles
+              </Link>
             </Button>
           </div>
         </div>
