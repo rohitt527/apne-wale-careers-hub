@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users, Star, BookOpen, TrendingUp, Sparkles, Zap, CheckCircle, Play, Award } from "lucide-react";
+import { ArrowRight, Users, Star, BookOpen, TrendingUp, Sparkles, Zap, CheckCircle, Calendar, Award } from "lucide-react";
 import Counter from "@/components/common/Counter";
 
 const HeroSection = () => {
@@ -63,10 +63,10 @@ const HeroSection = () => {
                     <ArrowRight className="w-6 h-6" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 px-12 py-6 text-xl rounded-2xl transition-all duration-500 hover:scale-105 shadow-lg">
-                  <Link to="/jobs" className="flex items-center gap-3">
-                    <Play className="w-5 h-5" />
-                    Watch Demo
+                <Button size="lg" variant="outline" className="border-2 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 px-12 py-6 text-xl rounded-2xl transition-all duration-500 hover:scale-105 shadow-lg">
+                  <Link to="/book" className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5" />
+                    Book a Free Consultation
                   </Link>
                 </Button>
               </div>
