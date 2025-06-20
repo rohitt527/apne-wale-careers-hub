@@ -12,10 +12,15 @@ const Index = () => {
     <Layout>
       <div className="overflow-hidden">
         <HeroSection />
-        <ServicesSection />
-        <StudyMaterialsSection />
-        <JobsSection />
-        <BlogSection />
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/30 to-white pointer-events-none"></div>
+          <div className="relative z-10">
+            <ServicesSection />
+            <StudyMaterialsSection />
+            <JobsSection />
+            <BlogSection />
+          </div>
+        </div>
         <CTASection />
       </div>
     </Layout>
