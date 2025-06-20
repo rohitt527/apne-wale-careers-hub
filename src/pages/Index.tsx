@@ -10,12 +10,14 @@ import CTASection from "@/components/home/CTASection";
 const Index = () => {
   return (
     <Layout>
-      <HeroSection />
-      <ServicesSection />
-      <StudyMaterialsSection />
-      <JobsSection />
-      <BlogSection />
-      <CTASection />
+      <div className="overflow-hidden">
+        <HeroSection />
+        <ServicesSection />
+        <StudyMaterialsSection />
+        <JobsSection />
+        <BlogSection />
+        <CTASection />
+      </div>
     </Layout>
   );
 };
