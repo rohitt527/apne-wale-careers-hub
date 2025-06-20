@@ -1,5 +1,6 @@
 
 import { useParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import StudyMaterialHeroSection from "./detail/StudyMaterialHeroSection";
 import StudyMaterialStats from "./detail/StudyMaterialStats";
 import StudyMaterialMainContent from "./detail/StudyMaterialMainContent";
@@ -9,6 +10,7 @@ import RelatedMaterialsSection from "./detail/RelatedMaterialsSection";
 
 const StudyMaterialDetailView = () => {
   const { id } = useParams();
+  const { toast } = useToast();
 
   // Mock data - in real app, this would come from an API
   const material = {
@@ -40,27 +42,87 @@ const StudyMaterialDetailView = () => {
 
   const handleDownload = () => {
     console.log("Downloading material:", material.title);
-    // Add download functionality here
+    toast({
+      title: "Download Started",
+      description: `${material.title} is being downloaded to your device.`,
+      duration: 3000,
+    });
+    
+    // Simulate download process
+    setTimeout(() => {
+      toast({
+        title: "Download Complete",
+        description: "Your study material is ready to use!",
+        duration: 3000,
+      });
+    }, 2000);
   };
 
   const handleBookmark = () => {
     console.log("Bookmarking material:", material.title);
-    // Add bookmark functionality here
+    toast({
+      title: "Added to Reading List",
+      description: `${material.title} has been saved to your reading list.`,
+      duration: 3000,
+    });
   };
 
   const handleShare = () => {
     console.log("Sharing material:", material.title);
-    // Add share functionality here
+    
+    if (navigator.share) {
+      navigator.share({
+        title: material.title,
+        text: material.description,
+        url: window.location.href,
+      }).then(() => {
+        toast({
+          title: "Shared Successfully",
+          description: "Study material shared with others!",
+          duration: 3000,
+        });
+      }).catch((error) => {
+        console.log("Error sharing:", error);
+        fallbackShare();
+      });
+    } else {
+      fallbackShare();
+    }
+  };
+
+  const fallbackShare = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      toast({
+        title: "Link Copied",
+        description: "Study material link copied to clipboard!",
+        duration: 3000,
+      });
+    }).catch(() => {
+      toast({
+        title: "Share Failed",
+        description: "Unable to share at this time. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    });
   };
 
   const handleLike = () => {
     console.log("Liking material:", material.title);
-    // Add like functionality here
+    toast({
+      title: "Thanks for the feedback!",
+      description: "Your like helps us recommend better content.",
+      duration: 3000,
+    });
   };
 
   const handleRating = () => {
     console.log("Rating material:", material.title);
-    // Add rating functionality here
+    toast({
+      title: "Rate This Material",
+      description: "Your rating helps other learners find quality content.",
+      duration: 3000,
+    });
   };
 
   return (
@@ -76,8 +138,8 @@ const StudyMaterialDetailView = () => {
 
       {/* Main Content */}
       <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-4 gap-12">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="grid lg:grid-cols-4 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-3 space-y-12">
               {/* Statistics Cards */}
@@ -103,10 +165,12 @@ const StudyMaterialDetailView = () => {
         </div>
       </section>
 
-      {/* Related Materials Section - Now appears after main content */}
-      <div className="container mx-auto px-4">
-        <RelatedMaterialsSection />
-      </div>
+      {/* Related Materials Section */}
+      <section className="pb-16">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <RelatedMaterialsSection />
+        </div>
+      </section>
     </div>
   );
 };
