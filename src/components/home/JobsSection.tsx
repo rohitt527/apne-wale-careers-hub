@@ -1,9 +1,13 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Briefcase, TrendingUp, MapPin, Clock, Star, Sparkles, Building2 } from "lucide-react";
+import { ArrowRight, Briefcase, MapPin, Clock, Star, Sparkles, Building2, Users, TrendingUp } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const JobsSection = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: jobsRef, isVisible: jobsVisible } = useScrollAnimation();
+
   const featuredJobs = [
     {
       id: 1,
@@ -47,62 +51,80 @@ const JobsSection = () => {
   ];
 
   return (
-    <section className="py-32 bg-gradient-to-b from-gray-50/50 to-white relative overflow-hidden">
-      {/* Enhanced Background Elements */}
+    <section className="py-32 bg-gradient-to-b from-white to-gray-50/50 relative overflow-hidden">
+      {/* Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-purple-100/40 to-pink-100/40 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-blue-100/40 to-purple-100/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 left-20 w-80 h-80 bg-gradient-to-r from-purple-100/40 to-pink-100/40 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-100/40 to-purple-100/40 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-24 animate-fade-in">
-          <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm text-purple-700 px-8 py-4 rounded-full text-sm font-semibold mb-8 border border-purple-100 shadow-lg">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-24 transition-all duration-1000 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 px-8 py-4 rounded-full text-sm font-semibold mb-8 border border-purple-100/80 shadow-lg">
             <Building2 className="w-5 h-5" />
             <Sparkles className="w-4 h-4 animate-pulse" />
-            Job Opportunities
+            Career Opportunities
           </div>
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            Latest Career
-            <span className="block bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent">
+            Exciting Career
+            <span className="block bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 bg-clip-text text-transparent mt-2">
               Opportunities
             </span>
           </h2>
           <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light">
-            Discover exciting job openings from top companies and startups. Your dream job is just one click away.
+            Discover exciting job openings from top companies and startups. Your dream career awaits you.
           </p>
           
-          {/* Enhanced Job Market Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100/50 hover:shadow-2xl transition-all duration-500 hover:scale-105">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Briefcase className="w-8 h-8 text-purple-600" />
-                <div className="text-4xl font-bold text-purple-600">500+</div>
+          {/* Inline stats without boxes */}
+          <div className="flex flex-wrap justify-center items-center gap-12 mt-16">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <Briefcase className="w-8 h-8 text-white" />
               </div>
-              <div className="text-gray-600 font-medium">Active Jobs</div>
+              <div className="text-left">
+                <div className="text-3xl font-bold text-gray-900">500+</div>
+                <div className="text-gray-600 font-medium">Active Jobs</div>
+              </div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100/50 hover:shadow-2xl transition-all duration-500 hover:scale-105">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Building2 className="w-8 h-8 text-pink-600" />
-                <div className="text-4xl font-bold text-pink-600">150+</div>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+                <Building2 className="w-8 h-8 text-white" />
               </div>
-              <div className="text-gray-600 font-medium">Top Companies</div>
+              <div className="text-left">
+                <div className="text-3xl font-bold text-gray-900">150+</div>
+                <div className="text-gray-600 font-medium">Top Companies</div>
+              </div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100/50 hover:shadow-2xl transition-all duration-500 hover:scale-105">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Star className="w-8 h-8 text-blue-600" />
-                <div className="text-4xl font-bold text-blue-600">95%</div>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                <TrendingUp className="w-8 h-8 text-white" />
               </div>
-              <div className="text-gray-600 font-medium">Success Rate</div>
+              <div className="text-left">
+                <div className="text-3xl font-bold text-gray-900">95%</div>
+                <div className="text-gray-600 font-medium">Success Rate</div>
+              </div>
             </div>
           </div>
         </div>
         
-        <div className="grid lg:grid-cols-3 gap-10 mb-20">
+        <div 
+          ref={jobsRef}
+          className="grid lg:grid-cols-3 gap-10 mb-20"
+        >
           {featuredJobs.map((job, index) => (
             <div 
               key={job.id} 
-              className="group bg-white rounded-4xl shadow-xl hover:shadow-2xl transition-all duration-700 border border-gray-100/50 overflow-hidden transform hover:-translate-y-3" 
-              style={{ animationDelay: `${index * 200}ms` }}
+              className={`group bg-white rounded-4xl shadow-xl hover:shadow-2xl transition-all duration-700 border border-gray-100/50 overflow-hidden transform hover:-translate-y-2 ${
+                jobsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              style={{ 
+                transitionDelay: jobsVisible ? `${index * 200}ms` : '0ms'
+              }}
             >
               <div className="p-10">
                 <div className="flex items-center gap-6 mb-8">
@@ -144,7 +166,7 @@ const JobsSection = () => {
                   ))}
                 </div>
                 
-                <Button asChild className={`w-full bg-gradient-to-r ${job.gradient} hover:shadow-xl transition-all duration-500 rounded-2xl py-6 text-lg font-semibold shadow-lg`}>
+                <Button asChild className={`w-full bg-gradient-to-r ${job.gradient} hover:shadow-xl transition-all duration-500 rounded-2xl py-6 text-lg font-semibold shadow-lg group-hover:scale-105`}>
                   <Link to={`/job/${job.id}`} className="flex items-center justify-center gap-3">
                     View Details
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -155,8 +177,8 @@ const JobsSection = () => {
           ))}
         </div>
         
-        <div className="text-center animate-fade-in">
-          <Button size="lg" variant="outline" className="border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white px-16 py-6 text-xl font-semibold shadow-xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-105 rounded-2xl">
+        <div className="text-center">
+          <Button size="lg" variant="outline" className="border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white px-16 py-8 text-xl font-semibold shadow-xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-105 rounded-2xl">
             <Link to="/jobs" className="flex items-center gap-4">
               View All Jobs
               <ArrowRight className="w-6 h-6" />
