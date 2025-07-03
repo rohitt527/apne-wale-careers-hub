@@ -13,8 +13,9 @@ const Index = () => {
       <div className="overflow-hidden">
         <HeroSection />
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/30 to-white pointer-events-none"></div>
-          <div className="relative z-10">
+          {/* Enhanced gradient overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50/20 to-white pointer-events-none z-10"></div>
+          <div className="relative z-20">
             <ServicesSection />
             <StudyMaterialsSection />
             <JobsSection />
