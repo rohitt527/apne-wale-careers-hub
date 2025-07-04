@@ -4,6 +4,10 @@ import Preloader from '@/components/common/Preloader';
 import ModernNavbar from '@/components/layout/ModernNavbar';
 import ModernHeroSection from '@/components/home/ModernHeroSection';
 import ModernFeaturesSection from '@/components/home/ModernFeaturesSection';
+import ServicesSection from '@/components/home/ServicesSection';
+import StudyMaterialsSection from '@/components/home/StudyMaterialsSection';
+import JobsSection from '@/components/home/JobsSection';
+import BlogSection from '@/components/home/BlogSection';
 import ModernTestimonialsSection from '@/components/home/ModernTestimonialsSection';
 import ModernFooter from '@/components/layout/ModernFooter';
 
@@ -12,6 +16,10 @@ const Index = () => {
   const [visibleSections, setVisibleSections] = useState({
     hero: false,
     features: false,
+    services: false,
+    studyMaterials: false,
+    jobs: false,
+    blog: false,
     testimonials: false,
     footer: false
   });
@@ -19,11 +27,15 @@ const Index = () => {
   const handlePreloaderComplete = () => {
     setLoading(false);
     
-    // Step-by-step section reveal
+    // Step-by-step section reveal with smooth timing
     setTimeout(() => setVisibleSections(prev => ({ ...prev, hero: true })), 300);
     setTimeout(() => setVisibleSections(prev => ({ ...prev, features: true })), 800);
-    setTimeout(() => setVisibleSections(prev => ({ ...prev, testimonials: true })), 1300);
-    setTimeout(() => setVisibleSections(prev => ({ ...prev, footer: true })), 1800);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, services: true })), 1100);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, studyMaterials: true })), 1400);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, jobs: true })), 1700);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, blog: true })), 2000);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, testimonials: true })), 2300);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, footer: true })), 2600);
   };
 
   // Smooth scroll behavior
@@ -34,13 +46,13 @@ const Index = () => {
     };
   }, []);
 
-  // Scroll-triggered animations
+  // Advanced scroll-triggered animations
   useEffect(() => {
     if (loading) return;
 
     const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -54,7 +66,7 @@ const Index = () => {
       });
     }, observerOptions);
 
-    // Observe sections
+    // Observe all sections for scroll animations
     const sections = document.querySelectorAll('[data-section]');
     sections.forEach(section => observer.observe(section));
 
@@ -75,6 +87,22 @@ const Index = () => {
       
       <div data-section="features">
         <ModernFeaturesSection isVisible={visibleSections.features} />
+      </div>
+      
+      <div data-section="services">
+        <ServicesSection isVisible={visibleSections.services} />
+      </div>
+      
+      <div data-section="studyMaterials">
+        <StudyMaterialsSection isVisible={visibleSections.studyMaterials} />
+      </div>
+      
+      <div data-section="jobs">
+        <JobsSection isVisible={visibleSections.jobs} />
+      </div>
+      
+      <div data-section="blog">
+        <BlogSection isVisible={visibleSections.blog} />
       </div>
       
       <div data-section="testimonials">

@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Code, BrainCircuit, Rocket, Target, CheckCircle, Sparkles } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const ServicesSection = () => {
+interface ServicesSectionProps {
+  isVisible: boolean;
+}
+
+const ServicesSection = ({ isVisible }: ServicesSectionProps) => {
   const [services, setServices] = useState([]);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: servicesRef, isVisible: servicesVisible } = useScrollAnimation();

@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Eye, Clock, User, Star, Sparkles, PenTool } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const BlogSection = () => {
+interface BlogSectionProps {
+  isVisible: boolean;
+}
+
+const BlogSection = ({ isVisible }: BlogSectionProps) => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: blogsRef, isVisible: blogsVisible } = useScrollAnimation();
 

@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Briefcase, MapPin, Clock, Star, Sparkles, Building2, Users, TrendingUp } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const JobsSection = () => {
+interface JobsSectionProps {
+  isVisible: boolean;
+}
+
+const JobsSection = ({ isVisible }: JobsSectionProps) => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: jobsRef, isVisible: jobsVisible } = useScrollAnimation();
 
