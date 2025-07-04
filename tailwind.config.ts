@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -71,6 +72,7 @@ export default {
 			fontFamily: {
 				sans: ['Inter', 'system-ui', 'sans-serif'],
 				poppins: ['Poppins', 'sans-serif'],
+				inter: ['Inter', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -127,6 +129,14 @@ export default {
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' },
+				},
+				'typewriter': {
+					'0%': { width: '0' },
+					'100%': { width: '100%' },
+				},
+				'blink': {
+					'0%, 50%': { opacity: '1' },
+					'51%, 100%': { opacity: '0' },
 				}
 			},
 			animation: {
@@ -139,6 +149,8 @@ export default {
 				'glow': 'glow 2s ease-in-out infinite alternate',
 				'bounce-gentle': 'bounce-gentle 2s ease-in-out infinite',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'typewriter': 'typewriter 2s steps(40) forwards',
+				'blink': 'blink 1s infinite',
 			}
 		}
 	},

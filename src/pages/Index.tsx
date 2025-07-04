@@ -1,30 +1,90 @@
 
-import Layout from "@/components/layout/Layout";
-import HeroSection from "@/components/home/HeroSection";
-import ServicesSection from "@/components/home/ServicesSection";
-import StudyMaterialsSection from "@/components/home/StudyMaterialsSection";
-import JobsSection from "@/components/home/JobsSection";
-import BlogSection from "@/components/home/BlogSection";
-import CTASection from "@/components/home/CTASection";
+import { useState, useEffect } from 'react';
+import Preloader from '@/components/common/Preloader';
+import ModernNavbar from '@/components/layout/ModernNavbar';
+import ModernHeroSection from '@/components/home/ModernHeroSection';
+import ModernFeaturesSection from '@/components/home/ModernFeaturesSection';
+import ModernTestimonialsSection from '@/components/home/ModernTestimonialsSection';
+import ModernFooter from '@/components/layout/ModernFooter';
 
 const Index = () => {
+  const [loading, setLoading] = useState(true);
+  const [visibleSections, setVisibleSections] = useState({
+    hero: false,
+    features: false,
+    testimonials: false,
+    footer: false
+  });
+
+  const handlePreloaderComplete = () => {
+    setLoading(false);
+    
+    // Step-by-step section reveal
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, hero: true })), 300);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, features: true })), 800);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, testimonials: true })), 1300);
+    setTimeout(() => setVisibleSections(prev => ({ ...prev, footer: true })), 1800);
+  };
+
+  // Smooth scroll behavior
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    };
+  }, []);
+
+  // Scroll-triggered animations
+  useEffect(() => {
+    if (loading) return;
+
+    const observerOptions = {
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.getAttribute('data-section');
+          if (sectionId) {
+            setVisibleSections(prev => ({ ...prev, [sectionId]: true }));
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe sections
+    const sections = document.querySelectorAll('[data-section]');
+    sections.forEach(section => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [loading]);
+
+  if (loading) {
+    return <Preloader onComplete={handlePreloaderComplete} />;
+  }
+
   return (
-    <Layout>
-      <div className="overflow-hidden">
-        <HeroSection />
-        <div className="relative">
-          {/* Smooth gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/10 to-transparent pointer-events-none z-10"></div>
-          <div className="relative z-20 space-y-0">
-            <ServicesSection />
-            <StudyMaterialsSection />
-            <JobsSection />
-            <BlogSection />
-          </div>
-        </div>
-        <CTASection />
+    <div className="overflow-x-hidden">
+      <ModernNavbar />
+      
+      <div data-section="hero">
+        <ModernHeroSection isVisible={visibleSections.hero} />
       </div>
-    </Layout>
+      
+      <div data-section="features">
+        <ModernFeaturesSection isVisible={visibleSections.features} />
+      </div>
+      
+      <div data-section="testimonials">
+        <ModernTestimonialsSection isVisible={visibleSections.testimonials} />
+      </div>
+      
+      <div data-section="footer">
+        <ModernFooter isVisible={visibleSections.footer} />
+      </div>
+    </div>
   );
 };
 
