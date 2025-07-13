@@ -36,14 +36,14 @@ const ModernNavbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img 
-              src="/src/assets/logo.png" 
-              alt="Apne Wale Careers" 
-              className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
+              src="/lovable-uploads/3dcd0962-bfe6-4b05-afae-66580adb249d.png" 
+              alt="Apne Wale Coders" 
+              className="w-16 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
             />
             <span className={`text-xl font-bold transition-colors duration-300 ${
               isScrolled ? 'text-gray-900' : 'text-white'
             }`}>
-              Apne Wale Careers
+              Apne Wale Coders
             </span>
           </Link>
 
