@@ -94,7 +94,7 @@ const Index = () => {
       </div>
       
       <div data-section="studyMaterials">
-        <StudyMaterialsSection isVisible={visibleSections.studyMaterials} />
+        <StudyMaterialsSection />
       </div>
       
       <div data-section="jobs">

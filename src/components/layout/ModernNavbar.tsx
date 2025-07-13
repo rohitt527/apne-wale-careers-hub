@@ -34,14 +34,16 @@ const ModernNavbar = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <span className="text-lg font-bold text-white">AW</span>
-            </div>
+          <Link to="/" className="flex items-center space-x-3 group">
+            <img 
+              src="/src/assets/logo.png" 
+              alt="Apne Wale Careers" 
+              className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
+            />
             <span className={`text-xl font-bold transition-colors duration-300 ${
               isScrolled ? 'text-gray-900' : 'text-white'
             }`}>
-              Apne Wale
+              Apne Wale Careers
             </span>
           </Link>
 
